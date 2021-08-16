@@ -32,24 +32,58 @@
 
 #include "thalesremoteconnection.h"
 
+enum class PotentiostatMode {
+    POTENTIOSTATIC,         /**< Potentiostatic operation of the potentiostat, as a voltage source. */
+    GALVANOSTATIC,          /**< Galvanostatic operation of the potentiostat, as a current source. */
+    PSEUDOGALVANOSTATIC     /**< Potentiostatic operation only for EIS, the potential for a target current is determined automatically. Measurement is done with voltage amplitude. */
+};
+
+enum class ScanStrategy{
+    SINGLE_SINE,    /**< Measurement of individual frequency points in the low-frequency range. */
+    MULTI_SINE,     /**< Measurement with multisine in the low-frequency range. */
+    TABLE           /**< Specify a table with frequency points at which the measurements are carried out. */
+};
+
+enum class ScanDirection{
+    START_TO_MIN,   /**< Scan at first from start to lower frequency. */
+    START_TO_MAX    /**< Scan at first from start to maximum frequency. */
+};
+
+enum class NamingRule{
+    DATETIME,    /**< Extension of the specified name with date and time. */
+    COUNTER,     /**< Extension of the specified name with an sequential number. */
+    INDIVIDUAL   /**< No extension each file must be named individually, otherwise it will be overwritten. */
+};
+
+enum class PotentialRelation{
+    ABSOLUTE_RELATED, /**< Absolute relation of the potential. */
+    RELATIVE_RELATED  /**< Relative relation of the potential. */
+};
+
+enum class IESweepMode{
+    STEADYSTATE,    /**< The explanation of the modes can be found in the IE manual. */
+    FIXEDSAMPLING,  /**< The explanation of the modes can be found in the IE manual. */
+    DYNAMICSCAN     /**< The explanation of the modes can be found in the IE manual. */
+};
+
+/** The ThalesRemoteScriptWrapper class
+ *
+ *  Wrapper that uses the ThalesRemoteConnection class.
+ *  The commands are explained in http://zahner.de/pdf/Remote2.pdf .
+ *  In the document you can also find a table with error numbers which are returned.
+ */
 class ThalesRemoteScriptWrapper
 {
 public:
 
-    enum PotentiostatMode {
-        POTMODE_POTENTIOSTATIC,
-        POTMODE_GALVANOSTATIC,
-        POTMODE_PSEUDOGALVANOSTATIC
-    };
-
     /** Constructor. Needs a connected ThalesRemoteConnection */
-    ThalesRemoteScriptWrapper(ThalesRemoteConnection * const remoteConnection);
+    ThalesRemoteScriptWrapper(ZenniumConnection * const remoteConnection);
 
     /** Directly execute a query to Remote Script.
      *
      * \param [in] command The query string, e.g. "IMPEDANCE" or "Pset=0"
      *
-     * \returns the reply sent by Remote Script
+     * \returns The response string from the device.
      */
     std::string executeRemoteCommand(std::string command);
 
@@ -64,37 +98,313 @@ public:
      *          something else. For high stability applications 20 seconds would
      *          probably be a save bet.
      */
-    void forceThalesIntoRemoteScript();
+    std::string forceThalesIntoRemoteScript();
 
+    /** Read the measured current from the device.
+     *
+     * \returns The current current value.
+     */
     double getCurrent();
+
+    /** Read the measured voltage from the device.
+     *
+     * \returns The current voltage value.
+     */
     double getPotential();
 
-    void setCurrent(double current);
-    void setPotential(double potential);
+    /** Set the output current.
+     *
+     * \param [in] current The output current to set.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setCurrent(double current);
+
+    /** Set the output potential.
+     *
+     * \param [in] potential The output potential to set.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setPotential(double potential);
+
+    /** Set the maximum shunt for measurement.
+     *
+     * Set the maximum shunt index for impedance measurements.
+     *
+     * \param [in] shunt The number of the shunt.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setMaximumShuntIndex(int shunt);
+
+    /** Set the minimum shunt for measurement.
+     *
+     * Set the minimum shunt index for impedance measurements.
+     *
+     * \param [in] shunt The number of the shunt.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setMinimumShuntIndex(int shunt);
+
+    /** Set the shunt for measurement.
+     *
+     * Fixes the shunt to the passed index.
+     *
+     * \param [in] index The number of the shunt.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setShuntIndex(int index);
+
+    /** Set the voltage range for measurement.
+     *
+     * If a Zennium, Zennium E, Zennium E4 or a device from the IM6 series is used,
+     * the set index must match the U-buffer.
+     * If the U-buffer does not match the set value, the measurement is wrong.
+     * The Zennium pro, Zennium X and Zennium XC series automatically change the range.
+     *
+     * \param [in] index The number of the voltage range.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setVoltageRangeIndex(int index);
+
+    /** Set the device for output.
+     *
+     * Device which is to be selected, on which the settings are output.
+     * First, the device must be selected.
+     * Only then can devices other than the internal main potentiostat be configured.
+     * It is only possible to measure with one device at a time.
+     * For example, impedance cannot be measured on two devices at once.
+     *
+     * \param [in] device Number of the device. 0 = Main. 1 = EPC channel 1 and so on.
+     *
+     * \returns The response string from the device.
+     */
+    std::string selectPotentiostat(int device);
+
+    /** Change away from operation as EPC device to SCPI operation.
+     *
+     * This command works only with external potentiostats of the latest generation PP212, PP222, PP242 and XPOT2.
+     * After this command they are no longer accessible with the EPC interface.
+     * Then you can connect to the potentiostat with USB via the Comports.
+     * The change back to EPC operation is also done explicitly from the USB side.
+     *
+     * \returns The response string from the device.
+     */
+    std::string switchToSCPIControl();
+
+    /** Get the serialnumber of the active device.
+     *
+     * The active device is selected using the ThalesRemoteScriptWrapper::selectPotentiostat method.
+     *
+     * \returns The device serial number.
+     */
+    std::string getSerialNumber();
+
+    /** Get the name of the active device.
+     *
+     * The active device is selected using the ThalesRemoteScriptWrapper::selectPotentiostat method.
+     *
+     * \returns The device name.
+     */
+    std::string getDeviceName();
 
     /** Switch the potentiostat on or off.
      *
-     * \param ]in] enabled switches the potentiostat on if true and off if false.
-     */
-    void enablePotentiostat(bool enabled = true);
-    void setPotentiostatMode(PotentiostatMode potentiostatMode);
-
-    void setFrequency(double frequency);
-    void setAmplitude(double amplitude);
-
-
-    void setValue(std::string name, double value);
-    void setValue(std::string name, int value);
-
-    /** Sets the number of periods to average for one impedance measurement.
+     * \param [in] enabled Switches the potentiostat on if true and off if false.
      *
-     * \param [in] number_of_periods the number of periods / waves to average.
+     * \returns The response string from the device.
      */
-    void setNumberOfPeriods(int number_of_periods);
+    std::string enablePotentiostat(bool enabled = true);
+
+    /** Switch the potentiostat off.
+     *
+     * \returns The response string from the device.
+     */
+    std::string disablePotentiostat();
+
+    /** Set the coupling of the potentiostat.
+     *
+     * \param [in] potentiostatMode The coupling of the potentiostat.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setPotentiostatMode(PotentiostatMode potentiostatMode);
+
+    /** Enable the usage of a rule file.
+     *
+     *  If the usage of the rule file is activated all the parameters required
+     *  for the EIS, CV, and/or IE are taken from the rule file.
+     *  The exact usage can be found in the remote manual.
+     *
+     * \param [in] enabled Switches the potentiostat on if true and off if false.
+     *
+     * \returns The response string from the device.
+     */
+    std::string enableRuleFileUsage(bool enabled = true);
+
+    /** Disable the usage of a rule file.
+     *
+     *  If the usage of the rule file is activated all the parameters required
+     *  for the EIS, CV, and/or IE are taken from the rule file.
+     *  The exact usage can be found in the remote manual.
+     *
+     * \returns The response string from the device.
+     */
+    std::string disableRuleFileUsage();
+
+    /** Setting a single channel of a PAD4 card for an EIS measurement.
+     *
+     *  Each channel of the Pad4 card must be configured separately and then the PAD4 must be activated with ThalesRemoteScriptWrapper::enablePAD4.
+     *
+     * \param [in] card The number of the card starting at 1 and up to 4.
+     * \param [in] channel The channel of the card starting at 1 and up to 4.
+     * \param [in] enabled True to enable the channel.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setupPAD4(int card, int channel, bool enabled);
+
+    /** Enable the configured PAD4 channels.
+     *
+     *  Each channel of the Pad4 card must be configured separately.
+     *
+     * \param [in] enabled True to enable PAD4 measurements.
+     *
+     * \returns The response string from the device.
+     */
+    std::string enablePAD4(bool enabled = true);
+
+    /** Disable the configured PAD4 channels.
+     *
+     *  Each channel of the Pad4 card must be configured separately.
+     *
+     * \returns The response string from the device.
+     */
+    std::string disablePAD4();
+
+    /** Read the set parameters.
+     *
+     *  Reading the set PAD4 configuration.
+     *
+     * \returns The response string from the device.
+     */
+    std::string readPAD4Setup();
+
+    /*
+     * Section with settings for single impedance and EIS measurements.
+     */
+
+
+    /** Set the output frequency for single frequency impedance.
+     *
+     * \param [in] frequency The output frequency for Impedance measurement to set.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setFrequency(double frequency);
+
+    /** Set the output amplitude.
+     *
+     *  The amplitude is valid for one impedance measurement and for EIS.
+     *  The amplitude is specified in the basic unit V or A.
+     *
+     * \param [in] amplitude The amplitude in A or V.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setAmplitude(double amplitude);
+
+    /** Set the number of periods to average for one impedance measurement.
+     *
+     * \param [in] numberOfPeriods The number of periods / waves to average.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setNumberOfPeriods(int numberOfPeriods);
+
+    /** Set the upper frequency limit for EIS measurements.
+     *
+     * \param [in] frequency The upper frequency limit.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setUpperFrequencyLimit(double frequency);
+
+    /** Set the lower frequency limit for EIS measurements.
+     *
+     * \param [in] frequency The lower frequency limit.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setLowerFrequencyLimit(double frequency);
+
+    /** Set the start frequency for EIS measurements.
+     *
+     * \param [in] frequency The start frequency.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setStartFrequency(double frequency);
+
+    /** Set the number of steps per decade in frequency range above 66 Hz for EIS measurements.
+     *
+     * \param [in] steps The number of steps per decade.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setUpperStepsPerDecade(int steps);
+
+    /** Set the number of steps per decade in frequency range below 66 Hz for EIS measurements.
+     *
+     * \param [in] steps The number of steps per decade.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setLowerStepsPerDecade(int steps);
+
+    /** Set the number of periods to measure in frequency range above 66 Hz for EIS measurements.
+     *
+     *  Must be greater than ThalesRemoteScriptWrapper::setLowerNumberOfPeriods.
+     *
+     * \param [in] periods The number of periods.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setUpperNumberOfPeriods(int periods);
+
+    /** Set the number of periods to measure in frequency range below 66 Hz for EIS measurements.
+     *
+     *  Must be smaller than ThalesRemoteScriptWrapper::setUpperNumberOfPeriods.
+     *
+     * \param [in] periods The number of periods.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setLowerNumberOfPeriods(int periods);
+
+    /** Set the scan strategy for EIS measurements.
+     *
+     * \param [in] strategy The scan strategy for EIS measurements.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setScanStrategy(ScanStrategy strategy);
+
+    /** Set the scan direction for EIS measurements.
+     *
+     * \param [in] direction The scan direction for EIS measurements.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setScanDirection(ScanDirection direction);
 
     /** Measure the impedance at the set frequency, amplitude and averages.
      *
-     * \returns the complex impedance at the measured point.
+     * \returns The complex impedance at the measured point.
      */
     std::complex<double> getImpedance();
 
@@ -102,22 +412,689 @@ public:
      *
      * \param [in] frequency the frequency to measure the impedance at.
      *
-     * \returns the complex impedance at the measured point.
+     * \returns The complex impedance at the measured point.
      */
     std::complex<double> getImpedance(double frequency);
 
     /** Measure the impedace with all possible parameters
      *
-     * \param [in] frequency the frequency to measure the impedance at.
-     * \param [in] amplitude the amplitude to measure the impedance with. In Volt if potentiostatic mode or Ampere for galvanostatic mode.
-     * \param [in] number_of_periods the number of periods / waves to average.
+     * \param [in] frequency The frequency to measure the impedance at.
+     * \param [in] amplitude The amplitude to measure the impedance with. In Volt if potentiostatic mode or Ampere for galvanostatic mode.
+     * \param [in] numberOfPeriods The number of periods / waves to average.
      *
-     * \returns the complex impedance at the measured point.
+     * \returns The complex impedance at the measured point.
      */
-    std::complex<double> getImpedance(double frequency, double amplitude, int number_of_periods = 1);
+    std::complex<double> getImpedance(double frequency, double amplitude, int numberOfPeriods = 1);
+
+    /** Set the measurement naming rule.
+     *
+     * \param [in] naming The measurement naming rule.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setEISNaming(NamingRule naming);
+
+    /** Set the current number of measurement for filename.
+     *
+     *  Current number for the file name for measurements which is used next and then incremented.
+     *
+     * \param [in] number The next measurement number.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setEISCounter(int number);
+
+    /** Set the path where the EIS measurements should be stored.
+     *
+     *  The directory must exist.
+     *  The results must be stored on the C hard disk.
+     *  If an error occurs test an alternative path or "C:\THALES\temp".
+     *
+     * \param [in] path The path to the directory.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setEISOutputPath(std::string path);
+
+    /** Set the basic output filename.
+     *
+     *  The basic name of the file, which is extended by a sequential number or the date and time.
+     *  Only numbers, underscores and letters from a-Z may be used.
+     *  If the name is set to "individual", the file with the same name must not yet exist.
+     *  Existing files are not overwritten.
+     *
+     * \param [in] name The basic name of the file.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setEISOutputFileName(std::string name);
+
+    /** Measure EIS
+     *
+     *  For the measurement all parameters must be specified before.
+     *
+     * \returns The response string from the device.
+     */
+    std::string measureEIS();
+
+
+
+    /*
+     * Section with settings for CV measurements.
+     */
+
+    /** Set the start potential of a CV measurment.
+     *
+     * \param [in] potential The start potential.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setCVStartPotential(double potential);
+
+    /** Set the upper reversal potential of a CV measurment.
+     *
+     * \param [in] potential The upper reversal potential.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setCVUpperReversingPotential(double potential);
+
+    /** Set the lower reversal potential of a CV measurment.
+     *
+     * \param [in] potential The lower reversal potential.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setCVLowerReversingPotential(double potential);
+
+    /** Set the end potential of a CV measurment.
+     *
+     * \param [in] potential The end potential.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setCVEndPotential(double potential);
+
+    /** Setting the holding time at the start potential.
+     *
+     *  The time must be given in seconds.
+     *
+     * \param [in] time The waiting time at start potential in s
+     *
+     * \returns The response string from the device.
+     */
+    std::string setCVStartHoldTime(double time);
+
+    /** Setting the holding time at the end potential.
+     *
+     *  The time must be given in seconds.
+     *
+     * \param [in] time The waiting time at end potential in s
+     *
+     * \returns The response string from the device.
+     */
+    std::string setCVEndHoldTime(double time);
+
+    /** Set the scan rate.
+     *
+     *  The scan rate must be specified in V/s.
+     *
+     * \param [in] scanRate The scan rate in V/s.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setCVScanRate(double scanRate);
+
+    /** Set the number of cycles.
+     *
+     *  At least 0.5 cycles are necessary.
+     *  The number of cycles must be a multiple of 0.5. 3.5 are also possible, for example.
+     *
+     * \param [in] cycles The number of CV cycles, at least 0.5.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setCVCycles(double cycles);
+
+    /** Set the number of measurements per CV cycle.
+     *
+     * \param [in] samples The number of measurments per cycle.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setCVSamplesPerCycle(double samples);
+
+    /** Set the maximum current.
+     *
+     *  The maximum positive current at which the measurement is interrupted.
+     *
+     * \param [in] current The maximum current for measurement in A.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setCVMaximumCurrent(double current);
+
+    /** Set the minimum current.
+     *
+     *  The maximum negative current at which the measurement is interrupted.
+     *
+     * \param [in] current The minimum current for measurement in A.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setCVMinimumCurrent(double current);
+
+    /** Set the ohmic drop for CV measurement.
+     *
+     *  The maximum negative current at which the measurement is interrupted.
+     *
+     * \param [in] ohmicDrop The ohmic drop for measurement.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setCVOhmicDrop(double ohmicDrop);
+
+    /** Automatically restart if current is exceeded.
+     *
+     *  A new measurement is automatically started with a different
+     *  reverse potential at which the current limit is not exceeded.
+     *
+     * \param [in] enabled If enabled = true the auto restart is enabled.
+     *
+     * \returns The response string from the device.
+     */
+    std::string enableCVAutoRestartAtCurrentOverflow(bool enabled = true);
+
+    /** Disable automatically restart if current is exceeded.
+     *
+     * \returns The response string from the device.
+     */
+    std::string disableCVAutoRestartAtCurrentOverflow();
+
+    /** Automatically restart if the current drops below the limit.
+     *
+     *  A new measurement is automatically started with a smaller
+     *  current range than that determined by the minimum and maximum current.
+     *
+     * \param [in] enabled If enabled = true the auto restart is enabled.
+     *
+     * \returns The response string from the device.
+     */
+    std::string enableCVAutoRestartAtCurrentUnderflow(bool enabled = true);
+
+    /** Disable automatically restart if the current drops below the limit.
+     *
+     * \returns The response string from the device.
+     */
+    std::string disableCVAutoRestartAtCurrentUnderflow();
+
+    /** Switch on the analog function generator (AFG).
+     *
+     *  The analog function generator can only be used if it was purchased with the device.
+     *  If the device has the AFG function, you will see a button in the CV software to activate this function.
+     *
+     * \param [in] enabled If enabled = true the AFG is switched on.
+     *
+     * \returns The response string from the device.
+     */
+    std::string enableCVAnalogFunctionGenerator(bool enabled = true);
+
+    /** Switch off the analog function generator (AFG).
+     *
+     * \returns The response string from the device.
+     */
+    std::string disableCVAnalogFunctionGenerator();
+
+    /** Set the measurement naming rule.
+     *
+     * \param [in] naming The measurement naming rule.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setCVNaming(NamingRule naming);
+
+    /** Set the current number of measurement for filename.
+     *
+     *  Current number for the file name for measurements which is used next and then incremented.
+     *
+     * \param [in] number The next measurement number.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setCVCounter(int number);
+
+    /** Set the path where the EIS measurements should be stored.
+     *
+     *  The directory must exist.
+     *  The results must be stored on the C hard disk.
+     *  If an error occurs test an alternative path or "C:\THALES\temp".
+     *
+     * \param [in] path The path to the directory.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setCVOutputPath(std::string path);
+
+    /** Set the basic output filename.
+     *
+     *  The basic name of the file, which is extended by a sequential number or the date and time.
+     *  Only numbers, underscores and letters from a-Z may be used.
+     *  If the name is set to "individual", the file with the same name must not yet exist.
+     *  Existing files are not overwritten.
+     *
+     * \param [in] name The basic name of the file.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setCVOutputFileName(std::string name);
+
+    /** Check the set parameters.
+     *
+     *  With the error number the wrong parameter can be found.
+     *  The error numbers are listed in the Remote2 manual.
+     *
+     * \returns The response string from the device.
+     */
+    std::string checkCVSetup();
+
+    /** Read the set parameters.
+     *
+     *  After checking with ThalesRemoteScriptWrapper::checkCVSetup the parameters can be read back from the workstation.
+     *
+     * \returns The response string from the device.
+     */
+    std::string readCVSetup();
+
+    /** Measure CV.
+     *
+     *  Before measurement, all parameters must be checked with ThalesRemoteScriptWrapper::checkCVSetup.
+     *
+     * \returns The response string from the device.
+     */
+    std::string measureCV();
+
+
+    /*
+     * Section with settings for IE measurements.
+     * Additional informations can be found in the IE manual.
+     */
+
+    /** Set the first edge potential.
+     *
+     * \param [in] potential The potential of the first edge in V.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setIEFirstEdgePotential(double potential);
+
+    /** Set the fourth edge potential.
+     *
+     * \param [in] potential The potential of the fourth edge in V.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setIESecondEdgePotential(double potential);
+
+    /** Set the first edge potential.
+     *
+     * \param [in] potential The potential of the first edge in V.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setIEThirdEdgePotential(double potential);
+
+    /** Set the first edge potential.
+     *
+     * \param [in] potential The potential of the first edge in V.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setIEFourthEdgePotential(double potential);
+
+    /** Set the relation of the first edge potential.
+     *
+     * \param [in] relation The relation of the edge potential absolute or relative.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setIEFirstEdgePotentialRelation(PotentialRelation relation);
+
+    /** Set the relation of the second edge potential.
+     *
+     * \param [in] relation The relation of the edge potential absolute or relative.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setIESecondEdgePotentialRelation(PotentialRelation relation);
+
+    /** Set the relation of the third edge potential.
+     *
+     * \param [in] relation The relation of the edge potential absolute or relative.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setIEThirdEdgePotentialRelation(PotentialRelation relation);
+
+    /** Set the relation of the fourth edge potential.
+     *
+     * \param [in] relation The relation of the edge potential absolute or relative.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setIEFourthEdgePotentialRelation(PotentialRelation relation);
+
+    /** Set the potential resolution.
+     *
+     *  The potential step size for IE measurements in V.
+     *
+     * \param [in] resolution The resolution for the measurement in V.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setIEPotentialResolution(double resolution);
+
+    /** Set the minimum waiting time.
+     *
+     *  The minimum waiting time on each step of the IE measurement.
+     *  This time is at least waited, even if the tolerance abort criteria are met.
+     *
+     * \param [in] time The waiting time in seconds.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setIEMinimumWaitingTime(double time);
+
+    /** Set the maximum waiting time.
+     *
+     *  The maximum waiting time on each step of the IE measurement.
+     *  After this time the measurement is stopped at this potential
+     *  and continued with the next potential even if the tolerances are not reached.
+     *
+     * \param [in] time The waiting time in seconds.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setIEMaximumWaitingTime(double time);
+
+    /** Set the relative tolerance criteria.
+     *
+     *  This parameter is only used in sweep mode steady state.
+     *  The relative tolerance to wait in percent.
+     *  The explanation can be found in the IE manual.
+     *
+     * \param [in] tolerance The tolerance to wait until break, 0.01 = 1%.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setIERelativeTolerance(double tolerance);
+
+    /** Set the absolute tolerance criteria.
+     *
+     *  This parameter is only used in sweep mode steady state.
+     *  The absolute tolerance to wait in A.
+     *  The explanation can be found in the IE manual.
+     *
+     * \param [in] tolerance The tolerance to wait until break, 0.01 = 1%.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setIEAbsoluteTolerance(double tolerance);
+
+    /** Set the ohmic drop for IE measurement.
+     *
+     * \param [in] ohmicDrop The ohmic drop for measurement.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setIEOhmicDrop(double ohmicDrop);
+
+    /** Set the sweep mode.
+     *
+     *  The explanation of the modes can be found in the IE manual.
+     *
+     * \param [in] sweepMode The sweep mode for measurement.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setIESweepMode(IESweepMode sweepMode);
+
+    /** Set the scan rate.
+     *
+     *  This parameter is only used in sweep mode dynamic scan.
+     *  The scan rate must be specified in V/s.
+     *
+     * \param [in] scanRate The scan rate in V/s.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setIEScanRate(double scanRate);
+
+    /** Set the maximum current.
+     *
+     *  The maximum positive current at which the measurement is interrupted.
+     *
+     * \param [in] current The maximum current for measurement in A.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setIEMaximumCurrent(double current);
+
+    /** Set the minimum current.
+     *
+     *  The maximum negative current at which the measurement is interrupted.
+     *
+     * \param [in] current The minimum current for measurement in A.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setIEMinimumCurrent(double current);
+
+    /** Set the measurement naming rule.
+     *
+     * \param [in] naming The measurement naming rule.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setIENaming(NamingRule naming);
+
+    /** Set the current number of measurement for filename.
+     *
+     *  Current number for the file name for measurements which is used next and then incremented.
+     *
+     * \param [in] number The next measurement number.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setIECounter(int number);
+
+    /** Set the path where the EIS measurements should be stored.
+     *
+     *  The directory must exist.
+     *  The results must be stored on the C hard disk.
+     *  If an error occurs test an alternative path or "C:\THALES\temp".
+     *
+     * \param [in] path The path to the directory.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setIEOutputPath(std::string path);
+
+    /** Set the basic output filename.
+     *
+     *  The basic name of the file, which is extended by a sequential number or the date and time.
+     *  Only numbers, underscores and letters from a-Z may be used.
+     *  If the name is set to "individual", the file with the same name must not yet exist.
+     *  Existing files are not overwritten.
+     *
+     * \param [in] name The basic name of the file.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setIEOutputFileName(std::string name);
+
+    /** Check the set parameters.
+     *
+     *  With the error number the wrong parameter can be found.
+     *  The error numbers are listed in the Remote2 manual.
+     *
+     * \returns The response string from the device.
+     */
+    std::string checkIESetup();
+
+    /** Read the set parameters.
+     *
+     *  After checking with ThalesRemoteScriptWrapper::checkIESetup the parameters can be read back from the workstation.
+     *
+     * \returns The response string from the device.
+     */
+    std::string readIESetup();
+
+    /** Measure IE.
+    *
+    *  Before measurement, all parameters must be checked with ThalesRemoteScriptWrapper::checkIESetup.
+    *
+    * \returns The response string from the device.
+    */
+    std::string measureIE();
+
+    /*
+     * Section of remote functions for the sequencer.
+     *
+     * With the sequencer DC profiles can be described textually.
+     * For instructions on how the sequencer file is structured, please refer to the manual of the sequencer.
+     */
+
+    /** Select the sequence to run with ThalesRemoteScriptWrapper::runSequence.
+     *
+     *  The sequences must be stored under "C:\THALES\script\sequencer\sequences".
+     *  Sequences from 0 to 9 can be created.
+     *  These must have the names from "sequence00.seq" to "sequence09.seq".
+     *
+     *
+     * \param [in] number The number of the sequence.
+     *
+     * \returns The response string from the device.
+     */
+    std::string selectSequence(int number);
+
+    /** Set the measurement naming rule.
+     *
+     * \param [in] naming The measurement naming rule.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setSequenceNaming(NamingRule naming);
+
+    /** Set the current number of measurement for filename.
+     *
+     *  Current number for the file name for measurements which is used next and then incremented.
+     *
+     * \param [in] number The next measurement number.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setSequenceCounter(int number);
+
+    /** Set the path where the EIS measurements should be stored.
+     *
+     *  The directory must exist.
+     *  The results must be stored on the C hard disk.
+     *  If an error occurs test an alternative path or "C:\THALES\temp".
+     *
+     * \param [in] path The path to the directory.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setSequenceOutputPath(std::string path);
+
+    /** Set the basic output filename.
+     *
+     *  The basic name of the file, which is extended by a sequential number or the date and time.
+     *  Only numbers, underscores and letters from a-Z may be used.
+     *  If the name is set to "individual", the file with the same name must not yet exist.
+     *  Existing files are not overwritten.
+     *
+     * \param [in] name The basic name of the file.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setSequenceOutputFileName(std::string name);
+
+    /** Run the selected sequence.
+     *
+     *  This command executes the selected sequence between 0 and 9.
+     *
+     * \returns The response string from the device.
+     */
+    std::string runSequence();
+
+
 
 protected:
 
+
+    /** Set an Remote2 parameter or value.
+     *
+     *  With this command the parameters are transmitted to the Thales Remote2 and the response is read.
+     *
+     * \param [in] name Name of the Remote2 parameter.
+     * \param [in] relation The value of the specified type.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setValue(std::string name, PotentialRelation relation);
+
+    /** Set an Remote2 parameter or value.
+     *
+     *  With this command the parameters are transmitted to the Thales Remote2 and the response is read.
+     *
+     * \param [in] name Name of the Remote2 parameter.
+     * \param [in] value The value of the specified type.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setValue(std::string name, bool value);
+
+    /** Set an Remote2 parameter or value.
+     *
+     *  With this command the parameters are transmitted to the Thales Remote2 and the response is read.
+     *
+     * \param [in] name Name of the Remote2 parameter.
+     * \param [in] value The value of the specified type.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setValue(std::string name, double value);
+
+    /** Set an Remote2 parameter or value.
+     *
+     *  With this command the parameters are transmitted to the Thales Remote2 and the response is read.
+     *
+     * \param [in] name Name of the Remote2 parameter.
+     * \param [in] value The value of the specified type.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setValue(std::string name, int value);
+
+    /** Set an Remote2 parameter or value.
+     *
+     *  With this command the parameters are transmitted to the Thales Remote2 and the response is read.
+     *
+     * \param [in] name Name of the Remote2 parameter.
+     * \param [in] value The value of the specified type.
+     *
+     * \returns The response string from the device.
+     */
+    std::string setValue(std::string name, std::string value);
+
+    /** Sending a Remote2 command and parsing a double from the response.
+     *
+     * \param [in] command Name of the Remote2 command.
+     * \param [in] pattern The regex to extract the value from the response string.
+     *
+     * \returns The received value.
+     */
     double requestValueAndParseUsingRegexp(std::string command, std::regex pattern);
 
     /** Converts a string to double.
@@ -129,7 +1106,7 @@ protected:
      */
     double stringToDobule(std::string string);
 
-    ThalesRemoteConnection * const remoteConnection;
+    ZenniumConnection * const remoteConnection;
 };
 
 #endif // THALESREMOTESCRIPTWRAPPER_H

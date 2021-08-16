@@ -7,4 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_subdirectory(ThalesRemoteCppLibrary)
 add_subdirectory(GeneralExample)
+add_subdirectory(EisPad4Example)
 
+file(GLOB_RECURSE GitHubFiles Readme.md LICENSE)
+add_custom_target(GitHubFiles SOURCES ${GitHubFiles})
