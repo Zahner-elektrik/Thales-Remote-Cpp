@@ -4,11 +4,12 @@ It was developed to **easily integrate** Zahner Zennium Potentiostats into Pytho
 
 The measurement methods **EIS**, **IE**, **CV** and **DC sequences** are supported. Also constant current or constant voltage can be output and current and voltage can be measured. Single frequency impedance measurement is also possible.
 
-Additional detailed documentation of the individual commands can be found in the python modules.  
-The complete documentation of the individual functions can be found on the [API documentation website](https://doc.zahner.de/thales_remote_cpp/). 
-
 In the GitHub repository [Thales-Remote-Python](https://github.com/Zahner-elektrik/Thales-Remote-Python) are more detailed examples which can be easily implemented in C++.  
 The setter and getter in C++ and Python are always named the same and behave the same.
+
+# 📚 Documentation
+
+The complete documentation of the individual functions can be found on the [API documentation website](https://doc.zahner.de/thales_remote_cpp/).  
 
 # 🔧 Installation
 Download the folder ThalesRemoteCppLibrary and compile the library into your project.  

@@ -167,6 +167,7 @@ public:
 protected:
 
     static const int term_port = 260;
+    std::string connectionName;
 
     SOCKET socket_handle;
 

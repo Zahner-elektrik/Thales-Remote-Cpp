@@ -212,6 +212,15 @@ public:
      */
     std::string getDeviceName();
 
+    /** Perform offset calibration on the device.
+     *
+     * When the instrument has warmed up for about 30 minutes,
+     * this command can be used to perform the offset calibration again.
+     *
+     * \returns The response string from the device.
+     */
+    std::string calibrateOffsets();
+
     /** Switch the potentiostat on or off.
      *
      * \param [in] enabled Switches the potentiostat on if true and off if false.

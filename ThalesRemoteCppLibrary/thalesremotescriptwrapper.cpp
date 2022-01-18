@@ -27,6 +27,16 @@
 #include "thalesremotescriptwrapper.h"
 #include "thalesremoteerror.h"
 #include <algorithm>
+#include <iomanip>
+#include <sstream>
+
+template <typename T>
+std::string to_string_with_precision(const T value, const int n = 6)
+{
+    std::stringstream  out;
+    out << std::scientific << std::setprecision(n) << value;
+    return out.str();
+}
 
 ThalesRemoteScriptWrapper::ThalesRemoteScriptWrapper(ZenniumConnection * const remoteConnection) :
     remoteConnection(remoteConnection)
@@ -128,6 +138,11 @@ std::string ThalesRemoteScriptWrapper::getDeviceName()
         retval = match.str(3);
     }
     return retval;
+}
+
+std::string ThalesRemoteScriptWrapper::calibrateOffsets()
+{
+    return this->executeRemoteCommand("CALOFFSETS");
 }
 
 std::string ThalesRemoteScriptWrapper::enablePotentiostat(bool enabled) {
@@ -822,7 +837,7 @@ std::string ThalesRemoteScriptWrapper::setValue(std::string name, bool value)
 std::string ThalesRemoteScriptWrapper::setValue(std::string name, double value)
 {
 
-    std::string reply = this->executeRemoteCommand(name + "=" + std::to_string(value));
+    std::string reply = this->executeRemoteCommand(name + "=" + to_string_with_precision(value,16));
 
     if(reply.find("ERROR") != std::string::npos)
     {

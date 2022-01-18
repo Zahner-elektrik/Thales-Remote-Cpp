@@ -54,6 +54,7 @@ bool ZenniumConnection::connectToTerm(std::string address, std::string connectio
 {
 
     this->socket_handle = socket(AF_INET, SOCK_STREAM, 0);
+    this->connectionName = connectionName;
 
 #ifdef _WIN32
     if (this->socket_handle == INVALID_SOCKET) {
@@ -134,7 +135,7 @@ void ZenniumConnection::disconnectFromTerm()
 
     try
     {
-        this->sendStringAndWaitForReplyString("3,ScriptRemote,0,RS",0x80);
+        this->sendStringAndWaitForReplyString("3," + this->connectionName + ",0,RS",0x80);
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
         this->sendTelegram("\xff\xff", 4);
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
