@@ -4,7 +4,7 @@
  *  / /_/ _ `/ _ \/ _ \/ -_) __/___/ -_) / -_)  '_/ __/ __/ /  '_/
  * /___/\_,_/_//_/_//_/\__/_/      \__/_/\__/_/\_\\__/_/ /_/_/\_\
  *
- * Copyright 2019 ZAHNER-elektrik I. Zahner-Schiller GmbH & Co. KG
+ * Copyright 2022 ZAHNER-elektrik I. Zahner-Schiller GmbH & Co. KG
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -51,8 +51,31 @@ std::string ThalesRemoteScriptWrapper::executeRemoteCommand(std::string command)
 
 std::string ThalesRemoteScriptWrapper::forceThalesIntoRemoteScript()
 {
-    remoteConnection->sendStringAndWaitForReplyString("3,ScriptRemote,0,OFF", 0x80);
-    return remoteConnection->sendStringAndWaitForReplyString("2,ScriptRemote", 0x80);
+    remoteConnection->sendStringAndWaitForReplyString("3," + this->remoteConnection->getConnectionName() + ",0,OFF", 128);
+    return remoteConnection->sendStringAndWaitForReplyString("2," + this->remoteConnection->getConnectionName(), 128);
+}
+
+int ThalesRemoteScriptWrapper::getWorkstationHeartBeat()
+{
+    auto reply = remoteConnection->sendStringAndWaitForReplyString("1," + this->remoteConnection->getConnectionName(), 128);
+    int result = -1;
+
+    if(reply.find("ERROR") != std::string::npos)
+    {
+        throw ThalesRemoteError(reply);
+    }
+
+    std::regex replyStringPattern("^\\S*,\\S*,([\\d]*)$");
+    std::smatch match;
+
+    std::regex_search(reply, match, replyStringPattern);
+
+    if (match.size() > 1) {
+
+        result = this->stringToInt(match.str(1));
+    }
+
+    return result;
 }
 
 double ThalesRemoteScriptWrapper::getCurrent()
@@ -903,6 +926,17 @@ double ThalesRemoteScriptWrapper::stringToDobule(std::string string)
 
     std::stringstream stream(string);
     double number;
+
+    stream >> number;
+
+    return number;
+}
+
+int ThalesRemoteScriptWrapper::stringToInt(std::string string)
+{
+
+    std::stringstream stream(string);
+    int number;
 
     stream >> number;
 

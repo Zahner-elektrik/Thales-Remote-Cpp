@@ -17,47 +17,47 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    ThalesRemoteScriptWrapper ZahnerZennium(&ZenniumConnection);
+    ThalesRemoteScriptWrapper zahnerZennium(&ZenniumConnection);
 
-    ZahnerZennium.forceThalesIntoRemoteScript();
+    zahnerZennium.forceThalesIntoRemoteScript();
 
-    ZahnerZennium.calibrateOffsets();
+    zahnerZennium.calibrateOffsets();
 
-    ZahnerZennium.setPotentiostatMode(PotentiostatMode::POTENTIOSTATIC);
-    ZahnerZennium.setPotential(1.0);
-    ZahnerZennium.enablePotentiostat();
-
-    for (int i = 0; i < 5 ; i ++) {
-        std::cout << ZahnerZennium.getPotential() << std::endl;
-        std::cout << ZahnerZennium.getCurrent() << std::endl;
-    }
-
-    ZahnerZennium.disablePotentiostat();
-    ZahnerZennium.setPotentiostatMode(PotentiostatMode::GALVANOSTATIC);
-    ZahnerZennium.setCurrent(20e-9);
-    ZahnerZennium.enablePotentiostat();
+    zahnerZennium.setPotentiostatMode(PotentiostatMode::POTENTIOSTATIC);
+    zahnerZennium.setPotential(1.0);
+    zahnerZennium.enablePotentiostat();
 
     for (int i = 0; i < 5 ; i ++) {
-        std::cout << ZahnerZennium.getPotential() << std::endl;
-        std::cout << ZahnerZennium.getCurrent() << std::endl;
+        std::cout << zahnerZennium.getPotential() << std::endl;
+        std::cout << zahnerZennium.getCurrent() << std::endl;
     }
 
-    ZahnerZennium.disablePotentiostat();
-    ZahnerZennium.setPotentiostatMode(PotentiostatMode::POTENTIOSTATIC);
-    ZahnerZennium.setPotential(1.0);
-    ZahnerZennium.enablePotentiostat();
-    ZahnerZennium.setFrequency(2000);
-    ZahnerZennium.setAmplitude(10e-3);
-    ZahnerZennium.setNumberOfPeriods(3);
+    zahnerZennium.disablePotentiostat();
+    zahnerZennium.setPotentiostatMode(PotentiostatMode::GALVANOSTATIC);
+    zahnerZennium.setCurrent(20e-9);
+    zahnerZennium.enablePotentiostat();
 
-    printImpedance(ZahnerZennium.getImpedance());
-    printImpedance(ZahnerZennium.getImpedance(2000));
-    printImpedance(ZahnerZennium.getImpedance(2000, 10e-3, 3));
+    for (int i = 0; i < 5 ; i ++) {
+        std::cout << zahnerZennium.getPotential() << std::endl;
+        std::cout << zahnerZennium.getCurrent() << std::endl;
+    }
 
-    spectrum(ZahnerZennium, 1000, 2e5, 10);
+    zahnerZennium.disablePotentiostat();
+    zahnerZennium.setPotentiostatMode(PotentiostatMode::POTENTIOSTATIC);
+    zahnerZennium.setPotential(1.0);
+    zahnerZennium.enablePotentiostat();
+    zahnerZennium.setFrequency(2000);
+    zahnerZennium.setAmplitude(10e-3);
+    zahnerZennium.setNumberOfPeriods(3);
 
-    ZahnerZennium.disablePotentiostat();
-    ZahnerZennium.setAmplitude(0);
+    printImpedance(zahnerZennium.getImpedance());
+    printImpedance(zahnerZennium.getImpedance(2000));
+    printImpedance(zahnerZennium.getImpedance(2000, 10e-3, 3));
+
+    spectrum(zahnerZennium, 1000, 2e5, 10);
+
+    zahnerZennium.disablePotentiostat();
+    zahnerZennium.setAmplitude(0);
 
     ZenniumConnection.disconnectFromTerm();
 

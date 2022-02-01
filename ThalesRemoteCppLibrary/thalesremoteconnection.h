@@ -4,7 +4,7 @@
  *  / /_/ _ `/ _ \/ _ \/ -_) __/___/ -_) / -_)  '_/ __/ __/ /  '_/
  * /___/\_,_/_//_/_//_/\__/_/      \__/_/\__/_/\_\\__/_/ /_/_/\_\
  *
- * Copyright 2019 ZAHNER-elektrik I. Zahner-Schiller GmbH & Co. KG
+ * Copyright 2022 ZAHNER-elektrik I. Zahner-Schiller GmbH & Co. KG
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -35,7 +35,11 @@
 #include <queue>
 #include <thread>
 #include <mutex>
+#include <algorithm>
 #include <vector>
+#include <unordered_map>
+#include "threadsafequeue.h"
+#include <memory>
 
 #ifdef _WIN32
 
@@ -66,9 +70,9 @@ public:
 
     /** Connect to Term Software(The Thales Terminal)
      *
-     * \param [in] address The hostname or ip-address of the host running Term.
-     * \param [in] connectionName The name of the connection ScriptRemote for Remote and Logging as Online Display.
-     * \returns true on success, false if failed
+     * \param  address The hostname or ip-address of the host running Term.
+     * \param  connectionName The name of the connection ScriptRemote for Remote and Logging as Online Display.
+     * \return true on success, false if failed
      */
     bool connectToTerm(std::string address, std::string connectionName);
 
@@ -81,89 +85,68 @@ public:
 
     /** Check if the connection to Term is open.
      *
-     * \returns true if connected, false if not.
+     * \return true if connected, false if not.
      */
     bool isConnectedToTerm() const;
 
     /** Send a telegram (data) to Term.
      *
-     * \param [in] payload The actual data which is being sent to Term.
-     * \param [in] message_type Used internally by the DevCli dll. Depends on context. Most of the time 2.
+     * \param  payload The actual data which is being sent to Term.
+     * \param  message_type Used internally by the DevCli dll. Depends on context. Most of the time 2.
      */
-    void sendTelegram(std::string payload, char message_type);
+    void sendTelegram(std::string payload, int message_type);
 
     /** Send a telegram (data) to Term.
      *
-     * \param [in] payload The actual data which is being sent to Term.
-     * \param [in] message_type Used internally by the DevCli dll. Depends on context. Most of the time 2.
+     * \param  payload The actual data which is being sent to Term.
+     * \param  message_type Used internally by the DevCli dll. Depends on context. Most of the time 2.
      */
-    void sendTelegram(std::vector<unsigned char> payload, unsigned char message_type);
-
-    /** Block infinitely until the next Telegram is arriving.
-     *
-     * If some Telegram has already arrived it will just return the last one from the queue.
-     *
-     * \returns The last received telegram or an empty string if someting went wrong.
-     */
-    std::string waitForStringTelegram();
-
-    /** Block infinitely until the next Telegram is arriving.
-     *
-     * If some Telegram has already arrived it will just return the last one from the queue.
-     *
-     * \returns The last received telegram or an empty string if someting went wrong.
-     */
-    std::vector<uint8_t> waitForTelegram();
+    void sendTelegram(std::vector<unsigned char> payload, int message_type);
 
     /** Block maximal timeout milliseconds while waiting for an incoming telegram.
      *
      * If some Telegram has already arrived it will just return the last one from the queue.
      *
-     * \returns The last received telegram or an empty string if the timeout was reached or something went wrong.
+     * \return The last received telegram or an empty string if the timeout was reached or something went wrong.
      */
-    std::string waitForStringTelegram(const std::chrono::duration<int, std::milli> timeout);
+    std::string waitForStringTelegram(int message_type = 2, const std::chrono::duration<int, std::milli> timeout = std::chrono::duration<int, std::milli>::max());
 
     /** Block maximal timeout milliseconds while waiting for an incoming telegram.
      *
      * If some Telegram has already arrived it will just return the last one from the queue.
      *
-     * \returns The last received telegram or an empty string if the timeout was reached or something went wrong.
+     * \return The last received telegram or an empty string if the timeout was reached or something went wrong.
      */
-    std::vector<uint8_t> waitForTelegram(const std::chrono::duration<int, std::milli> timeout);
+    std::vector<uint8_t> waitForTelegram(int message_type = 2, const std::chrono::duration<int, std::milli> timeout = std::chrono::duration<int, std::milli>::max());
 
     /** Immediately return the last received telegram.
      *
-     * \returns The last received telegram or an empty string if no telegram was received or something went wrong.
+     * \return The last received telegram or an empty string if no telegram was received or something went wrong.
      */
     std::string receiveStringTelegram();
 
     /** Immediately return the last received telegram.
      *
-     * \returns The last received telegram or an empty string if no telegram was received or something went wrong.
+     * \return The last received telegram or an empty string if no telegram was received or something went wrong.
      */
     std::vector<uint8_t> receiveTelegram();
 
     /** Convenience function: Send a telegram and wait for it's reply.
      *
-     * \param [in] payload The actual data which is being sent to Term.
-     * \param [in] message_type Used internally by the DevCli dll. Depends on context. Most of the time 2.
+     * \param  payload The actual data which is being sent to Term.
+     * \param  message_type Used internally by the DevCli dll. Depends on context. Most of the time 2.
      *
-     * \returns The last received telegram or an empty string if someting went wrong.
+     * \return The last received telegram or an empty string if someting went wrong.
      */
-    std::string sendStringAndWaitForReplyString(std::string payload, char message_type);
+    std::string sendStringAndWaitForReplyString(std::string payload,
+                                                int message_type = 2,
+                                                const std::chrono::duration<int, std::milli> timeout = std::chrono::duration<int, std::milli>::max());
+    std::string sendStringAndWaitForReplyString(std::string payload,
+                                                int message_type,
+                                                const std::chrono::duration<int, std::milli> timeout,
+                                                int answer_message_typ);
 
-    /** Checks if there is some telegram in the queue.
-     *
-     * \returns True if there is some telegram in the queue and false if not.
-     */
-    bool telegramReceived();
-
-    /** Clears the queue of incoming telegrams.
-     *
-     * All telegrams received to this point will be discarded.
-     */
-    void clearIncomingTelegramQueue();
-
+    std::string getConnectionName();
 protected:
 
     static const int term_port = 260;
@@ -171,10 +154,9 @@ protected:
 
     SOCKET socket_handle;
 
-    std::mutex receivedTelegramsGuard;
-    std::queue< std::vector<uint8_t> > receivedTelegrams;
+    std::vector<int> availableChannels;
 
-    std::timed_mutex telegramsAvailableMutex;
+    std::unordered_map<int, std::shared_ptr<ThreadsafeQueue>> queuesForChannels;
 
     bool receiving_worker_is_running;
     std::thread *receivingWorker;
@@ -192,7 +174,7 @@ protected:
      *
      *  If the connection was disconnected, an empty array is returned.
      */
-    std::vector<uint8_t> readTelegramFromSocket();
+    std::tuple<int, std::vector<uint8_t>> readTelegramFromSocket();
 
     /** Helper function getting the current time in milliseconds. */
     std::chrono::milliseconds getCurrentTimeInMilliseconds() const;

@@ -1,5 +1,5 @@
 # Thales-Remote-Cpp
-Thales-Remote-Python is a Python extension which uses the Zahner [Remote2](http://zahner.de/pdf/Remote2.pdf) to control [Zahner Zennium Potentiostats](http://zahner.de/products/electrochemical-workstation.html).  
+Thales-Remote-Python is a Python extension which uses the Zahner [Remote2](https://doc.zahner.de/Remote.pdf) to control [Zahner Zennium Potentiostats](https://zahner.de/products#potentiostats).  
 It was developed to **easily integrate** Zahner Zennium Potentiostats into Python scripts for more **complex measurement** tasks and for **automation purposes**.
 
 The measurement methods **EIS**, **IE**, **CV** and **DC sequences** are supported. Also constant current or constant voltage can be output and current and voltage can be measured. Single frequency impedance measurement is also possible.
@@ -23,29 +23,29 @@ The examples were created with cmake, this can be used as a template.
  */
 ZenniumConnection ThalesRemoteConnection;
 ThalesRemoteConnection.connectToTerm("localhost", "ScriptRemote");
-ThalesRemoteScriptWrapper ZahnerZennium(&ThalesRemoteConnection);
-ZahnerZennium.forceThalesIntoRemoteScript();
+ThalesRemoteScriptWrapper zahnerZennium(&ThalesRemoteConnection);
+zahnerZennium.forceThalesIntoRemoteScript();
 
 /*
  * Read the measured voltage and current.
  */
- std::cout << "Potential " << ZahnerZennium.getPotential() << std::endl;
- std::cout << "Current " << ZahnerZennium.getCurrent()   << std::endl;
+ std::cout << "Potential " << zahnerZennium.getPotential() << std::endl;
+ std::cout << "Current " << zahnerZennium.getCurrent()   << std::endl;
 
 /*
  * Single frequency impedance measurement at 1 V DC and 2 kHz
  * with 10mV amplitude for 3 periods.
  */
-ZahnerZennium.setPotentiostatMode(PotentiostatMode::POTENTIOSTATIC);
-ZahnerZennium.setPotential(0);
+zahnerZennium.setPotentiostatMode(PotentiostatMode::POTENTIOSTATIC);
+zahnerZennium.setPotential(0);
     
-ZahnerZennium.setFrequency(2000);
-ZahnerZennium.setAmplitude(10e-3);
-ZahnerZennium.setNumberOfPeriods(3);
+zahnerZennium.setFrequency(2000);
+zahnerZennium.setAmplitude(10e-3);
+zahnerZennium.setNumberOfPeriods(3);
 
-ZahnerZennium.enablePotentiostat();
-ZahnerZennium.getImpedance();
-ZahnerZennium.disablePotentiostat();
+zahnerZennium.enablePotentiostat();
+zahnerZennium.getImpedance();
+zahnerZennium.disablePotentiostat();
 ```
 
 # 📖 Examples
@@ -65,8 +65,14 @@ The setter and getter in C++ and Python are always named the same and behave the
 
 * Switch potentiostat on or off
 * Setting potentiostat potentiostatic or galvanostatic
-* Measurement of an impedance spectrum (EIS) on a stack with single cells connected to the [PAD4](http://zahner.de/products/addon-cards/pad4.html) card.
-* Configuration of the [PAD4](http://zahner.de/products/addon-cards/pad4.html) card
+* Measurement of an impedance spectrum (EIS) on a stack with single cells connected to the [PAD4](https://zahner.de/products-details/addon-cards/pad4) card.
+* Configuration of the [PAD4](https://zahner.de/products-details/addon-cards/pad4) card
+
+### [FileExchangeExample](FileExchangeExample/main.cpp)
+
+* Measurement of an impedance spectrum
+* Monitor activity with the HeartBeat
+* **Acquiring the measurement files with C++ via network**
 
 # 📧 Haveing a question?
 Send an <a href="mailto:support@zahner.de?subject=Thales-Remote-Python Question&body=Your Message">e-mail</a> to our support team.

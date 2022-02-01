@@ -4,7 +4,7 @@
  *  / /_/ _ `/ _ \/ _ \/ -_) __/___/ -_) / -_)  '_/ __/ __/ /  '_/
  * /___/\_,_/_//_/_//_/\__/_/      \__/_/\__/_/\_\\__/_/ /_/_/\_\
  *
- * Copyright 2019 ZAHNER-elektrik I. Zahner-Schiller GmbH & Co. KG
+ * Copyright 2022 ZAHNER-elektrik I. Zahner-Schiller GmbH & Co. KG
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -33,6 +33,13 @@ ZenniumConnection::ZenniumConnection() :
     receiving_worker_is_running(false),
     receivingWorker(nullptr)
 {
+    this->availableChannels = {2,128,129,130,131,132};
+
+    for(int channel : this->availableChannels)
+    {
+        std::shared_ptr<ThreadsafeQueue> p = std::make_shared<ThreadsafeQueue>();
+        this->queuesForChannels.insert({channel, p});
+    }
 
 #ifdef _WIN32
     WSADATA wsaData;
@@ -156,28 +163,13 @@ bool ZenniumConnection::isConnectedToTerm() const
 
 }
 
-void ZenniumConnection::sendTelegram(std::string payload, char message_type)
+void ZenniumConnection::sendTelegram(std::string payload, int message_type)
 {
-
-    std::vector<char> packet;
-    uint16_t payload_length = static_cast<uint16_t>(payload.size());
-
-    packet.reserve(payload_length + 3);
-    packet.push_back(reinterpret_cast<char *>(&payload_length)[0]);
-    packet.push_back(reinterpret_cast<char *>(&payload_length)[1]);
-    packet.push_back(message_type);
-
-    std::copy(payload.begin(), payload.end(), std::back_inserter(packet));
-
-    int status = send(this->socket_handle, reinterpret_cast<char *>(packet.data()), static_cast<int>(packet.size()), 0);
-
-    if(status == -1)
-    {
-        throw TermConnectionError("Socket error during data transmission.");
-    }
+    std::vector<unsigned char> bytes(payload.begin(), payload.end());
+    this->sendTelegram(bytes, message_type);
 }
 
-void ZenniumConnection::sendTelegram(std::vector<unsigned char> payload, unsigned char message_type)
+void ZenniumConnection::sendTelegram(std::vector<unsigned char> payload, int message_type)
 {
 
     std::vector<unsigned char> packet;
@@ -198,127 +190,43 @@ void ZenniumConnection::sendTelegram(std::vector<unsigned char> payload, unsigne
     }
 }
 
+std::vector<uint8_t> ZenniumConnection::waitForTelegram(int message_type, const std::chrono::duration<int, std::milli> timeout) {
 
-std::string ZenniumConnection::waitForStringTelegram()
-{
+    auto receivedTelegram = this->queuesForChannels[message_type]->get(true, timeout);
 
-    while (this->telegramReceived() == false)
-    {
-        this->telegramsAvailableMutex.lock();
-    }
-
-    return this->receiveStringTelegram();
-}
-
-std::vector<uint8_t> ZenniumConnection::waitForTelegram()
-{
-
-    while (this->telegramReceived() == false)
-    {
-        this->telegramsAvailableMutex.lock();
-    }
-
-    return this->receiveTelegram();
-}
-
-std::vector<uint8_t> ZenniumConnection::waitForTelegram(const std::chrono::duration<int, std::milli> timeout) {
-
-    std::chrono::milliseconds startTime = this->getCurrentTimeInMilliseconds();
-    std::chrono::duration<int, std::milli> remainingTime;
-    std::chrono::duration<int, std::milli> elapsedTime;
-
-    while (this->telegramReceived() == false)
-    {
-        elapsedTime = this->getCurrentTimeInMilliseconds() - startTime;
-        if (elapsedTime > timeout)
-        {
-            return std::vector<uint8_t>();
-        }
-        remainingTime = timeout - elapsedTime;
-
-        this->telegramsAvailableMutex.try_lock_for(remainingTime);
-    }
-
-    return this->receiveTelegram();
-}
-
-std::string ZenniumConnection::waitForStringTelegram(const std::chrono::duration<int, std::milli> timeout)
-{
-
-    std::vector<uint8_t> telegram = waitForTelegram(timeout);
-
-    return std::string(reinterpret_cast<char *>(telegram.data()), telegram.size());
-}
-
-std::string ZenniumConnection::receiveStringTelegram()
-{
-
-    std::vector<uint8_t> telegram = this->receiveTelegram();
-
-    return std::string(reinterpret_cast<char *>(telegram.data()), telegram.size());
-}
-
-std::vector<uint8_t> ZenniumConnection::receiveTelegram()
-{
-
-    std::vector<uint8_t> receivedTelegram;
-
-    // Making sure we won't read from the queue while the thread might be
-    // in the process of putting in a new telegram.
-    this->receivedTelegramsGuard.lock();
-
-    if (this->receivedTelegrams.empty() == false)
-    {
-        receivedTelegram = this->receivedTelegrams.front();
-        this->receivedTelegrams.pop();
-    }
-
-    this->receivedTelegramsGuard.unlock();
 
     if(receivedTelegram.size() == 0)
     {
         throw TermConnectionError("Socket error during data reception.");
     }
-
     return receivedTelegram;
 }
 
-std::string ZenniumConnection::sendStringAndWaitForReplyString(std::string payload, char message_type)
+std::string ZenniumConnection::waitForStringTelegram(int message_type, const std::chrono::duration<int, std::milli> timeout)
 {
 
-    // This is just a convenience method.
+    std::vector<uint8_t> telegram = waitForTelegram(message_type, timeout);
+
+    return std::string(reinterpret_cast<char *>(telegram.data()), telegram.size());
+}
+
+std::string ZenniumConnection::sendStringAndWaitForReplyString(std::string payload, int message_type, const std::chrono::duration<int, std::milli> timeout)
+{
+    return this->sendStringAndWaitForReplyString(payload,message_type,timeout,message_type);
+}
+
+std::string ZenniumConnection::sendStringAndWaitForReplyString(std::string payload, int message_type, const std::chrono::duration<int, std::milli> timeout, int answer_message_type)
+{
     this->sendTelegram(payload, message_type);
-    return this->waitForStringTelegram();
+    return this->waitForStringTelegram(answer_message_type, timeout);
 }
 
-bool ZenniumConnection::telegramReceived()
+std::string ZenniumConnection::getConnectionName()
 {
-
-    bool telegramsAvailable = false;
-
-    this->receivedTelegramsGuard.lock();
-
-    telegramsAvailable = !this->receivedTelegrams.empty();
-
-    this->receivedTelegramsGuard.unlock();
-
-    return telegramsAvailable;
+    return this->connectionName;
 }
 
-void ZenniumConnection::clearIncomingTelegramQueue()
-{
-
-    this->receivedTelegramsGuard.lock();
-
-    while(this->receivedTelegrams.empty() == false)
-    {
-        this->receivedTelegrams.pop();
-    }
-
-    this->receivedTelegramsGuard.unlock();
-}
-
-std::vector<uint8_t> ZenniumConnection::readTelegramFromSocket()
+std::tuple<int, std::vector<uint8_t>> ZenniumConnection::readTelegramFromSocket()
 {
     bool connectionInterrupted = false;
     std::vector<uint8_t> incoming_packet;
@@ -339,7 +247,7 @@ std::vector<uint8_t> ZenniumConnection::readTelegramFromSocket()
 
         if (received_bytes == 0) {
 
-            return std::vector<uint8_t>();
+            return {-1,std::vector<uint8_t>()};
         } else if (received_bytes == -1) {
 
             connectionInterrupted = true;
@@ -365,7 +273,7 @@ std::vector<uint8_t> ZenniumConnection::readTelegramFromSocket()
 
             if (received_bytes == 0)
             {
-                return std::vector<uint8_t>();
+                return {-1,std::vector<uint8_t>()};
             } else if (received_bytes == -1)
             {
                 connectionInterrupted = true;
@@ -383,27 +291,29 @@ std::vector<uint8_t> ZenniumConnection::readTelegramFromSocket()
     {
         incoming_packet.clear();
     }
-    return incoming_packet;
+    return {static_cast<unsigned char>(header_bytes[2]),incoming_packet};
 }
 
 void ZenniumConnection::telegramListenerJob()
 {
     do {
-        std::vector<uint8_t> telegram = readTelegramFromSocket();
+        auto telegram = readTelegramFromSocket();
 
-        /*
-         * To free the waiting receive threads, the Empty Telegram is put into the queue.
-         * The receive thread is then terminated.
-         */
-
-        this->receivedTelegramsGuard.lock();
-        this->receivedTelegrams.push(telegram);
-        this->telegramsAvailableMutex.unlock();
-        this->receivedTelegramsGuard.unlock();
-
-        if (telegram.size() == 0)
+        if (std::get<1>(telegram).size() > 0 && std::find(availableChannels.begin(), availableChannels.end(), std::get<0>(telegram)) != availableChannels.end())
         {
-
+            this->queuesForChannels[std::get<0>(telegram)]->put(std::get<1>(telegram));
+        }
+        else if(std::get<0>(telegram) == -1)
+        {
+            /*
+             * Error:
+             * To free the waiting receive threads, the Empty Telegram is put into the queue.
+             * The receive thread is then terminated.
+             */
+            for(int channel : availableChannels)
+            {
+                this->queuesForChannels[channel]->put(std::vector<uint8_t>());
+            }
             this->receiving_worker_is_running = false;
         }
 
@@ -414,19 +324,15 @@ void ZenniumConnection::startTelegramListener()
 {
 
     this->receiving_worker_is_running = true;
-    this->telegramsAvailableMutex.lock();
     this->receivingWorker = new std::thread(&ZenniumConnection::telegramListenerJob, this);
 }
 
 void ZenniumConnection::stopTelegramListener()
 {
-
     shutdown(this->socket_handle, SHUT_RD);
 
     this->receiving_worker_is_running = false;
     this->receivingWorker->join();
-
-    this->telegramsAvailableMutex.unlock();
 }
 
 std::chrono::milliseconds ZenniumConnection::getCurrentTimeInMilliseconds() const

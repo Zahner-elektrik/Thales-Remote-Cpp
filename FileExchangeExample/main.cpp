@@ -1,6 +1,35 @@
 #include "thalesremoteconnection.h"
 #include "thalesremotescriptwrapper.h"
 #include "thalesremoteerror.h"
+#include "thalesfileinterface.h"
+
+#include <thread>
+
+bool watchThreadRun = true;
+
+/** Function which is used as thread.
+ *
+ */
+void watchThread()
+{
+    ZenniumConnection zenniumHeartBeatConnection;
+
+    bool connectionSuccessful = zenniumHeartBeatConnection.connectToTerm("localhost", "Watch");
+
+    if (not connectionSuccessful) {
+
+        std::cout << "could not connect to Term" << std::endl;
+        return;
+    }
+
+    ThalesRemoteScriptWrapper zahnerZennium(&zenniumHeartBeatConnection);
+    while (watchThreadRun == true)
+    {
+        std::cout << "Beat count: " << zahnerZennium.getWorkstationHeartBeat() << std::endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    }
+    zenniumHeartBeatConnection.disconnectFromTerm();
+}
 
 int main(int argc, char *argv[]) {
 
@@ -16,7 +45,12 @@ int main(int argc, char *argv[]) {
 
     ThalesRemoteScriptWrapper zahnerZennium(&ZenniumConnection);
 
+    auto watchWorker = new std::thread(&watchThread);
+
     zahnerZennium.forceThalesIntoRemoteScript();
+    zahnerZennium.calibrateOffsets();
+
+    ThalesFileInterface fileInterface("localhost");
 
     /*
      * Measure EIS spectra with a sequential number in the file name that has been specified.
@@ -34,9 +68,9 @@ int main(int argc, char *argv[]) {
     zahnerZennium.setPotentiostatMode(PotentiostatMode::POTENTIOSTATIC);
     zahnerZennium.setAmplitude(50e-3);
     zahnerZennium.setPotential(0);
-    zahnerZennium.setLowerFrequencyLimit(100);
+    zahnerZennium.setLowerFrequencyLimit(500);
     zahnerZennium.setStartFrequency(1000);
-    zahnerZennium.setUpperFrequencyLimit(10000);
+    zahnerZennium.setUpperFrequencyLimit(2000);
     zahnerZennium.setLowerNumberOfPeriods(3);
     zahnerZennium.setLowerStepsPerDecade(5);
     zahnerZennium.setUpperNumberOfPeriods(20);
@@ -64,10 +98,30 @@ int main(int argc, char *argv[]) {
      * If the potentiostat is off before the measurement,
      * the measurement is performed at the OCP.
      */
+
     zahnerZennium.enablePotentiostat();
     zahnerZennium.measureEIS();
+
+    fileInterface.aquireFile(R"(C:\THALES\temp\test1\spectra_cells_0002_ser01.ism)");
+
+    fileInterface.enableSaveReceivedFilesToDisk(R"(C:\THALES\temp\exchange)");
+    fileInterface.enableKeepReceivedFilesInObject();
+    //fileInterface.enableAutomaticFileExchange(true, "*.ism*.isc*.isw");
+    fileInterface.enableAutomaticFileExchange();
+
+    zahnerZennium.measureEIS();
     zahnerZennium.disablePotentiostat();
+
     ZenniumConnection.disconnectFromTerm();
+
+    fileInterface.disableAutomaticFileExchange();
+    std::cout << "Received Files: " << fileInterface.getReceivedFiles().size() << std::endl;
+    fileInterface.deleteReceivedFiles();
+
+    fileInterface.close();
+
+    watchThreadRun = false;
+    watchWorker->join();
 
     std::cout << "finish" << std::endl;
     return 0;
