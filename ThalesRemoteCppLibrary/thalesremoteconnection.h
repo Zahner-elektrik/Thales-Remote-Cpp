@@ -109,7 +109,8 @@ public:
      *
      * \return The last received telegram or an empty string if the timeout was reached or something went wrong.
      */
-    std::string waitForStringTelegram(int message_type = 2, const std::chrono::duration<int, std::milli> timeout = std::chrono::duration<int, std::milli>::max());
+    std::string waitForStringTelegram(int message_type);
+    std::string waitForStringTelegram(int message_type, const std::chrono::duration<int, std::milli> timeout);
 
     /** Block maximal timeout milliseconds while waiting for an incoming telegram.
      *
@@ -117,7 +118,8 @@ public:
      *
      * \return The last received telegram or an empty string if the timeout was reached or something went wrong.
      */
-    std::vector<uint8_t> waitForTelegram(int message_type = 2, const std::chrono::duration<int, std::milli> timeout = std::chrono::duration<int, std::milli>::max());
+    std::vector<uint8_t> waitForTelegram(int message_type);
+    std::vector<uint8_t> waitForTelegram(int message_type, const std::chrono::duration<int, std::milli> timeout);
 
     /** Immediately return the last received telegram.
      *
@@ -139,15 +141,22 @@ public:
      * \return The last received telegram or an empty string if someting went wrong.
      */
     std::string sendStringAndWaitForReplyString(std::string payload,
-                                                int message_type = 2,
-                                                const std::chrono::duration<int, std::milli> timeout = std::chrono::duration<int, std::milli>::max());
+                                                int message_type);
+    std::string sendStringAndWaitForReplyString(std::string payload,
+                                                int message_type,
+                                                const std::chrono::duration<int, std::milli> timeout);
     std::string sendStringAndWaitForReplyString(std::string payload,
                                                 int message_type,
                                                 const std::chrono::duration<int, std::milli> timeout,
                                                 int answer_message_typ);
 
     std::string getConnectionName();
+
+    void setTimeout(const std::chrono::duration<int, std::milli> timeout);
+    std::chrono::duration<int, std::milli> getTimeout();
+
 protected:
+    std::chrono::duration<int, std::milli> defaultTimeout;
 
     static const int term_port = 260;
     std::string connectionName;

@@ -37,7 +37,17 @@ ThalesFileInterface::ThalesFileInterface(std::string address, std::string connec
     this->remoteConnection->connectToTerm(address, connectionName);
     this->filesToSkip.push_back("lastshot.ism");
     this->saveReceivedFilesToDisk = false;
-    this->keepReceivedFilesInObject = true;
+    this->keepReceivedFilesInObject = false;
+    this->receiving_worker_is_running = false;
+}
+
+ThalesFileInterface::ThalesFileInterface(ZenniumConnection* connection)
+{
+    this->connectionName = connection->getConnectionName();
+    this->remoteConnection = connection;
+    this->filesToSkip.push_back("lastshot.ism");
+    this->saveReceivedFilesToDisk = false;
+    this->keepReceivedFilesInObject = false;
     this->receiving_worker_is_running = false;
 }
 

@@ -1,5 +1,5 @@
 # Thales-Remote-Cpp
-Thales-Remote-Python is a Python extension which uses the Zahner [Remote2](https://doc.zahner.de/Remote.pdf) to control [Zahner Zennium Potentiostats](https://zahner.de/products#potentiostats).  
+Thales-Remote-Cpp is a C++ extension which uses the Zahner [Remote2](https://doc.zahner.de/Remote.pdf) to control [Zahner Zennium Potentiostats](https://zahner.de/products#potentiostats).  
 It was developed to **easily integrate** Zahner Zennium Potentiostats into Python scripts for more **complex measurement** tasks and for **automation purposes**.
 
 The measurement methods **EIS**, **IE**, **CV** and **DC sequences** are supported. Also constant current or constant voltage can be output and current and voltage can be measured. Single frequency impedance measurement is also possible.
@@ -74,6 +74,24 @@ The setter and getter in C++ and Python are always named the same and behave the
 * Monitor activity with the HeartBeat
 * **Acquiring the measurement files with C++ via network**
 
+### [ExternalDeviceFRA](ExternalDeviceFRA/main.cpp)
+
+* Configure FRA Probe measurement
+* Measure EIS with FRA Probe
+
+### [EisDLLExample](EisDLLExample/main.cpp)
+
+* Switch potentiostat on or off
+* Setting potentiostat potentiostatic or galvanostatic
+* Setting output potential or current
+* Read potential and current
+* Measure impedance
+
+This example uses a DLL which was created from the library. The DLL is loaded from the C++ code in the example with WinAPI at runtime. But in C++ the library itself should be used this is easier.
+The DLL and the source and header files of the DLL generated.cpp and generated.h are located in the subfolder [ThalesRemoteExternalLibrary](ThalesRemoteExternalLibrary).
+The DLL is built with CMAKE and MinGW and does not contain any debug information. The repository contains all files to generate the DLL from the generated.cpp and generated.h files.
+
+
 # 📧 Haveing a question?
 Send an <a href="mailto:support@zahner.de?subject=Thales-Remote-Python Question&body=Your Message">e-mail</a> to our support team.
 
@@ -81,4 +99,4 @@ Send an <a href="mailto:support@zahner.de?subject=Thales-Remote-Python Question&
 Feel free to **create a new issue** with a respective title and description on the the [Thales-Remote-Cpp](https://github.com/Zahner-elektrik/Thales-Remote-Cpp/issues) repository. If you already found a solution to your problem, **we would love to review your pull request**!
 
 # ✅ Requirements
-The library was developed and tested with C++17 without additional libraries.
+The library was developed and tested with C++20 without additional libraries.

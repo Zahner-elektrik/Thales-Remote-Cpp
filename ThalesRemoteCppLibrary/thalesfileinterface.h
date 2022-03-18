@@ -59,6 +59,7 @@ public:
      * \param connectionName The name of the connection default FileExchange. But can also be freely assigned.
      */
     ThalesFileInterface(std::string address = "localhost", std::string connectionName = "FileExchange");
+    ThalesFileInterface(ZenniumConnection* connection);
 
     /** Close the file interface.
     *

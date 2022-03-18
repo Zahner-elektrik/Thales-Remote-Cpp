@@ -29,6 +29,7 @@
 
 ZenniumConnection::ZenniumConnection() :
 
+    defaultTimeout(std::chrono::duration<int, std::milli>::max()),
     socket_handle(INVALID_SOCKET),
     receiving_worker_is_running(false),
     receivingWorker(nullptr)
@@ -190,6 +191,11 @@ void ZenniumConnection::sendTelegram(std::vector<unsigned char> payload, int mes
     }
 }
 
+std::vector<uint8_t> ZenniumConnection::waitForTelegram(int message_type)
+{
+    return this->waitForTelegram(message_type, this->defaultTimeout);
+}
+
 std::vector<uint8_t> ZenniumConnection::waitForTelegram(int message_type, const std::chrono::duration<int, std::milli> timeout) {
 
     auto receivedTelegram = this->queuesForChannels[message_type]->get(true, timeout);
@@ -197,9 +203,14 @@ std::vector<uint8_t> ZenniumConnection::waitForTelegram(int message_type, const 
 
     if(receivedTelegram.size() == 0)
     {
-        throw TermConnectionError("Socket error during data reception.");
+        throw TermConnectionError("Empty telegram received.");
     }
     return receivedTelegram;
+}
+
+std::string ZenniumConnection::waitForStringTelegram(int message_type)
+{
+    return this->waitForStringTelegram(message_type, this->defaultTimeout);
 }
 
 std::string ZenniumConnection::waitForStringTelegram(int message_type, const std::chrono::duration<int, std::milli> timeout)
@@ -208,6 +219,11 @@ std::string ZenniumConnection::waitForStringTelegram(int message_type, const std
     std::vector<uint8_t> telegram = waitForTelegram(message_type, timeout);
 
     return std::string(reinterpret_cast<char *>(telegram.data()), telegram.size());
+}
+
+std::string ZenniumConnection::sendStringAndWaitForReplyString(std::string payload, int message_type)
+{
+    return this->sendStringAndWaitForReplyString(payload, message_type, this->defaultTimeout, message_type);
 }
 
 std::string ZenniumConnection::sendStringAndWaitForReplyString(std::string payload, int message_type, const std::chrono::duration<int, std::milli> timeout)
@@ -224,6 +240,16 @@ std::string ZenniumConnection::sendStringAndWaitForReplyString(std::string paylo
 std::string ZenniumConnection::getConnectionName()
 {
     return this->connectionName;
+}
+
+void ZenniumConnection::setTimeout(const std::chrono::duration<int, std::milli> timeout)
+{
+    this->defaultTimeout = timeout;
+}
+
+std::chrono::duration<int, std::milli> ZenniumConnection::getTimeout()
+{
+    return this->defaultTimeout;
 }
 
 std::tuple<int, std::vector<uint8_t>> ZenniumConnection::readTelegramFromSocket()

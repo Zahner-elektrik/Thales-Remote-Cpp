@@ -100,6 +100,16 @@ public:
      */
     std::string forceThalesIntoRemoteScript();
 
+    /** Read the HeartBeat from the Term.
+     *
+     * Query the HeartBeat time from the Term software for the workstation and the Thales software accordingly.
+     * The complete documentation can be found in the DevCli-Manual Page 8.
+     *
+     * The timeout is not set by default and the command blocks indefinitely.
+     * However, a time in seconds can optionally be specified for the timeout. When the timeout expires, an exception is thrown by the socket.
+     *
+     * \return The HeartBeat time in milli seconds.
+     */
     int getWorkstationHeartBeat();
 
     /** Read the measured current from the device.
@@ -1038,6 +1048,100 @@ public:
      * \return The response string from the device.
      */
     std::string runSequence();
+
+    /** Enables the use of the FRA probe.
+     *
+     *  With the FRA Probe, external power potentiostats, signal generators, sources, sinks can be
+     *  controlled analog for impedance measurements.
+     *
+     *  Product Page: https://www.zahner.de/products-details/probes/fra-probe
+     *  Manual: https://www.zahner.de/media-files/downloads_pdf/files/m_fra.pdf
+     *
+     *  Before this function is called, the analog interface to the external interface must be initialized
+     *  with the correct factors. It may be necessary to use + or - as sign, this must be tested to ensure
+     *  that potentiostatic and galvanostatic function correctly.
+     *
+     *  For example, if the device has 100 A output current and the analog signal input range of the
+     *  device is 5 V, then the current gain is 100/5.
+     *
+     * \param  enabled If state = true FRA mode is enabled.
+     *
+     * \return The response string from the device.
+     */
+    std::string enableFraMode(bool enabled = true);
+    std::string disableFraMode();
+
+    /** Sets the input voltage gain.
+     *
+     * \param  value The value to set.
+     *
+     * \return The response string from the device.
+     */
+    std::string setFraVoltageInputGain(double value);
+
+    /** Sets the output voltage gain.
+     *
+     * \param  value The value to set.
+     *
+     * \return The response string from the device.
+     */
+    std::string setFraVoltageOutputGain(double value);
+
+    /** Sets the minimum voltage.
+     *
+     * \param  value The value to set.
+     *
+     * \return The response string from the device.
+     */
+    std::string setFraVoltageMinimum(double value);
+
+    /** Sets the maximum voltage.
+     *
+     * \param  value The value to set.
+     *
+     * \return The response string from the device.
+     */
+    std::string setFraVoltageMaximum(double value);
+
+    /** Sets the input current gain
+     *
+     * \param  value The value to set.
+     *
+     * \return The response string from the device.
+     */
+    std::string setFraCurrentInputGain(double value);
+
+    /** Sets the output current gain
+     *
+     * \param  value The value to set.
+     *
+     * \return The response string from the device.
+     */
+    std::string setFraCurrentOutputGain(double value);
+
+    /** Sets the minimum current.
+     *
+     * \param  value The value to set.
+     *
+     * \return The response string from the device.
+     */
+    std::string setFraCurrentMinimum(double value);
+
+    /** Sets the maximum current.
+     *
+     * \param  value The value to set.
+     *
+     * \return The response string from the device.
+     */
+    std::string setFraCurrentMaximum(double value);
+
+    /** Set the coupling of the FRA mode.
+     *
+     * \param  potentiostatMode The coupling of the FRA mode.
+     *
+     * \return The response string from the device.
+     */
+    std::string setFraPotentiostatMode(PotentiostatMode potentiostatMode);
 
 
 

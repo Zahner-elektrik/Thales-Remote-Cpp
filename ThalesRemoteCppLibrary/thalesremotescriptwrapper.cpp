@@ -821,6 +821,75 @@ std::string ThalesRemoteScriptWrapper::runSequence()
     return reply;
 }
 
+std::string ThalesRemoteScriptWrapper::enableFraMode(bool enabled)
+{
+    return this->setValue("FRA", enabled);
+}
+
+std::string ThalesRemoteScriptWrapper::disableFraMode()
+{
+    return this->enableFraMode(false);
+}
+
+std::string ThalesRemoteScriptWrapper::setFraVoltageInputGain(double value)
+{
+    return this->setValue("FRA_POT_IN",value);
+}
+
+std::string ThalesRemoteScriptWrapper::setFraVoltageOutputGain(double value)
+{
+    return this->setValue("FRA_POT_OUT",value);
+}
+
+std::string ThalesRemoteScriptWrapper::setFraVoltageMinimum(double value)
+{
+    return this->setValue("FRA_POT_MIN",value);
+}
+
+std::string ThalesRemoteScriptWrapper::setFraVoltageMaximum(double value)
+{
+    return this->setValue("FRA_POT_MAX",value);
+}
+
+std::string ThalesRemoteScriptWrapper::setFraCurrentInputGain(double value)
+{
+    return this->setValue("FRA_CUR_IN",value);
+}
+
+std::string ThalesRemoteScriptWrapper::setFraCurrentOutputGain(double value)
+{
+    return this->setValue("FRA_CUR_OUT",value);
+}
+
+std::string ThalesRemoteScriptWrapper::setFraCurrentMinimum(double value)
+{
+    return this->setValue("FRA_CUR_MIN",value);
+}
+
+std::string ThalesRemoteScriptWrapper::setFraCurrentMaximum(double value)
+{
+    return this->setValue("FRA_CUR_MAX",value);
+}
+
+std::string ThalesRemoteScriptWrapper::setFraPotentiostatMode(PotentiostatMode potentiostatMode)
+{
+    std::string command;
+
+    switch(potentiostatMode) {
+    case PotentiostatMode::POTENTIOSTATIC:
+        command = "FRAGAL=0";
+        break;
+    case PotentiostatMode::GALVANOSTATIC:
+        command = "FRAGAL=1";
+        break;
+    default:
+        return "error";
+        break;
+    }
+
+    return this->executeRemoteCommand(command);
+}
+
 
 /*
  * protected/internal Methods
@@ -860,7 +929,7 @@ std::string ThalesRemoteScriptWrapper::setValue(std::string name, bool value)
 std::string ThalesRemoteScriptWrapper::setValue(std::string name, double value)
 {
 
-    std::string reply = this->executeRemoteCommand(name + "=" + to_string_with_precision(value,16));
+    std::string reply = this->executeRemoteCommand(name + "=" + to_string_with_precision(value,10));
 
     if(reply.find("ERROR") != std::string::npos)
     {
