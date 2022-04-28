@@ -46,6 +46,10 @@
 #define MSG_MORE 0
 #define SHUT_RD 0
 
+#ifdef _MSC_VER
+#define NOMINMAX //Necessary for MSVC Compiler.
+#endif
+
 #include <ws2tcpip.h>
 #include <windows.h>
 
