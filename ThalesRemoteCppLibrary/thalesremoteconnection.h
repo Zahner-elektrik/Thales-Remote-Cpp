@@ -107,22 +107,32 @@ public:
      */
     void sendTelegram(std::vector<unsigned char> payload, int message_type);
 
+    std::string waitForStringTelegram(int message_type);
     /** Block maximal timeout milliseconds while waiting for an incoming telegram.
      *
      * If some Telegram has already arrived it will just return the last one from the queue.
      *
+     * \param  message_type Used internally by the DevCli dll. Depends on context. Most of the time 2.
+     * \param  answer_message_typ Message type which is used for the response. Mostly like the send number 2.
+     *          If the overloaded method is used without this parameter, then the send number is used.
+     * \param  timeout Timeout in milliseconds for waiting for the response.
+     *          If an overloaded method without timeout is used, then the default timeout is used.
+     *
      * \return The last received telegram or an empty string if the timeout was reached or something went wrong.
      */
-    std::string waitForStringTelegram(int message_type);
     std::string waitForStringTelegram(int message_type, const std::chrono::duration<int, std::milli> timeout);
 
+    std::vector<uint8_t> waitForTelegram(int message_type);
     /** Block maximal timeout milliseconds while waiting for an incoming telegram.
      *
      * If some Telegram has already arrived it will just return the last one from the queue.
      *
+     * \param  message_type Used internally by the DevCli dll. Depends on context. Most of the time 2.
+     * \param  timeout Timeout in milliseconds for waiting for the response.
+     *          If an overloaded method without timeout is used, then the default timeout is used.
+     *
      * \return The last received telegram or an empty string if the timeout was reached or something went wrong.
      */
-    std::vector<uint8_t> waitForTelegram(int message_type);
     std::vector<uint8_t> waitForTelegram(int message_type, const std::chrono::duration<int, std::milli> timeout);
 
     /** Immediately return the last received telegram.
@@ -137,26 +147,53 @@ public:
      */
     std::vector<uint8_t> receiveTelegram();
 
-    /** Convenience function: Send a telegram and wait for it's reply.
-     *
-     * \param  payload The actual data which is being sent to Term.
-     * \param  message_type Used internally by the DevCli dll. Depends on context. Most of the time 2.
-     *
-     * \return The last received telegram or an empty string if someting went wrong.
-     */
     std::string sendStringAndWaitForReplyString(std::string payload,
                                                 int message_type);
     std::string sendStringAndWaitForReplyString(std::string payload,
                                                 int message_type,
                                                 const std::chrono::duration<int, std::milli> timeout);
+    /** Convenience function: Send a telegram and wait for it's reply.
+     *
+     * \param  payload The actual data which is being sent to Term.
+     * \param  message_type Used internally by the DevCli dll. Depends on context. Most of the time 2.
+     * \param  timeout Timeout in milliseconds for waiting for the response.
+     *          If an overloaded method without timeout is used, then the default timeout is used.
+     * \param  answer_message_typ Message type which is used for the response. Mostly like the send number 2.
+     *          If the overloaded method is used without this parameter, then the send number is used.
+     *
+     * \return The last received telegram or an empty string if someting went wrong.
+     */
     std::string sendStringAndWaitForReplyString(std::string payload,
                                                 int message_type,
                                                 const std::chrono::duration<int, std::milli> timeout,
                                                 int answer_message_typ);
 
+    /** Get the used name of the connection.
+     *
+     * \return The name of the connection.
+     */
     std::string getConnectionName();
 
+    /** Set the default timeout.
+     *
+     *  If no default timeout was passed to the methods, then the default timeout used with this method is used.
+     *  If this method has never been called the timeout is std::chrono::duration<int, std::milli>::max().
+     *
+     *  When the timout time has expired the wait function for the response from the Term Software is exited and a TermConnectionError exception is thrown.
+     *
+     * \param  timeout The default timeout.
+     */
     void setTimeout(const std::chrono::duration<int, std::milli> timeout);
+
+    /** Get the timout time.
+     *
+     *  If no default timeout was passed to the methods, then the default timeout used with this method is used.
+     *  If this method has never been called the timeout is std::chrono::duration<int, std::milli>::max().
+     *
+     *  When the timout time has expired the wait function for the response from the Term Software is exited and a TermConnectionError exception is thrown.
+     *
+     * \return The set timout.
+     */
     std::chrono::duration<int, std::milli> getTimeout();
 
 protected:
