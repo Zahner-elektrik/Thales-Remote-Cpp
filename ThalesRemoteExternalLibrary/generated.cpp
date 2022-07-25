@@ -40,7 +40,7 @@ __declspec(dllexport) bool __stdcall disconnectFromTerm(ZenniumConnection* handl
     {
         zenniumConnections.at(handle)->disconnectFromTerm();
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -53,7 +53,7 @@ __declspec(dllexport) bool __stdcall connectToTerm(ZenniumConnection* handle, ch
     try
     {
         return zenniumConnections.at(handle)->connectToTerm(std::string(address), std::string(connectionName));
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -117,7 +117,7 @@ __declspec(dllexport) bool __stdcall enableAutomaticFileExchange(ThalesFileInter
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -136,7 +136,7 @@ __declspec(dllexport) bool __stdcall disableAutomaticFileExchange(ThalesFileInte
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -150,7 +150,7 @@ __declspec(dllexport) bool __stdcall appendFilesToSkip(ThalesFileInterface* hand
     {
         fileInterfaces.at(handle)->appendFilesToSkip(std::string(filename));
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -164,7 +164,7 @@ __declspec(dllexport) bool __stdcall setSavePath(ThalesFileInterface* handle, ch
     {
         fileInterfaces.at(handle)->setSavePath(std::string(path));
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -178,7 +178,7 @@ __declspec(dllexport) bool __stdcall enableSaveReceivedFilesToDisk(ThalesFileInt
     {
         fileInterfaces.at(handle)->enableSaveReceivedFilesToDisk(std::string(path), enable);
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -192,7 +192,7 @@ __declspec(dllexport) bool __stdcall disableSaveReceivedFilesToDisk(ThalesFileIn
     {
         fileInterfaces.at(handle)->disableSaveReceivedFilesToDisk();
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -202,164 +202,164 @@ __declspec(dllexport) bool __stdcall disableSaveReceivedFilesToDisk(ThalesFileIn
 
 
 
-PotentiostatMode stringToPotentiostatMode(std::string string)
-{
-    if(string == "")
+    PotentiostatMode stringToPotentiostatMode(std::string string)
     {
-        throw ThalesRemoteError("enum member does not exist.");
-    }
-
-    else if(string == "POTENTIOSTATIC")
-    {
-        return PotentiostatMode::POTENTIOSTATIC;
+        if(string == "")
+        {
+            throw ThalesRemoteError("enum member does not exist.");
+        }
+        
+        else if(string == "POTENTIOSTATIC")
+        {
+            return PotentiostatMode::POTENTIOSTATIC;
+        }
+    
+        else if(string == "GALVANOSTATIC")
+        {
+            return PotentiostatMode::GALVANOSTATIC;
+        }
+    
+        else if(string == "PSEUDOGALVANOSTATIC")
+        {
+            return PotentiostatMode::PSEUDOGALVANOSTATIC;
+        }
+    
+        else
+        {
+            throw ThalesRemoteError("enum member does not exist.");
+        }
     }
     
-    else if(string == "GALVANOSTATIC")
+    ScanStrategy stringToScanStrategy(std::string string)
     {
-        return PotentiostatMode::GALVANOSTATIC;
+        if(string == "")
+        {
+            throw ThalesRemoteError("enum member does not exist.");
+        }
+        
+        else if(string == "SINGLE_SINE")
+        {
+            return ScanStrategy::SINGLE_SINE;
+        }
+    
+        else if(string == "MULTI_SINE")
+        {
+            return ScanStrategy::MULTI_SINE;
+        }
+    
+        else if(string == "TABLE")
+        {
+            return ScanStrategy::TABLE;
+        }
+    
+        else
+        {
+            throw ThalesRemoteError("enum member does not exist.");
+        }
     }
     
-    else if(string == "PSEUDOGALVANOSTATIC")
+    ScanDirection stringToScanDirection(std::string string)
     {
-        return PotentiostatMode::PSEUDOGALVANOSTATIC;
+        if(string == "")
+        {
+            throw ThalesRemoteError("enum member does not exist.");
+        }
+        
+        else if(string == "START_TO_MIN")
+        {
+            return ScanDirection::START_TO_MIN;
+        }
+    
+        else if(string == "START_TO_MAX")
+        {
+            return ScanDirection::START_TO_MAX;
+        }
+    
+        else
+        {
+            throw ThalesRemoteError("enum member does not exist.");
+        }
     }
     
-    else
+    NamingRule stringToNamingRule(std::string string)
     {
-        throw ThalesRemoteError("enum member does not exist.");
-    }
-}
-
-ScanStrategy stringToScanStrategy(std::string string)
-{
-    if(string == "")
-    {
-        throw ThalesRemoteError("enum member does not exist.");
-    }
-
-    else if(string == "SINGLE_SINE")
-    {
-        return ScanStrategy::SINGLE_SINE;
+        if(string == "")
+        {
+            throw ThalesRemoteError("enum member does not exist.");
+        }
+        
+        else if(string == "DATETIME")
+        {
+            return NamingRule::DATETIME;
+        }
+    
+        else if(string == "COUNTER")
+        {
+            return NamingRule::COUNTER;
+        }
+    
+        else if(string == "INDIVIDUAL")
+        {
+            return NamingRule::INDIVIDUAL;
+        }
+    
+        else
+        {
+            throw ThalesRemoteError("enum member does not exist.");
+        }
     }
     
-    else if(string == "MULTI_SINE")
+    PotentialRelation stringToPotentialRelation(std::string string)
     {
-        return ScanStrategy::MULTI_SINE;
+        if(string == "")
+        {
+            throw ThalesRemoteError("enum member does not exist.");
+        }
+        
+        else if(string == "ABSOLUTE_RELATED")
+        {
+            return PotentialRelation::ABSOLUTE_RELATED;
+        }
+    
+        else if(string == "RELATIVE_RELATED")
+        {
+            return PotentialRelation::RELATIVE_RELATED;
+        }
+    
+        else
+        {
+            throw ThalesRemoteError("enum member does not exist.");
+        }
     }
     
-    else if(string == "TABLE")
+    IESweepMode stringToIESweepMode(std::string string)
     {
-        return ScanStrategy::TABLE;
+        if(string == "")
+        {
+            throw ThalesRemoteError("enum member does not exist.");
+        }
+        
+        else if(string == "STEADYSTATE")
+        {
+            return IESweepMode::STEADYSTATE;
+        }
+    
+        else if(string == "FIXEDSAMPLING")
+        {
+            return IESweepMode::FIXEDSAMPLING;
+        }
+    
+        else if(string == "DYNAMICSCAN")
+        {
+            return IESweepMode::DYNAMICSCAN;
+        }
+    
+        else
+        {
+            throw ThalesRemoteError("enum member does not exist.");
+        }
     }
     
-    else
-    {
-        throw ThalesRemoteError("enum member does not exist.");
-    }
-}
-
-ScanDirection stringToScanDirection(std::string string)
-{
-    if(string == "")
-    {
-        throw ThalesRemoteError("enum member does not exist.");
-    }
-
-    else if(string == "START_TO_MIN")
-    {
-        return ScanDirection::START_TO_MIN;
-    }
-    
-    else if(string == "START_TO_MAX")
-    {
-        return ScanDirection::START_TO_MAX;
-    }
-    
-    else
-    {
-        throw ThalesRemoteError("enum member does not exist.");
-    }
-}
-
-NamingRule stringToNamingRule(std::string string)
-{
-    if(string == "")
-    {
-        throw ThalesRemoteError("enum member does not exist.");
-    }
-
-    else if(string == "DATETIME")
-    {
-        return NamingRule::DATETIME;
-    }
-    
-    else if(string == "COUNTER")
-    {
-        return NamingRule::COUNTER;
-    }
-    
-    else if(string == "INDIVIDUAL")
-    {
-        return NamingRule::INDIVIDUAL;
-    }
-    
-    else
-    {
-        throw ThalesRemoteError("enum member does not exist.");
-    }
-}
-
-PotentialRelation stringToPotentialRelation(std::string string)
-{
-    if(string == "")
-    {
-        throw ThalesRemoteError("enum member does not exist.");
-    }
-
-    else if(string == "ABSOLUTE_RELATED")
-    {
-        return PotentialRelation::ABSOLUTE_RELATED;
-    }
-    
-    else if(string == "RELATIVE_RELATED")
-    {
-        return PotentialRelation::RELATIVE_RELATED;
-    }
-    
-    else
-    {
-        throw ThalesRemoteError("enum member does not exist.");
-    }
-}
-
-IESweepMode stringToIESweepMode(std::string string)
-{
-    if(string == "")
-    {
-        throw ThalesRemoteError("enum member does not exist.");
-    }
-
-    else if(string == "STEADYSTATE")
-    {
-        return IESweepMode::STEADYSTATE;
-    }
-    
-    else if(string == "FIXEDSAMPLING")
-    {
-        return IESweepMode::FIXEDSAMPLING;
-    }
-    
-    else if(string == "DYNAMICSCAN")
-    {
-        return IESweepMode::DYNAMICSCAN;
-    }
-    
-    else
-    {
-        throw ThalesRemoteError("enum member does not exist.");
-    }
-}
-
 __declspec(dllexport) bool __stdcall forceThalesIntoRemoteScript(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen )
 {
     try
@@ -371,7 +371,7 @@ __declspec(dllexport) bool __stdcall forceThalesIntoRemoteScript(ThalesRemoteScr
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -386,7 +386,7 @@ __declspec(dllexport) bool __stdcall getWorkstationHeartBeat(ThalesRemoteScriptW
         auto returned = scriptWrappers.at(handle)->getWorkstationHeartBeat();
         *retval = returned;
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -401,7 +401,7 @@ __declspec(dllexport) bool __stdcall getCurrent(ThalesRemoteScriptWrapper* handl
         auto returned = scriptWrappers.at(handle)->getCurrent();
         *retval = returned;
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -416,7 +416,7 @@ __declspec(dllexport) bool __stdcall getPotential(ThalesRemoteScriptWrapper* han
         auto returned = scriptWrappers.at(handle)->getPotential();
         *retval = returned;
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -435,7 +435,7 @@ __declspec(dllexport) bool __stdcall setCurrent(ThalesRemoteScriptWrapper* handl
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -454,7 +454,7 @@ __declspec(dllexport) bool __stdcall setPotential(ThalesRemoteScriptWrapper* han
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -473,7 +473,7 @@ __declspec(dllexport) bool __stdcall setMaximumShuntIndex(ThalesRemoteScriptWrap
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -492,7 +492,7 @@ __declspec(dllexport) bool __stdcall setMinimumShuntIndex(ThalesRemoteScriptWrap
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -511,7 +511,7 @@ __declspec(dllexport) bool __stdcall setShuntIndex(ThalesRemoteScriptWrapper* ha
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -530,7 +530,7 @@ __declspec(dllexport) bool __stdcall setVoltageRangeIndex(ThalesRemoteScriptWrap
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -549,7 +549,7 @@ __declspec(dllexport) bool __stdcall selectPotentiostat(ThalesRemoteScriptWrappe
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -568,7 +568,7 @@ __declspec(dllexport) bool __stdcall switchToSCPIControl(ThalesRemoteScriptWrapp
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -587,7 +587,7 @@ __declspec(dllexport) bool __stdcall getSerialNumber(ThalesRemoteScriptWrapper* 
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -606,7 +606,7 @@ __declspec(dllexport) bool __stdcall getDeviceName(ThalesRemoteScriptWrapper* ha
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -625,7 +625,7 @@ __declspec(dllexport) bool __stdcall calibrateOffsets(ThalesRemoteScriptWrapper*
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -644,7 +644,7 @@ __declspec(dllexport) bool __stdcall enablePotentiostat(ThalesRemoteScriptWrappe
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -663,7 +663,7 @@ __declspec(dllexport) bool __stdcall disablePotentiostat(ThalesRemoteScriptWrapp
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -682,7 +682,7 @@ __declspec(dllexport) bool __stdcall setPotentiostatMode(ThalesRemoteScriptWrapp
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -701,7 +701,7 @@ __declspec(dllexport) bool __stdcall enableRuleFileUsage(ThalesRemoteScriptWrapp
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -720,7 +720,7 @@ __declspec(dllexport) bool __stdcall disableRuleFileUsage(ThalesRemoteScriptWrap
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -739,7 +739,7 @@ __declspec(dllexport) bool __stdcall setupPAD4(ThalesRemoteScriptWrapper* handle
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -758,7 +758,7 @@ __declspec(dllexport) bool __stdcall enablePAD4(ThalesRemoteScriptWrapper* handl
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -777,7 +777,7 @@ __declspec(dllexport) bool __stdcall disablePAD4(ThalesRemoteScriptWrapper* hand
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -796,7 +796,7 @@ __declspec(dllexport) bool __stdcall readPAD4Setup(ThalesRemoteScriptWrapper* ha
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -815,7 +815,7 @@ __declspec(dllexport) bool __stdcall setFrequency(ThalesRemoteScriptWrapper* han
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -834,7 +834,7 @@ __declspec(dllexport) bool __stdcall setAmplitude(ThalesRemoteScriptWrapper* han
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -853,7 +853,7 @@ __declspec(dllexport) bool __stdcall setNumberOfPeriods(ThalesRemoteScriptWrappe
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -872,7 +872,7 @@ __declspec(dllexport) bool __stdcall setUpperFrequencyLimit(ThalesRemoteScriptWr
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -891,7 +891,7 @@ __declspec(dllexport) bool __stdcall setLowerFrequencyLimit(ThalesRemoteScriptWr
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -910,7 +910,7 @@ __declspec(dllexport) bool __stdcall setStartFrequency(ThalesRemoteScriptWrapper
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -929,7 +929,7 @@ __declspec(dllexport) bool __stdcall setUpperStepsPerDecade(ThalesRemoteScriptWr
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -948,7 +948,7 @@ __declspec(dllexport) bool __stdcall setLowerStepsPerDecade(ThalesRemoteScriptWr
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -967,7 +967,7 @@ __declspec(dllexport) bool __stdcall setUpperNumberOfPeriods(ThalesRemoteScriptW
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -986,7 +986,7 @@ __declspec(dllexport) bool __stdcall setLowerNumberOfPeriods(ThalesRemoteScriptW
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1005,7 +1005,7 @@ __declspec(dllexport) bool __stdcall setScanStrategy(ThalesRemoteScriptWrapper* 
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1024,7 +1024,7 @@ __declspec(dllexport) bool __stdcall setScanDirection(ThalesRemoteScriptWrapper*
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1042,7 +1042,7 @@ __declspec(dllexport) bool __stdcall getImpedance(ThalesRemoteScriptWrapper* han
         *imag = returned.imag();
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1061,7 +1061,7 @@ __declspec(dllexport) bool __stdcall setEISNaming(ThalesRemoteScriptWrapper* han
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1080,7 +1080,7 @@ __declspec(dllexport) bool __stdcall setEISCounter(ThalesRemoteScriptWrapper* ha
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1099,7 +1099,7 @@ __declspec(dllexport) bool __stdcall setEISOutputPath(ThalesRemoteScriptWrapper*
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1118,7 +1118,7 @@ __declspec(dllexport) bool __stdcall setEISOutputFileName(ThalesRemoteScriptWrap
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1137,7 +1137,7 @@ __declspec(dllexport) bool __stdcall measureEIS(ThalesRemoteScriptWrapper* handl
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1156,7 +1156,7 @@ __declspec(dllexport) bool __stdcall setCVStartPotential(ThalesRemoteScriptWrapp
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1175,7 +1175,7 @@ __declspec(dllexport) bool __stdcall setCVUpperReversingPotential(ThalesRemoteSc
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1194,7 +1194,7 @@ __declspec(dllexport) bool __stdcall setCVLowerReversingPotential(ThalesRemoteSc
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1213,7 +1213,7 @@ __declspec(dllexport) bool __stdcall setCVEndPotential(ThalesRemoteScriptWrapper
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1232,7 +1232,7 @@ __declspec(dllexport) bool __stdcall setCVStartHoldTime(ThalesRemoteScriptWrappe
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1251,7 +1251,7 @@ __declspec(dllexport) bool __stdcall setCVEndHoldTime(ThalesRemoteScriptWrapper*
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1270,7 +1270,7 @@ __declspec(dllexport) bool __stdcall setCVScanRate(ThalesRemoteScriptWrapper* ha
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1289,7 +1289,7 @@ __declspec(dllexport) bool __stdcall setCVCycles(ThalesRemoteScriptWrapper* hand
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1308,7 +1308,7 @@ __declspec(dllexport) bool __stdcall setCVSamplesPerCycle(ThalesRemoteScriptWrap
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1327,7 +1327,7 @@ __declspec(dllexport) bool __stdcall setCVMaximumCurrent(ThalesRemoteScriptWrapp
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1346,7 +1346,7 @@ __declspec(dllexport) bool __stdcall setCVMinimumCurrent(ThalesRemoteScriptWrapp
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1365,7 +1365,7 @@ __declspec(dllexport) bool __stdcall setCVOhmicDrop(ThalesRemoteScriptWrapper* h
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1384,7 +1384,7 @@ __declspec(dllexport) bool __stdcall enableCVAutoRestartAtCurrentOverflow(Thales
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1403,7 +1403,7 @@ __declspec(dllexport) bool __stdcall disableCVAutoRestartAtCurrentOverflow(Thale
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1422,7 +1422,7 @@ __declspec(dllexport) bool __stdcall enableCVAutoRestartAtCurrentUnderflow(Thale
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1441,7 +1441,7 @@ __declspec(dllexport) bool __stdcall disableCVAutoRestartAtCurrentUnderflow(Thal
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1460,7 +1460,7 @@ __declspec(dllexport) bool __stdcall enableCVAnalogFunctionGenerator(ThalesRemot
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1479,7 +1479,7 @@ __declspec(dllexport) bool __stdcall disableCVAnalogFunctionGenerator(ThalesRemo
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1498,7 +1498,7 @@ __declspec(dllexport) bool __stdcall setCVNaming(ThalesRemoteScriptWrapper* hand
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1517,7 +1517,7 @@ __declspec(dllexport) bool __stdcall setCVCounter(ThalesRemoteScriptWrapper* han
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1536,7 +1536,7 @@ __declspec(dllexport) bool __stdcall setCVOutputPath(ThalesRemoteScriptWrapper* 
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1555,7 +1555,7 @@ __declspec(dllexport) bool __stdcall setCVOutputFileName(ThalesRemoteScriptWrapp
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1574,7 +1574,7 @@ __declspec(dllexport) bool __stdcall checkCVSetup(ThalesRemoteScriptWrapper* han
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1593,7 +1593,7 @@ __declspec(dllexport) bool __stdcall readCVSetup(ThalesRemoteScriptWrapper* hand
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1612,7 +1612,7 @@ __declspec(dllexport) bool __stdcall measureCV(ThalesRemoteScriptWrapper* handle
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1631,7 +1631,7 @@ __declspec(dllexport) bool __stdcall setIEFirstEdgePotential(ThalesRemoteScriptW
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1650,7 +1650,7 @@ __declspec(dllexport) bool __stdcall setIESecondEdgePotential(ThalesRemoteScript
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1669,7 +1669,7 @@ __declspec(dllexport) bool __stdcall setIEThirdEdgePotential(ThalesRemoteScriptW
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1688,7 +1688,7 @@ __declspec(dllexport) bool __stdcall setIEFourthEdgePotential(ThalesRemoteScript
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1707,7 +1707,7 @@ __declspec(dllexport) bool __stdcall setIEFirstEdgePotentialRelation(ThalesRemot
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1726,7 +1726,7 @@ __declspec(dllexport) bool __stdcall setIESecondEdgePotentialRelation(ThalesRemo
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1745,7 +1745,7 @@ __declspec(dllexport) bool __stdcall setIEThirdEdgePotentialRelation(ThalesRemot
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1764,7 +1764,7 @@ __declspec(dllexport) bool __stdcall setIEFourthEdgePotentialRelation(ThalesRemo
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1783,7 +1783,7 @@ __declspec(dllexport) bool __stdcall setIEPotentialResolution(ThalesRemoteScript
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1802,7 +1802,7 @@ __declspec(dllexport) bool __stdcall setIEMinimumWaitingTime(ThalesRemoteScriptW
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1821,7 +1821,7 @@ __declspec(dllexport) bool __stdcall setIEMaximumWaitingTime(ThalesRemoteScriptW
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1840,7 +1840,7 @@ __declspec(dllexport) bool __stdcall setIERelativeTolerance(ThalesRemoteScriptWr
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1859,7 +1859,7 @@ __declspec(dllexport) bool __stdcall setIEAbsoluteTolerance(ThalesRemoteScriptWr
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1878,7 +1878,7 @@ __declspec(dllexport) bool __stdcall setIEOhmicDrop(ThalesRemoteScriptWrapper* h
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1897,7 +1897,7 @@ __declspec(dllexport) bool __stdcall setIESweepMode(ThalesRemoteScriptWrapper* h
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1916,7 +1916,7 @@ __declspec(dllexport) bool __stdcall setIEScanRate(ThalesRemoteScriptWrapper* ha
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1935,7 +1935,7 @@ __declspec(dllexport) bool __stdcall setIEMaximumCurrent(ThalesRemoteScriptWrapp
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1954,7 +1954,7 @@ __declspec(dllexport) bool __stdcall setIEMinimumCurrent(ThalesRemoteScriptWrapp
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1973,7 +1973,7 @@ __declspec(dllexport) bool __stdcall setIENaming(ThalesRemoteScriptWrapper* hand
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -1992,7 +1992,7 @@ __declspec(dllexport) bool __stdcall setIECounter(ThalesRemoteScriptWrapper* han
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -2011,7 +2011,7 @@ __declspec(dllexport) bool __stdcall setIEOutputPath(ThalesRemoteScriptWrapper* 
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -2030,7 +2030,7 @@ __declspec(dllexport) bool __stdcall setIEOutputFileName(ThalesRemoteScriptWrapp
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -2049,7 +2049,7 @@ __declspec(dllexport) bool __stdcall checkIESetup(ThalesRemoteScriptWrapper* han
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -2068,7 +2068,7 @@ __declspec(dllexport) bool __stdcall readIESetup(ThalesRemoteScriptWrapper* hand
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -2087,7 +2087,7 @@ __declspec(dllexport) bool __stdcall measureIE(ThalesRemoteScriptWrapper* handle
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -2106,7 +2106,7 @@ __declspec(dllexport) bool __stdcall selectSequence(ThalesRemoteScriptWrapper* h
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -2125,7 +2125,7 @@ __declspec(dllexport) bool __stdcall setSequenceNaming(ThalesRemoteScriptWrapper
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -2144,7 +2144,7 @@ __declspec(dllexport) bool __stdcall setSequenceCounter(ThalesRemoteScriptWrappe
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -2163,7 +2163,7 @@ __declspec(dllexport) bool __stdcall setSequenceOutputPath(ThalesRemoteScriptWra
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -2182,7 +2182,7 @@ __declspec(dllexport) bool __stdcall setSequenceOutputFileName(ThalesRemoteScrip
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -2201,7 +2201,7 @@ __declspec(dllexport) bool __stdcall runSequence(ThalesRemoteScriptWrapper* hand
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -2220,7 +2220,7 @@ __declspec(dllexport) bool __stdcall enableFraMode(ThalesRemoteScriptWrapper* ha
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -2239,7 +2239,7 @@ __declspec(dllexport) bool __stdcall setFraVoltageInputGain(ThalesRemoteScriptWr
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -2258,7 +2258,7 @@ __declspec(dllexport) bool __stdcall setFraVoltageOutputGain(ThalesRemoteScriptW
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -2277,7 +2277,7 @@ __declspec(dllexport) bool __stdcall setFraVoltageMinimum(ThalesRemoteScriptWrap
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -2296,7 +2296,7 @@ __declspec(dllexport) bool __stdcall setFraVoltageMaximum(ThalesRemoteScriptWrap
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -2315,7 +2315,7 @@ __declspec(dllexport) bool __stdcall setFraCurrentInputGain(ThalesRemoteScriptWr
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -2334,7 +2334,7 @@ __declspec(dllexport) bool __stdcall setFraCurrentOutputGain(ThalesRemoteScriptW
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -2353,7 +2353,7 @@ __declspec(dllexport) bool __stdcall setFraCurrentMinimum(ThalesRemoteScriptWrap
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -2372,7 +2372,7 @@ __declspec(dllexport) bool __stdcall setFraCurrentMaximum(ThalesRemoteScriptWrap
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();
@@ -2391,7 +2391,7 @@ __declspec(dllexport) bool __stdcall setFraPotentiostatMode(ThalesRemoteScriptWr
         *retvalLen += 1;
         
         return true;
-    }
+    } 
     catch (const ZahnerError& ex)
     {
         errorMessages.at(handle) = ex.getMessage();

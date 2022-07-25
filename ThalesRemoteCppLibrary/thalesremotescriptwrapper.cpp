@@ -765,9 +765,9 @@ std::string ThalesRemoteScriptWrapper::measureIE()
 
 std::string ThalesRemoteScriptWrapper::selectSequence(int number)
 {
-    auto reply = this->executeRemoteCommand("SEQ_MOD="+std::to_string(number));
+    auto reply = this->executeRemoteCommand("SELSEQ="+std::to_string(number));
 
-    if(reply.find("SELOK") >= 0)
+    if (reply.find("ERROR") != std::string::npos)
     {
         throw ThalesRemoteError(reply);
     }

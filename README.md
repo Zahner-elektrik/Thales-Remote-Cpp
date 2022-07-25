@@ -87,6 +87,20 @@ The setter and getter in C++ and Python are always named the same and behave the
 * Read potential and current
 * Measure impedance
 
+### [EisDLLExample](EisDLLExample/main.cpp)
+
+* Switch potentiostat on or off
+* Setting potentiostat potentiostatic or galvanostatic
+* Setting output potential or current
+* Read potential and current
+* Measure impedance
+
+### [DCSequencerExample](DCSequencerExample/main.cpp)
+
+* The [Zahner sequencer](https://zahner.de/media-files/support_downloads/files/sequencer_1.pdf) outputs current and voltage curves defined in a text file.
+* Setting output file naming for sequence measurements
+* Parametrizing an sequence measurement
+
 This example uses a DLL which was created from the library. The DLL is loaded from the C++ code in the example with WinAPI at runtime. But in C++ the library itself should be used this is easier.
 The DLL and the source and header files of the DLL generated.cpp and generated.h are located in the subfolder [ThalesRemoteExternalLibrary](ThalesRemoteExternalLibrary).
 The DLL is built with CMAKE and MinGW and does not contain any debug information. The repository contains all files to generate the DLL from the generated.cpp and generated.h files.
