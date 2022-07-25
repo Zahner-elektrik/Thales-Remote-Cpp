@@ -813,7 +813,7 @@ std::string ThalesRemoteScriptWrapper::runSequence()
 {
     auto reply = this->executeRemoteCommand("DOSEQ");
 
-    if(reply.find("SEQ DONE") >= 0)
+    if (reply.find("ERROR") != std::string::npos)
     {
         throw ThalesRemoteError(reply);
     }
