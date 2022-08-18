@@ -34,7 +34,7 @@
  *  This exception is thrown when an error is reported in the remote protocol,
  *  for example, when a parameter is out of range.
  *  In the following document the errors are explained.
- *  https://doc.zahner.de/Remote.pdf
+ *  https://doc.zahner.de/manuals/remote2.pdf
  */
 class ThalesRemoteError : public ZahnerError
 {

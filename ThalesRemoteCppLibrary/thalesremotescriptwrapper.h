@@ -69,7 +69,7 @@ enum class IESweepMode{
 /** The ThalesRemoteScriptWrapper class
  *
  *  Wrapper that uses the ThalesRemoteConnection class.
- *  The commands are explained in https://doc.zahner.de/Remote.pdf .
+ *  The commands are explained in https://doc.zahner.de/manuals/remote2.pdf .
  *  In the document you can also find a table with error numbers which are returned.
  */
 class ThalesRemoteScriptWrapper
@@ -1054,8 +1054,8 @@ public:
      *  With the FRA Probe, external power potentiostats, signal generators, sources, sinks can be
      *  controlled analog for impedance measurements.
      *
-     *  Product Page: https://www.zahner.de/products-details/probes/fra-probe
-     *  Manual: https://www.zahner.de/media-files/downloads_pdf/files/m_fra.pdf
+     *  Product Page: https://zahner.de/products-details/probes/fra-probe
+     *  Manual: https://doc.zahner.de/hardware/fra_probe.pdf
      *
      *  Before this function is called, the analog interface to the external interface must be initialized
      *  with the correct factors. It may be necessary to use + or - as sign, this must be tested to ensure

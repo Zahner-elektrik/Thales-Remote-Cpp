@@ -1,5 +1,5 @@
 # Thales-Remote-Cpp
-Thales-Remote-Cpp is a C++ extension which uses the Zahner [Remote2](https://doc.zahner.de/Remote.pdf) to control [Zahner Zennium Potentiostats](https://zahner.de/products#potentiostats).  
+Thales-Remote-Cpp is a C++ extension which uses the Zahner [Remote2](https://doc.zahner.de/manuals/remote2.pdf) to control [Zahner Zennium Potentiostats](https://zahner.de/products#potentiostats).  
 It was developed to **easily integrate** Zahner Zennium Potentiostats into Python scripts for more **complex measurement** tasks and for **automation purposes**.
 
 The measurement methods **EIS**, **IE**, **CV** and **DC sequences** are supported. Also constant current or constant voltage can be output and current and voltage can be measured. Single frequency impedance measurement is also possible.
@@ -97,7 +97,7 @@ The setter and getter in C++ and Python are always named the same and behave the
 
 ### [DCSequencerExample](DCSequencerExample/main.cpp)
 
-* The [Zahner sequencer](https://zahner.de/media-files/support_downloads/files/sequencer_1.pdf) outputs current and voltage curves defined in a text file.
+* The [Zahner sequencer](https://doc.zahner.de/manuals/sequencer.pdf) outputs current and voltage curves defined in a text file.
 * Setting output file naming for sequence measurements
 * Parametrizing an sequence measurement
 
