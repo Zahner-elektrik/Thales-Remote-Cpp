@@ -9,14 +9,7 @@ int main(int argc, char *argv[]) {
 
     ZenniumConnection ZenniumConnection;
 
-    bool connectionSuccessful = ZenniumConnection.connectToTerm("localhost", "ScriptRemote");
-
-    if (connectionSuccessful == false) {
-
-        std::cout << "could not connect to Term" << std::endl;
-        return 0;
-    }
-
+    ZenniumConnection.connectToTerm("192.168.2.94", "ScriptRemote");
     ThalesRemoteScriptWrapper zahnerZennium(&ZenniumConnection);
 
     zahnerZennium.forceThalesIntoRemoteScript();

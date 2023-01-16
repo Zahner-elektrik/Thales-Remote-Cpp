@@ -36,7 +36,9 @@ typedef bool (__stdcall  *setMinimumShuntIndexType)(void* handle, char* retval, 
 typedef bool (__stdcall  *setShuntIndexType)(void* handle, char* retval, int* retvalLen , int index);
 typedef bool (__stdcall  *setVoltageRangeIndexType)(void* handle, char* retval, int* retvalLen , int index);
 typedef bool (__stdcall  *selectPotentiostatType)(void* handle, char* retval, int* retvalLen , int device);
+typedef bool (__stdcall  *selectPotentiostatWithoutPotentiostatStateChangeType)(void* handle, char* retval, int* retvalLen , int device);
 typedef bool (__stdcall  *switchToSCPIControlType)(void* handle, char* retval, int* retvalLen );
+typedef bool (__stdcall  *switchToSCPIControlWithoutPotentiostatStateChangeType)(void* handle, char* retval, int* retvalLen );
 typedef bool (__stdcall  *getSerialNumberType)(void* handle, char* retval, int* retvalLen );
 typedef bool (__stdcall  *getDeviceNameType)(void* handle, char* retval, int* retvalLen );
 typedef bool (__stdcall  *calibrateOffsetsType)(void* handle, char* retval, int* retvalLen );
@@ -152,7 +154,7 @@ void watchThread()
     getWorkstationHeartBeatType getWorkstationHeartBeat = (getWorkstationHeartBeatType) GetProcAddress(lib, "getWorkstationHeartBeat");
 
     void* connectionHandle = createZenniumConnection();
-    bool state = connectToTerm(connectionHandle,"localhost","Watch");
+    bool state = connectToTerm(connectionHandle,"192.168.2.94","Watch");
     if (not state)
     {
         std::cout << "could not connect to Term" << std::endl;
@@ -180,7 +182,8 @@ void watchThread()
 
 int main(int argc, char *argv[]) {
 
-    lib = LoadLibrary(TEXT("libThalesRemoteExternalLibrary.dll"));
+//    lib = LoadLibrary(TEXT("libThalesRemoteExternalLibrary.dll"));
+    lib = LoadLibrary(TEXT("C:\\Programmieren\\Github\\ThalesRemoteQt\\ThalesRemoteExternalLibrary\\libThalesRemoteExternalLibrary.dll"));
     char replyBuffer[1000];
     int replySize;
     if(lib == NULL)
@@ -226,7 +229,9 @@ int main(int argc, char *argv[]) {
         setShuntIndexType setShuntIndex = (setShuntIndexType) GetProcAddress(lib, "setShuntIndex");
         setVoltageRangeIndexType setVoltageRangeIndex = (setVoltageRangeIndexType) GetProcAddress(lib, "setVoltageRangeIndex");
         selectPotentiostatType selectPotentiostat = (selectPotentiostatType) GetProcAddress(lib, "selectPotentiostat");
+        selectPotentiostatWithoutPotentiostatStateChangeType selectPotentiostatWithoutPotentiostatStateChange = (selectPotentiostatWithoutPotentiostatStateChangeType) GetProcAddress(lib, "selectPotentiostatWithoutPotentiostatStateChange");
         switchToSCPIControlType switchToSCPIControl = (switchToSCPIControlType) GetProcAddress(lib, "switchToSCPIControl");
+        switchToSCPIControlWithoutPotentiostatStateChangeType switchToSCPIControlWithoutPotentiostatStateChange = (switchToSCPIControlWithoutPotentiostatStateChangeType) GetProcAddress(lib, "switchToSCPIControlWithoutPotentiostatStateChange");
         getSerialNumberType getSerialNumber = (getSerialNumberType) GetProcAddress(lib, "getSerialNumber");
         getDeviceNameType getDeviceName = (getDeviceNameType) GetProcAddress(lib, "getDeviceName");
         calibrateOffsetsType calibrateOffsets = (calibrateOffsetsType) GetProcAddress(lib, "calibrateOffsets");
@@ -325,7 +330,7 @@ int main(int argc, char *argv[]) {
         setFraPotentiostatModeType setFraPotentiostatMode = (setFraPotentiostatModeType) GetProcAddress(lib, "setFraPotentiostatMode");
 
         void* connectionHandle = createZenniumConnection();
-        bool state = connectToTerm(connectionHandle,"localhost","ScriptRemote");
+        bool state = connectToTerm(connectionHandle,"192.168.2.94","ScriptRemote");
         if (not state)
         {
             std::cout << "could not connect to Term" << std::endl;
@@ -340,7 +345,7 @@ int main(int argc, char *argv[]) {
         auto watchWorker = new std::thread(&watchThread);
 
         void* fileConnection = createZenniumConnection();
-        state = connectToTerm(fileConnection,"localhost","FileExchange");
+        state = connectToTerm(fileConnection,"192.168.2.94","FileExchange");
         if (not state)
         {
             std::cout << "could not connect to Term" << std::endl;
@@ -363,7 +368,7 @@ int main(int argc, char *argv[]) {
         state = calibrateOffsets(scriptHandle,replyBuffer,&replySize);
 
         replySize = 1000;
-        state = setCurrent(scriptHandle,replyBuffer,&replySize, 10000.0);
+        state = setCurrent(scriptHandle,replyBuffer,&replySize, 0.01);
         if(not state)
         {
             replySize = 1000;
@@ -435,7 +440,6 @@ int main(int argc, char *argv[]) {
         watchWorker->join();
 
     }
-
 
     BOOL fFreeResult = FreeLibrary(lib);
 

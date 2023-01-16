@@ -4,7 +4,7 @@
  *  / /_/ _ `/ _ \/ _ \/ -_) __/___/ -_) / -_)  '_/ __/ __/ /  '_/
  * /___/\_,_/_//_/_//_/\__/_/      \__/_/\__/_/\_\\__/_/ /_/_/\_\
  *
- * Copyright 2022 ZAHNER-elektrik I. Zahner-Schiller GmbH & Co. KG
+ * Copyright 2023 ZAHNER-elektrik I. Zahner-Schiller GmbH & Co. KG
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -197,6 +197,23 @@ public:
      */
     std::string selectPotentiostat(int device);
 
+    /** Set the device for output.
+     *
+     * Device which is to be selected, on which the settings are output.
+     * First, the device must be selected.
+     * Only then can devices other than the internal main potentiostat be configured.
+     * It is only possible to measure with one device at a time.
+     * For example, impedance cannot be measured on two devices at once.
+     *
+     * Selects the device in the current state without changing it. So when the potentiostat is on it stays on.
+     * With this command, the potentiostat is still switched off for about 50 ms.
+     *
+     * \param  device Number of the device. 0 = Main. 1 = EPC channel 1 and so on.
+     *
+     * \return The response string from the device.
+     */
+    std::string selectPotentiostatWithoutPotentiostatStateChange(int device);
+
     /** Change away from operation as EPC device to SCPI operation.
      *
      * This command works only with external potentiostats of the latest generation PP212, PP222, PP242 and XPOT2.
@@ -204,9 +221,24 @@ public:
      * Then you can connect to the potentiostat with USB via the Comports.
      * The change back to EPC operation is also done explicitly from the USB side.
      *
+     * This command switches off the potentiostat.
+     *
      * \return The response string from the device.
      */
     std::string switchToSCPIControl();
+
+    /** Change away from operation as EPC device to SCPI operation.
+     *
+     * This command works only with external potentiostats of the latest generation PP212, PP222, PP242 and XPOT2.
+     * After this command they are no longer accessible with the EPC interface.
+     * Then you can connect to the potentiostat with USB via the Comports.
+     * The change back to EPC operation is also done explicitly from the USB side.
+     *
+     * This command does not change the state of the potentiostat. If it is on, the potentiostat remains on.
+     *
+     * \return The response string from the device.
+     */
+    std::string switchToSCPIControlWithoutPotentiostatStateChange();
 
     /** Get the serialnumber of the active device.
      *

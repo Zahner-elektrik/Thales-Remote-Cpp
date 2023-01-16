@@ -4,7 +4,7 @@
  *  / /_/ _ `/ _ \/ _ \/ -_) __/___/ -_) / -_)  '_/ __/ __/ /  '_/
  * /___/\_,_/_//_/_//_/\__/_/      \__/_/\__/_/\_\\__/_/ /_/_/\_\
  *
- * Copyright 2022 ZAHNER-elektrik I. Zahner-Schiller GmbH & Co. KG
+ * Copyright 2023 ZAHNER-elektrik I. Zahner-Schiller GmbH & Co. KG
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -124,9 +124,19 @@ std::string ThalesRemoteScriptWrapper::selectPotentiostat(int device)
     return this->setValue("DEV%", device);
 }
 
+std::string ThalesRemoteScriptWrapper::selectPotentiostatWithoutPotentiostatStateChange(int device)
+{
+    return this->setValue("DEVHOT%", device);
+}
+
 std::string ThalesRemoteScriptWrapper::switchToSCPIControl()
 {
     return this->executeRemoteCommand("SETUSB");
+}
+
+std::string ThalesRemoteScriptWrapper::switchToSCPIControlWithoutPotentiostatStateChange()
+{
+    return this->executeRemoteCommand("HOT2USB");
 }
 
 std::string ThalesRemoteScriptWrapper::getSerialNumber()

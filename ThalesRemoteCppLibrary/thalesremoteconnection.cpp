@@ -4,7 +4,7 @@
  *  / /_/ _ `/ _ \/ _ \/ -_) __/___/ -_) / -_)  '_/ __/ __/ /  '_/
  * /___/\_,_/_//_/_//_/\__/_/      \__/_/\__/_/\_\\__/_/ /_/_/\_\
  *
- * Copyright 2022 ZAHNER-elektrik I. Zahner-Schiller GmbH & Co. KG
+ * Copyright 2023 ZAHNER-elektrik I. Zahner-Schiller GmbH & Co. KG
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -83,9 +83,8 @@ bool ZenniumConnection::connectToTerm(std::string address, std::string connectio
 
     if (getaddrinfo(address.data(), "260", &hints, &result_pointer) != 0)
     {
-
-        std::cerr << "error while resolving address" << std::endl;
         this->closeSocket();
+        throw TermConnectionError("Error while resolving address");
         return false;
     }
 
@@ -93,18 +92,16 @@ bool ZenniumConnection::connectToTerm(std::string address, std::string connectio
 
     if (first_addr == nullptr)
     {
-
-        std::cerr << "could not resolve hostname" << std::endl;
         freeaddrinfo(result_pointer);
         this->closeSocket();
+        throw TermConnectionError("Could not resolve hostname");
         return false;
     }
 
     if (connect(this->socket_handle, first_addr->ai_addr, static_cast<int>(first_addr->ai_addrlen)) < 0)
     {
-
-        std::cerr << "could not connect to term" << std::endl;
         this->closeSocket();
+        throw TermConnectionError("Could not connect to term");
         return false;
     }
 
