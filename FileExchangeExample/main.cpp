@@ -102,7 +102,7 @@ int main(int argc, char *argv[]) {
     zahnerZennium.enablePotentiostat();
     zahnerZennium.measureEIS();
 
-    fileInterface.aquireFile(R"(C:\THALES\temp\test1\spectra_cells_0002_ser01.ism)");
+    fileInterface.acquireFile(R"(C:\THALES\temp\test1\spectra_cells_0002_ser01.ism)");
 
     fileInterface.enableSaveReceivedFilesToDisk(R"(C:\THALES\temp\exchange)");
     fileInterface.enableKeepReceivedFilesInObject();

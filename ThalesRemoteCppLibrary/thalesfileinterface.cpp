@@ -93,7 +93,7 @@ std::string ThalesFileInterface::disableAutomaticFileExchange()
     return this->enableAutomaticFileExchange(false);
 }
 
-ThalesFileInterface::FileObject ThalesFileInterface::aquireFile(std::string filename)
+ThalesFileInterface::FileObject ThalesFileInterface::acquireFile(std::string filename)
 {
     FileObject retval;
     retval.name = "";

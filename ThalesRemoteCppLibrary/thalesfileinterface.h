@@ -96,7 +96,7 @@ public:
      * \param filename
      * \return
      */
-    FileObject aquireFile(std::string filename);
+    FileObject acquireFile(std::string filename);
 
     /** Set filenames to be filtered and not processed by C++.
      *
