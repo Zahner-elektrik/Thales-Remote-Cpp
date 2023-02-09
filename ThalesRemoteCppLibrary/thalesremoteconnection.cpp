@@ -60,6 +60,7 @@ ZenniumConnection::~ZenniumConnection()
 
 bool ZenniumConnection::connectToTerm(std::string address, std::string connectionName)
 {
+    std::this_thread::sleep_for(std::chrono::milliseconds(400));
 
     this->socket_handle = socket(AF_INET, SOCK_STREAM, 0);
     this->connectionName = connectionName;
@@ -70,7 +71,7 @@ bool ZenniumConnection::connectToTerm(std::string address, std::string connectio
     if (this->socket_handle < 0) {
 #endif
 
-        std::cerr << "could not create socket" << std::endl;
+        throw TermConnectionError("Could not create socket");
         return false;
     }
 
@@ -120,7 +121,7 @@ bool ZenniumConnection::connectToTerm(std::string address, std::string connectio
 
     const std::vector<unsigned char> fixedHeaderBytes =
     {
-        0x02, 0xd0,
+        0x12, 0xd0,
         0xff, 0xff,
         0xff, 0xff
     };
@@ -360,7 +361,6 @@ void ZenniumConnection::stopTelegramListener()
 
 std::chrono::milliseconds ZenniumConnection::getCurrentTimeInMilliseconds() const
 {
-
     return std::chrono::duration_cast<std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch());
 }
 

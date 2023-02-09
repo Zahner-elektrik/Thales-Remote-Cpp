@@ -66,6 +66,11 @@ enum class IESweepMode{
     DYNAMICSCAN     /**< The explanation of the modes can be found in the IE manual. */
 };
 
+enum class Pad4Mode{
+    VOLTAGE,    /**< Voltage measurement */
+    CURRENT     /**< The explanation of the modes can be found in the IE manual. */
+};
+
 /** The ThalesRemoteScriptWrapper class
  *
  *  Wrapper that uses the ThalesRemoteConnection class.
@@ -319,7 +324,47 @@ public:
      *
      * \return The response string from the device.
      */
-    std::string setupPAD4(int card, int channel, bool enabled);
+    std::string setupPad4Channel(int card, int channel, bool enabled);
+
+    /** Setting a single channel of a PAD4 card for an EIS measurement.
+     *
+     *  Each channel of the Pad4 card must be configured separately and then the PAD4 must be activated with ThalesRemoteScriptWrapper::enablePAD4.
+     *  Each channel can be given a different voltage range or shunt.
+     *  The user can switch the type of PAD4 channels between voltage sense (standard configuration) and current sense (with additional shunt resistor).
+     *
+     * \param  card The number of the card starting at 1 and up to 4.
+     * \param  channel The channel of the card starting at 1 and up to 4.
+     * \param  enabled True to enable the channel.
+     * \param  voltageRange input voltage range, if this differs from 4 V
+     *
+     * \return The response string from the device.
+     */
+    std::string setupPad4ChannelWithVoltageRange(int card, int channel, bool enabled, double voltageRange);
+
+    /** Setting a single channel of a PAD4 card for an EIS measurement.
+     *
+     *  Each channel of the Pad4 card must be configured separately and then the PAD4 must be activated with ThalesRemoteScriptWrapper::enablePAD4.
+     *  Each channel can be given a different voltage range or shunt.
+     *  The user can switch the type of PAD4 channels between voltage sense (standard configuration) and current sense (with additional shunt resistor).
+     *
+     * \param  card The number of the card starting at 1 and up to 4.
+     * \param  channel The channel of the card starting at 1 and up to 4.
+     * \param  enabled True to enable the channel.
+     * \param  shuntResistor shunt resistor, which is used. Only used if ThalesRemoteScriptWrapper::setupPad4ModeGlobal is set to Pad4Mode::CURRENT
+     *
+     * \return The response string from the device.
+     */
+    std::string setupPad4ChannelWithShuntResistor(int card, int channel, bool enabled, double shuntResistor);
+
+    /** Switch between current and voltage measurement
+     *
+     * The user can switch the type of PAD4 channels between voltage sense (standard configuration) and current sense (with additional shunt resistor).
+     *
+     * \param  mode current or voltage measurement
+     *
+     * \return The response string from the device.
+     */
+    std::string setupPad4ModeGlobal(Pad4Mode mode);
 
     /** Enable the configured PAD4 channels.
      *
@@ -329,7 +374,7 @@ public:
      *
      * \return The response string from the device.
      */
-    std::string enablePAD4(bool enabled = true);
+    std::string enablePad4Global(bool enabled = true);
 
     /** Disable the configured PAD4 channels.
      *
@@ -337,7 +382,7 @@ public:
      *
      * \return The response string from the device.
      */
-    std::string disablePAD4();
+    std::string disablePad4Global();
 
     /** Read the set parameters.
      *

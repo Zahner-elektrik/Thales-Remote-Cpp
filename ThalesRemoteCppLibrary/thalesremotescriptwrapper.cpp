@@ -226,7 +226,7 @@ std::string ThalesRemoteScriptWrapper::disableRuleFileUsage()
     return this->enableRuleFileUsage(false);
 }
 
-std::string ThalesRemoteScriptWrapper::setupPAD4(int card, int channel, bool enabled)
+std::string ThalesRemoteScriptWrapper::setupPad4Channel(int card, int channel, bool enabled)
 {
     int enable = (enabled == true)? 1 : 0;
     std::string command = "PAD4=" + std::to_string(card) + ";" + std::to_string(channel) + ";" + std::to_string(enable);
@@ -240,14 +240,57 @@ std::string ThalesRemoteScriptWrapper::setupPAD4(int card, int channel, bool ena
     return reply;
 }
 
-std::string ThalesRemoteScriptWrapper::enablePAD4(bool enabled)
+std::string ThalesRemoteScriptWrapper::setupPad4ChannelWithVoltageRange(int card, int channel, bool enabled, double voltageRange)
+{
+    setupPad4Channel(card,channel,enabled);
+    std::string command = "PAD4_PRANGE=" + std::to_string(card) + ";" + std::to_string(channel) + ";" + std::to_string(voltageRange);
+    auto reply = this->executeRemoteCommand(command);
+
+    if(reply.find("ERROR") != std::string::npos)
+    {
+        throw ThalesRemoteError(reply);
+    }
+
+    return reply;
+}
+
+std::string ThalesRemoteScriptWrapper::setupPad4ChannelWithShuntResistor(int card, int channel, bool enabled, double shuntResistor)
+{
+    setupPad4Channel(card,channel,enabled);
+    std::string command = "PAD4_RSHUNT=" + std::to_string(card) + ";" + std::to_string(channel) + ";" + std::to_string(shuntResistor);
+    auto reply = this->executeRemoteCommand(command);
+
+    if(reply.find("ERROR") != std::string::npos)
+    {
+        throw ThalesRemoteError(reply);
+    }
+
+    return reply;
+}
+
+std::string ThalesRemoteScriptWrapper::setupPad4ModeGlobal(Pad4Mode mode)
+{
+    int intmode;
+    switch (mode) {
+    default:
+    case Pad4Mode::VOLTAGE:
+        intmode = 0;
+        break;
+    case Pad4Mode::CURRENT:
+        intmode = 1;
+        break;
+    }
+    return this->setValue("PAD4MOD", intmode);
+}
+
+std::string ThalesRemoteScriptWrapper::enablePad4Global(bool enabled)
 {
     return this->setValue("PAD4ENA", enabled);
 }
 
-std::string ThalesRemoteScriptWrapper::disablePAD4()
+std::string ThalesRemoteScriptWrapper::disablePad4Global()
 {
-    return this->enablePAD4(false);
+    return this->enablePad4Global(false);
 }
 
 std::string ThalesRemoteScriptWrapper::readPAD4Setup()

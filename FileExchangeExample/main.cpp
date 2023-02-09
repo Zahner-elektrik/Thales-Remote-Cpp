@@ -83,9 +83,10 @@ int main(int argc, char *argv[]) {
      * The PAD4 setup is encapsulated with try and catch to catch the exception if no PAD4 card is present.
      */
     try {
-        zahnerZennium.setupPAD4(1,1,true);
-        zahnerZennium.setupPAD4(1,2,true);
-        zahnerZennium.enablePAD4();
+        zahnerZennium.setupPad4ChannelWithVoltageRange(1,1,true,4.0);
+        zahnerZennium.setupPad4ChannelWithVoltageRange(1,2,true,4.0);
+        zahnerZennium.setupPad4ModeGlobal(Pad4Mode::VOLTAGE);
+        zahnerZennium.enablePad4Global();
     }  catch (ThalesRemoteError error) {
         std::cout << "PAD4 not available:" << std::endl;
         std::cout << error.getMessage() << std::endl;
