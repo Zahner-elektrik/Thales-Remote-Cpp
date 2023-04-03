@@ -402,6 +402,63 @@ __declspec(dllexport) bool __stdcall forceThalesIntoRemoteScript(ThalesRemoteScr
     }
 }
 
+__declspec(dllexport) bool __stdcall hideWindow(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen )
+{
+    try
+    {
+        auto returned = scriptWrappers.at(handle)->hideWindow();
+        
+        *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
+        retval[*retvalLen] = '\0';
+        *retvalLen += 1;
+        
+        return true;
+    } 
+    catch (const ZahnerError& ex)
+    {
+        errorMessages.at(handle) = ex.getMessage();
+        return false;
+    }
+}
+
+__declspec(dllexport) bool __stdcall showWindow(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen )
+{
+    try
+    {
+        auto returned = scriptWrappers.at(handle)->showWindow();
+        
+        *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
+        retval[*retvalLen] = '\0';
+        *retvalLen += 1;
+        
+        return true;
+    } 
+    catch (const ZahnerError& ex)
+    {
+        errorMessages.at(handle) = ex.getMessage();
+        return false;
+    }
+}
+
+__declspec(dllexport) bool __stdcall getThalesVersion(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen )
+{
+    try
+    {
+        auto returned = scriptWrappers.at(handle)->getThalesVersion();
+        
+        *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
+        retval[*retvalLen] = '\0';
+        *retvalLen += 1;
+        
+        return true;
+    } 
+    catch (const ZahnerError& ex)
+    {
+        errorMessages.at(handle) = ex.getMessage();
+        return false;
+    }
+}
+
 __declspec(dllexport) bool __stdcall getWorkstationHeartBeat(ThalesRemoteScriptWrapper* handle, int* retval )
 {
     try

@@ -26,6 +26,9 @@ typedef bool (__stdcall *enableSaveReceivedFilesToDiskType)(void* handle, char c
 typedef bool (__stdcall *disableSaveReceivedFilesToDiskType)(void* handle);
 
 typedef bool (__stdcall  *forceThalesIntoRemoteScriptType)(void* handle, char* retval, int* retvalLen );
+typedef bool (__stdcall  *hideWindowType)(void* handle, char* retval, int* retvalLen );
+typedef bool (__stdcall  *showWindowType)(void* handle, char* retval, int* retvalLen );
+typedef bool (__stdcall  *getThalesVersionType)(void* handle, char* retval, int* retvalLen );
 typedef bool (__stdcall  *getWorkstationHeartBeatType)(void* handle, int* retval );
 typedef bool (__stdcall  *getCurrentType)(void* handle, double* retval );
 typedef bool (__stdcall  *getPotentialType)(void* handle, double* retval );
@@ -157,7 +160,7 @@ void watchThread()
     getWorkstationHeartBeatType getWorkstationHeartBeat = (getWorkstationHeartBeatType) GetProcAddress(lib, "getWorkstationHeartBeat");
 
     void* connectionHandle = createZenniumConnection();
-    bool state = connectToTerm(connectionHandle,"192.168.2.94","Watch");
+    bool state = connectToTerm(connectionHandle,"localhost","Watch");
     if (not state)
     {
         std::cout << "could not connect to Term" << std::endl;
@@ -222,6 +225,9 @@ int main(int argc, char *argv[]) {
         disableSaveReceivedFilesToDiskType disableSaveReceivedFilesToDisk = (disableSaveReceivedFilesToDiskType) GetProcAddress(lib, "disableSaveReceivedFilesToDisk");
 
         forceThalesIntoRemoteScriptType forceThalesIntoRemoteScript = (forceThalesIntoRemoteScriptType) GetProcAddress(lib, "forceThalesIntoRemoteScript");
+        hideWindowType hideWindow = (hideWindowType) GetProcAddress(lib, "hideWindow");
+        showWindowType showWindow = (showWindowType) GetProcAddress(lib, "showWindow");
+        getThalesVersionType getThalesVersion = (getThalesVersionType) GetProcAddress(lib, "getThalesVersion");
         getWorkstationHeartBeatType getWorkstationHeartBeat = (getWorkstationHeartBeatType) GetProcAddress(lib, "getWorkstationHeartBeat");
         getCurrentType getCurrent = (getCurrentType) GetProcAddress(lib, "getCurrent");
         getPotentialType getPotential = (getPotentialType) GetProcAddress(lib, "getPotential");
@@ -336,7 +342,7 @@ int main(int argc, char *argv[]) {
         setFraPotentiostatModeType setFraPotentiostatMode = (setFraPotentiostatModeType) GetProcAddress(lib, "setFraPotentiostatMode");
 
         void* connectionHandle = createZenniumConnection();
-        bool state = connectToTerm(connectionHandle,"192.168.2.94","ScriptRemote");
+        bool state = connectToTerm(connectionHandle,"localhost","ScriptRemote");
         if (not state)
         {
             std::cout << "could not connect to Term" << std::endl;
@@ -351,7 +357,7 @@ int main(int argc, char *argv[]) {
         auto watchWorker = new std::thread(&watchThread);
 
         void* fileConnection = createZenniumConnection();
-        state = connectToTerm(fileConnection,"192.168.2.94","FileExchange");
+        state = connectToTerm(fileConnection,"localhost","FileExchange");
         if (not state)
         {
             std::cout << "could not connect to Term" << std::endl;
@@ -447,8 +453,10 @@ int main(int argc, char *argv[]) {
 
     }
 
+    std::cout << "free DLL" << std::endl;
     BOOL fFreeResult = FreeLibrary(lib);
 
     std::cout << "finish" << std::endl;
+    std::cout.flush();
     return 0;
 }

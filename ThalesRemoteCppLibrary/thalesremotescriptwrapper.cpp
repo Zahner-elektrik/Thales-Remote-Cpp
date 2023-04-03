@@ -26,6 +26,7 @@
 
 #include "thalesremotescriptwrapper.h"
 #include "thalesremoteerror.h"
+#include "termconnectionerror.h"
 #include <algorithm>
 #include <iomanip>
 #include <sstream>
@@ -38,10 +39,72 @@ std::string to_string_with_precision(const T value, const int n = 6)
     return out.str();
 }
 
+std::vector<int> tokenize(const std::string& str, char delim) {
+    std::vector<int> tokens;
+    std::stringstream ss(str);
+    std::string token;
+    while (std::getline(ss, token, delim)) {
+        tokens.push_back(std::stoi(token));
+    }
+    return tokens;
+}
+
+int compareVersions(const std::string& version1, const std::string& version2) {
+    std::vector<int> v1 = tokenize(version1, '.');
+    std::vector<int> v2 = tokenize(version2, '.');
+    size_t i;
+    for (i = 0; i < v1.size() && i < v2.size(); ++i) {
+        if (v1[i] < v2[i]) {
+            return -1;
+        } else if (v1[i] > v2[i]) {
+            return 1;
+        }
+    }
+    if (v1.size() < v2.size()) {
+        return -1;
+    } else if (v1.size() > v2.size()) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+const std::string MINIMUM_THALES_VERSION = "5.8.6";
+
 ThalesRemoteScriptWrapper::ThalesRemoteScriptWrapper(ZenniumConnection * const remoteConnection) :
     remoteConnection(remoteConnection)
 {
+    bool versionOk = true;
 
+    try {
+        const auto versionReply = getThalesVersion();
+        if(versionReply.find("devel") == std::string::npos)
+        {
+            std::regex replyStringPattern("(\\d+.\\d+.\\d+)");
+            std::smatch match;
+
+            if(std::regex_search(versionReply, match, replyStringPattern))
+            {
+                const std::string versionString = match[0];
+                const auto compResult = compareVersions(versionString,MINIMUM_THALES_VERSION);
+                if(compResult == -1)
+                {
+                    versionOk = false;
+                }
+            }
+            else
+            {
+                versionOk = false;
+            }
+        }
+    } catch (TermConnectionError e) {
+        versionOk = false;
+    }
+
+    if(versionOk == false)
+    {
+        throw ThalesRemoteError("Please update your Thales version.");
+    }
 }
 
 std::string ThalesRemoteScriptWrapper::executeRemoteCommand(std::string command)
@@ -53,6 +116,38 @@ std::string ThalesRemoteScriptWrapper::forceThalesIntoRemoteScript()
 {
     remoteConnection->sendStringAndWaitForReplyString("3," + this->remoteConnection->getConnectionName() + ",0,OFF", 128);
     return remoteConnection->sendStringAndWaitForReplyString("2," + this->remoteConnection->getConnectionName(), 128);
+}
+
+std::string ThalesRemoteScriptWrapper::hideWindow()
+{
+    return remoteConnection->sendStringAndWaitForReplyString("3," + this->remoteConnection->getConnectionName() + ",5,off", 128);
+}
+
+std::string ThalesRemoteScriptWrapper::showWindow()
+{
+    return remoteConnection->sendStringAndWaitForReplyString("3," + this->remoteConnection->getConnectionName() + ",5,on", 128);
+}
+
+std::string ThalesRemoteScriptWrapper::getThalesVersion()
+{
+    auto reply = remoteConnection->sendStringAndWaitForReplyString("3," + this->remoteConnection->getConnectionName() + ",7", 128);
+
+    if(reply.find("ERROR") != std::string::npos)
+    {
+        throw ThalesRemoteError(reply);
+    }
+
+    std::regex replyStringPattern(".*?,.*?,(.*)");
+    std::smatch match;
+
+    std::regex_search(reply, match, replyStringPattern);
+
+    if (match.size() < 1)
+    {
+        throw ThalesRemoteError("Error with the serial number.");
+    }
+
+    return match.str(1);
 }
 
 int ThalesRemoteScriptWrapper::getWorkstationHeartBeat()

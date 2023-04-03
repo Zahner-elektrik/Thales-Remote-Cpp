@@ -15,6 +15,8 @@ The complete documentation of the individual functions can be found on the [API 
 Download the folder ThalesRemoteCppLibrary and compile the library into your project.  
 The examples were created with cmake, this can be used as a template.
 
+> ⚠️ Since v1.1.1 works only with Thales ≥ 5.8.6. For previous versions of Thales Software, please download an older version of the package.
+
 # 🔨 Basic Usage
 
 ```cpp

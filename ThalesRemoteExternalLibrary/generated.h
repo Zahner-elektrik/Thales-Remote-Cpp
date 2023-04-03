@@ -26,6 +26,12 @@ extern "C"
 	
 __declspec(dllexport) bool __stdcall forceThalesIntoRemoteScript(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen );
 	
+__declspec(dllexport) bool __stdcall hideWindow(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen );
+	
+__declspec(dllexport) bool __stdcall showWindow(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen );
+	
+__declspec(dllexport) bool __stdcall getThalesVersion(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen );
+	
 __declspec(dllexport) bool __stdcall getWorkstationHeartBeat(ThalesRemoteScriptWrapper* handle, int* retval );
 	
 __declspec(dllexport) bool __stdcall getCurrent(ThalesRemoteScriptWrapper* handle, double* retval );

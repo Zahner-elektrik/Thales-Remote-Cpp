@@ -105,6 +105,31 @@ public:
      */
     std::string forceThalesIntoRemoteScript();
 
+    /** Hide Thales window
+     *
+     * This is for remote integrations to prevent operation of the GUI.
+     * Thales is still visible in the taskbar but can no longer be maximized.
+     *
+     * \return The response string from the device.
+     */
+    std::string hideWindow();
+
+    /** Show Thales window
+     *
+     * If the Thales window has been hidden, it can be displayed again with this command.
+     *
+     * \return The response string from the device.
+     */
+    std::string showWindow();
+
+    /** Get Thales Version.
+     *
+     * Reads the current Thales version. Same version as in the application title line.
+     *
+     * \return The response string from the device.
+     */
+    std::string getThalesVersion();
+
     /** Read the HeartBeat from the Term.
      *
      * Query the HeartBeat time from the Term software for the workstation and the Thales software accordingly.
