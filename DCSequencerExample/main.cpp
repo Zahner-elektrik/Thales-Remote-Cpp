@@ -6,13 +6,7 @@ int main(int argc, char *argv[]) {
 
     ZenniumConnection zenniumConnection;
 
-    bool connectionSuccessful = zenniumConnection.connectToTerm("localhost", "ScriptRemote");
-
-    if (not connectionSuccessful) {
-
-        std::cout << "could not connect to Term" << std::endl;
-        return 0;
-    }
+    zenniumConnection.connectToTerm("localhost", "ScriptRemote");
 
     ThalesRemoteScriptWrapper zahnerZennium(&zenniumConnection);
 

@@ -154,6 +154,12 @@ public:
      */
     double getPotential();
 
+    /** Read the measured voltage from the device.
+     *
+     * \return The current voltage value.
+     */
+    double getVoltage();
+
     /** Set the output current.
      *
      * \param  current The output current to set.
@@ -286,6 +292,15 @@ public:
      */
     std::string getDeviceName();
 
+    /** Read the currently set parameters
+     *
+     * A string containing the configuration is returned.
+     *   For Example: OK;SETUP;Pset=1.0000e-05;Cset=1.0000e-06;Frq=1.0000e+03;Ampl=0.0000e+00;Nw=1;Pot=0;Gal=0;GAL=0;Cmin=-3.0000e+00;Cmax=3.0000e+00;Pmin=-5.2377e+00;Pmax=5.2377e+00;DEV=0;EPC=0;MAXDEV=4;ENDSETUP
+     *
+     * \return The response string from the device.
+     */
+    std::string readSetup();
+
     /** Perform offset calibration on the device.
      *
      * When the instrument has warmed up for about 30 minutes,
@@ -338,6 +353,10 @@ public:
      * \return The response string from the device.
      */
     std::string disableRuleFileUsage();
+
+    /*
+     * Section with PAD4 Commands
+     */
 
     /** Setting a single channel of a PAD4 card for an EIS measurement.
      *
@@ -1143,6 +1162,40 @@ public:
      */
     std::string setSequenceOutputFileName(std::string name);
 
+    /** Switch on that up to 8 ACQ channels are used in the sequencer.
+     *
+     * \param state default true to switch on.
+     * \return The response string from the device.
+     */
+    std::string enableSequenceAcqGlobal(bool state = true);
+
+    /** Switch off that up to 8 ACQ channels are used in the sequencer.
+     *
+     * \return The response string from the device.
+     */
+    std::string disableSequenceAcqGlobal();
+
+    /** Switch on the set sequence ACQ channel
+     *
+     * \param  channel ACQ channel index.
+     * \param state default true to switch on.
+     * \return The response string from the device.
+     */
+    std::string enableSequenceAcqChannel(int channel, bool state = true);
+
+    /** Switch off the set sequence ACQ channel
+     *
+     * \param  channel channel index
+     * \return The response string from the device.
+     */
+    std::string disableSequenceAcqChannel(int channel);
+
+    /** Read the currently set sequencer ACQ Setup.
+     *
+     * \return The response string from the device.
+     */
+    std::string readSequenceAcqSetup();
+
     /** Run the selected sequence.
      *
      *  This command executes the selected sequence between 0 and 9.
@@ -1150,6 +1203,118 @@ public:
      * \return The response string from the device.
      */
     std::string runSequence();
+
+    /** Set the Ohmic Drop or IR Drop for the sequencer.
+     *
+     *  0 to 1 tera ohm.
+     *
+     *  Parameter name in sequence file: ``rodrop``
+     *
+     * \param value Ohmic Drop in Ohm.
+     *
+     * \return The response string from the device.
+     */
+    std::string setSequenceOhmicDrop(double value);
+
+    /** Set the maximum runtime in hours.
+     *
+     *  0.1 to 1000 hours.
+     *
+     *  Parameter name in sequence file: ``max_ti``
+     *
+     * \param value maximum runtime in hours.
+     *
+     * \return The response string from the device.
+     */
+    std::string setSequenceMaximumRuntime(double value);
+
+    /** Set the lower potential limit.
+     *
+     *  Parameter name in sequence file: ``pot_hi``
+     *
+     * \param value potential limit.
+     *
+     * \return The response string from the device.
+     */
+    std::string setSequenceUpperPotentialLimit(double value);
+
+    /** Set the lower potential limit.
+     *
+     *  Parameter name in sequence file: ``pot_lo``
+     *
+     * \param value potential limit.
+     *
+     * \return The response string from the device.
+     */
+    std::string setSequenceLowerPotentialLimit(double value);
+
+    /** Set the upper current limit.
+     *
+     *  Parameter name in sequence file: ``cur_hi``
+     *
+     * \param value potential limit.
+     *
+     * \return The response string from the device.
+     */
+    std::string setSequenceUpperCurrentLimit(double value);
+
+    /** Set the lower current limit.
+     *
+     *  Parameter name in sequence file: ``cur_lo``
+     *
+     * \param value potential limit.
+     *
+     * \return The response string from the device.
+     */
+    std::string setSequenceLowerCurrentLimit(double value);
+
+    /** Set the current range.
+     *
+     *  Parameter name in sequence file: ``cur_ra``
+     *
+     * \param value current range in ampere.
+     *
+     * \return The response string from the device.
+     */
+    std::string setSequenceCurrentRange(double value);
+
+    /** Set the potential latency window..
+     *
+     *  This defines what happens when a limit value is exceeded.
+     *  The following values are possible:
+     *
+     *  1: potentiostat is not switched off
+     *  t: potentiostat is switched off after t seconds, maximum 30
+     *  2: potentiostat is switched off after 2 seconds
+     *  0: potentiostat is switched off immediately
+     *
+     *  Parameter name in sequence file: ``pot_of``
+     *
+     *
+     * \param value values meaning see in the text.
+     *
+     * \return The response string from the device.
+     */
+    std::string setSequencePotentialLatencyWindow(double value);
+
+    /** Set the current latency window..
+     *
+     *  This defines what happens when a limit value is exceeded.
+     *  The following values are possible:
+     *
+     *  1: potentiostat is not switched off
+     *  t: potentiostat is switched off after t seconds, maximum 30
+     *  2: potentiostat is switched off after 2 seconds
+     *  0: potentiostat is switched off immediately
+     *
+     *  Parameter name in sequence file: ``cur_of``
+     *
+     *
+     * \param value values meaning see in the text.
+     *
+     * \return The response string from the device.
+     */
+    std::string setSequenceCurrentLatencyWindow(double value);
 
     /** Enables the use of the FRA probe.
      *
@@ -1245,6 +1410,43 @@ public:
      */
     std::string setFraPotentiostatMode(PotentiostatMode potentiostatMode);
 
+    /** Read the currently set FRA parameters.
+     *
+     *  Reading the set FRA configuration.
+     *  A string containing the configuration is returned.
+     *
+     * \return The response string from the device.
+     */
+    std::string readFraSetup();
+
+    /*
+     * Section with methods for the ACQ channels
+     */
+
+    /** Read the currently set FRA parameters.
+     *
+     *  Reading the set FRA configuration.
+     *  A string containing the configuration is returned.
+     *
+     * \return The response string from the device.
+     */
+    std::string readAcqSetup();
+
+    /** Read all active ACQ channels.
+     *
+     * A string is read from Thales which contains the ACQ channels as follows:
+     * "ACQVAL(0)= 2.632052e-01;ACQVAL(1)= 8.413594e-02;ACQVAL(2)= 5.338292e+01"
+     *
+     * \return The response string from the device.
+     */
+    std::string readAllAcqChannels();
+
+    /** Read the ACQ channel to the passed index.
+     *
+     * @param channel Display channel index.
+     * @return
+     */
+    double readAcqChannel(int channel);
 
 
 protected:

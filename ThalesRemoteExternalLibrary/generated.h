@@ -1,4 +1,31 @@
 
+/******************************************************************
+ *  ____       __                        __    __   __      _ __
+ * /_  / ___ _/ /  ___  ___ ___________ / /__ / /__/ /_____(_) /__
+ *  / /_/ _ `/ _ \/ _ \/ -_) __/___/ -_) / -_)  '_/ __/ __/ /  '_/
+ * /___/\_,_/_//_/_//_/\__/_/      \__/_/\__/_/\_\__/_/ /_/_/\_ *
+ * Copyright 2023 ZAHNER-elektrik I. Zahner-Schiller GmbH & Co. KG
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the Software
+ * is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
+ * THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+#ifndef THALESREMOTEEXTERNALLIBRARY
+#define THALESREMOTEEXTERNALLIBRARY
+
 #include "thalesremoteconnection.h"
 #include "thalesremotescriptwrapper.h"
 #include "thalesfileinterface.h"
@@ -38,6 +65,8 @@ __declspec(dllexport) bool __stdcall getCurrent(ThalesRemoteScriptWrapper* handl
 	
 __declspec(dllexport) bool __stdcall getPotential(ThalesRemoteScriptWrapper* handle, double* retval );
 	
+__declspec(dllexport) bool __stdcall getVoltage(ThalesRemoteScriptWrapper* handle, double* retval );
+	
 __declspec(dllexport) bool __stdcall setCurrent(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , double current);
 	
 __declspec(dllexport) bool __stdcall setPotential(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , double potential);
@@ -61,6 +90,8 @@ __declspec(dllexport) bool __stdcall switchToSCPIControlWithoutPotentiostatState
 __declspec(dllexport) bool __stdcall getSerialNumber(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen );
 	
 __declspec(dllexport) bool __stdcall getDeviceName(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen );
+	
+__declspec(dllexport) bool __stdcall readSetup(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen );
 	
 __declspec(dllexport) bool __stdcall calibrateOffsets(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen );
 	
@@ -234,7 +265,35 @@ __declspec(dllexport) bool __stdcall setSequenceOutputPath(ThalesRemoteScriptWra
 	
 __declspec(dllexport) bool __stdcall setSequenceOutputFileName(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , const char* name);
 	
+__declspec(dllexport) bool __stdcall enableSequenceAcqGlobal(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , bool state);
+	
+__declspec(dllexport) bool __stdcall disableSequenceAcqGlobal(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen );
+	
+__declspec(dllexport) bool __stdcall enableSequenceAcqChannel(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , int channel, bool state);
+	
+__declspec(dllexport) bool __stdcall disableSequenceAcqChannel(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , int channel);
+	
+__declspec(dllexport) bool __stdcall readSequenceAcqSetup(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen );
+	
 __declspec(dllexport) bool __stdcall runSequence(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen );
+	
+__declspec(dllexport) bool __stdcall setSequenceOhmicDrop(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , double value);
+	
+__declspec(dllexport) bool __stdcall setSequenceMaximumRuntime(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , double value);
+	
+__declspec(dllexport) bool __stdcall setSequenceUpperPotentialLimit(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , double value);
+	
+__declspec(dllexport) bool __stdcall setSequenceLowerPotentialLimit(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , double value);
+	
+__declspec(dllexport) bool __stdcall setSequenceUpperCurrentLimit(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , double value);
+	
+__declspec(dllexport) bool __stdcall setSequenceLowerCurrentLimit(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , double value);
+	
+__declspec(dllexport) bool __stdcall setSequenceCurrentRange(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , double value);
+	
+__declspec(dllexport) bool __stdcall setSequencePotentialLatencyWindow(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , double value);
+	
+__declspec(dllexport) bool __stdcall setSequenceCurrentLatencyWindow(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , double value);
 	
 __declspec(dllexport) bool __stdcall enableFraMode(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , bool enabled);
 	
@@ -255,5 +314,14 @@ __declspec(dllexport) bool __stdcall setFraCurrentMinimum(ThalesRemoteScriptWrap
 __declspec(dllexport) bool __stdcall setFraCurrentMaximum(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , double value);
 	
 __declspec(dllexport) bool __stdcall setFraPotentiostatMode(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , char const* potentiostatMode);
+	
+__declspec(dllexport) bool __stdcall readFraSetup(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen );
+	
+__declspec(dllexport) bool __stdcall readAcqSetup(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen );
+	
+__declspec(dllexport) bool __stdcall readAllAcqChannels(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen );
+	
+__declspec(dllexport) bool __stdcall readAcqChannel(ThalesRemoteScriptWrapper* handle, double* retval , int channel);
 
 }
+#endif // THALESREMOTEEXTERNALLIBRARY

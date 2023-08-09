@@ -116,8 +116,8 @@ bool ZenniumConnection::connectToTerm(std::string address, std::string connectio
 
     registration_packet.reserve(payload_length + 6);
 
-    registration_packet.push_back(reinterpret_cast<unsigned char *>(&payload_length)[0]);
     registration_packet.push_back(reinterpret_cast<unsigned char *>(&payload_length)[1]);
+    registration_packet.push_back(reinterpret_cast<unsigned char *>(&payload_length)[0]);
 
     const std::vector<unsigned char> fixedHeaderBytes =
     {
@@ -129,7 +129,7 @@ bool ZenniumConnection::connectToTerm(std::string address, std::string connectio
     registration_packet.insert(registration_packet.end(), fixedHeaderBytes.begin(), fixedHeaderBytes.end());
 
     std::copy(connectionName.begin(), connectionName.end(), std::back_inserter(registration_packet));
-    send(this->socket_handle, reinterpret_cast<char *>(registration_packet.data()), static_cast<int>(registration_packet.size()), 0);
+    sendall(this->socket_handle, reinterpret_cast<char *>(registration_packet.data()), static_cast<int>(registration_packet.size()), 0);
 
     std::this_thread::sleep_for(std::chrono::milliseconds(800));
 
@@ -162,6 +162,30 @@ bool ZenniumConnection::isConnectedToTerm() const
 
 }
 
+int ZenniumConnection::sendall(SOCKET s, char *data, int dataSize, int flags)
+{
+    int totalSent = 0; // How much we've sent already
+    int bytesLeft = dataSize; // How much we still need to send
+    int n;
+
+    int attempts = 0; // Counts the number of attempts
+
+    while(totalSent < dataSize) {
+        n = send(s, data + totalSent, bytesLeft, flags);
+        if (n == -1) { break; }
+        totalSent += n;
+        bytesLeft -= n;
+
+        attempts++;
+        if(attempts >= dataSize) {
+            //something is wrong
+            break;
+        }
+    }
+
+    return (n==-1) ? -1 : totalSent; // Return -1 on error, otherwise return the number of bytes sent
+}
+
 void ZenniumConnection::sendTelegram(std::string payload, int message_type)
 {
     std::vector<unsigned char> bytes(payload.begin(), payload.end());
@@ -181,7 +205,7 @@ void ZenniumConnection::sendTelegram(std::vector<unsigned char> payload, int mes
 
     packet.insert(packet.end(), payload.begin(), payload.end());
 
-    int status = send(this->socket_handle, reinterpret_cast<char *>(packet.data()), static_cast<int>(packet.size()), 0);
+    int status = sendall(this->socket_handle, reinterpret_cast<char *>(packet.data()), static_cast<int>(packet.size()), 0);
 
     if(status == -1)
     {
@@ -217,6 +241,12 @@ std::string ZenniumConnection::waitForStringTelegram(int message_type, const std
     std::vector<uint8_t> telegram = waitForTelegram(message_type, timeout);
 
     return std::string(reinterpret_cast<char *>(telegram.data()), telegram.size());
+}
+
+bool ZenniumConnection::isTelegramAvailable(int message_type)
+{
+    auto empty = this->queuesForChannels[message_type]->empty();
+    return !empty;
 }
 
 std::string ZenniumConnection::sendStringAndWaitForReplyString(std::string payload, int message_type)

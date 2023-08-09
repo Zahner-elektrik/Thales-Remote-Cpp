@@ -14,13 +14,7 @@ void watchThread()
 {
     ZenniumConnection zenniumHeartBeatConnection;
 
-    bool connectionSuccessful = zenniumHeartBeatConnection.connectToTerm("localhost", "Watch");
-
-    if (not connectionSuccessful) {
-
-        std::cout << "could not connect to Term" << std::endl;
-        return;
-    }
+    zenniumHeartBeatConnection.connectToTerm("localhost", "Watch");
 
     ThalesRemoteScriptWrapper zahnerZennium(&zenniumHeartBeatConnection);
     while (watchThreadRun == true)
@@ -35,13 +29,7 @@ int main(int argc, char *argv[]) {
 
     ZenniumConnection ZenniumConnection;
 
-    bool connectionSuccessful = ZenniumConnection.connectToTerm("localhost", "ScriptRemote");
-
-    if (not connectionSuccessful) {
-
-        std::cout << "could not connect to Term" << std::endl;
-        return 0;
-    }
+    ZenniumConnection.connectToTerm("localhost", "ScriptRemote");
 
     ThalesRemoteScriptWrapper zahnerZennium(&ZenniumConnection);
 

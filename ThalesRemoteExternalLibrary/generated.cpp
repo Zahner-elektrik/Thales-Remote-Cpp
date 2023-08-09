@@ -1,4 +1,29 @@
 
+/******************************************************************
+ *  ____       __                        __    __   __      _ __
+ * /_  / ___ _/ /  ___  ___ ___________ / /__ / /__/ /_____(_) /__
+ *  / /_/ _ `/ _ \/ _ \/ -_) __/___/ -_) / -_)  '_/ __/ __/ /  '_/
+ * /___/\_,_/_//_/_//_/\__/_/      \__/_/\__/_/\_\__/_/ /_/_/\_ *
+ * Copyright 2023 ZAHNER-elektrik I. Zahner-Schiller GmbH & Co. KG
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the Software
+ * is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
+ * THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 #include "thalesremoteerror.h"
 #include "generated.h"
 #include <map>
@@ -67,10 +92,11 @@ __declspec(dllexport) bool __stdcall  setTimeout(ZenniumConnection* handle, int 
     zenniumConnections.at(handle)->setTimeout(std::chrono::duration<int, std::milli>(timeout));
     return true;
 }
+
 __declspec(dllexport) bool __stdcall  getTimeout(ZenniumConnection* handle, int* timeout)
 {
     auto retval = zenniumConnections.at(handle)->getTimeout();
-    *timeout = std::chrono::milliseconds(retval).count();
+    *timeout = static_cast<int>(std::chrono::milliseconds(retval).count());
     return true;
 }
 
@@ -504,6 +530,21 @@ __declspec(dllexport) bool __stdcall getPotential(ThalesRemoteScriptWrapper* han
     }
 }
 
+__declspec(dllexport) bool __stdcall getVoltage(ThalesRemoteScriptWrapper* handle, double* retval )
+{
+    try
+    {
+        auto returned = scriptWrappers.at(handle)->getVoltage();
+        *retval = returned;
+        return true;
+    } 
+    catch (const ZahnerError& ex)
+    {
+        errorMessages.at(handle) = ex.getMessage();
+        return false;
+    }
+}
+
 __declspec(dllexport) bool __stdcall setCurrent(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , double current)
 {
     try
@@ -718,6 +759,25 @@ __declspec(dllexport) bool __stdcall getDeviceName(ThalesRemoteScriptWrapper* ha
     try
     {
         auto returned = scriptWrappers.at(handle)->getDeviceName();
+        
+        *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
+        retval[*retvalLen] = '\0';
+        *retvalLen += 1;
+        
+        return true;
+    } 
+    catch (const ZahnerError& ex)
+    {
+        errorMessages.at(handle) = ex.getMessage();
+        return false;
+    }
+}
+
+__declspec(dllexport) bool __stdcall readSetup(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen )
+{
+    try
+    {
+        auto returned = scriptWrappers.at(handle)->readSetup();
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
         retval[*retvalLen] = '\0';
@@ -2365,11 +2425,277 @@ __declspec(dllexport) bool __stdcall setSequenceOutputFileName(ThalesRemoteScrip
     }
 }
 
+__declspec(dllexport) bool __stdcall enableSequenceAcqGlobal(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , bool state)
+{
+    try
+    {
+        auto returned = scriptWrappers.at(handle)->enableSequenceAcqGlobal(state);
+        
+        *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
+        retval[*retvalLen] = '\0';
+        *retvalLen += 1;
+        
+        return true;
+    } 
+    catch (const ZahnerError& ex)
+    {
+        errorMessages.at(handle) = ex.getMessage();
+        return false;
+    }
+}
+
+__declspec(dllexport) bool __stdcall disableSequenceAcqGlobal(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen )
+{
+    try
+    {
+        auto returned = scriptWrappers.at(handle)->disableSequenceAcqGlobal();
+        
+        *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
+        retval[*retvalLen] = '\0';
+        *retvalLen += 1;
+        
+        return true;
+    } 
+    catch (const ZahnerError& ex)
+    {
+        errorMessages.at(handle) = ex.getMessage();
+        return false;
+    }
+}
+
+__declspec(dllexport) bool __stdcall enableSequenceAcqChannel(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , int channel, bool state)
+{
+    try
+    {
+        auto returned = scriptWrappers.at(handle)->enableSequenceAcqChannel(channel, state);
+        
+        *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
+        retval[*retvalLen] = '\0';
+        *retvalLen += 1;
+        
+        return true;
+    } 
+    catch (const ZahnerError& ex)
+    {
+        errorMessages.at(handle) = ex.getMessage();
+        return false;
+    }
+}
+
+__declspec(dllexport) bool __stdcall disableSequenceAcqChannel(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , int channel)
+{
+    try
+    {
+        auto returned = scriptWrappers.at(handle)->disableSequenceAcqChannel(channel);
+        
+        *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
+        retval[*retvalLen] = '\0';
+        *retvalLen += 1;
+        
+        return true;
+    } 
+    catch (const ZahnerError& ex)
+    {
+        errorMessages.at(handle) = ex.getMessage();
+        return false;
+    }
+}
+
+__declspec(dllexport) bool __stdcall readSequenceAcqSetup(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen )
+{
+    try
+    {
+        auto returned = scriptWrappers.at(handle)->readSequenceAcqSetup();
+        
+        *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
+        retval[*retvalLen] = '\0';
+        *retvalLen += 1;
+        
+        return true;
+    } 
+    catch (const ZahnerError& ex)
+    {
+        errorMessages.at(handle) = ex.getMessage();
+        return false;
+    }
+}
+
 __declspec(dllexport) bool __stdcall runSequence(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen )
 {
     try
     {
         auto returned = scriptWrappers.at(handle)->runSequence();
+        
+        *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
+        retval[*retvalLen] = '\0';
+        *retvalLen += 1;
+        
+        return true;
+    } 
+    catch (const ZahnerError& ex)
+    {
+        errorMessages.at(handle) = ex.getMessage();
+        return false;
+    }
+}
+
+__declspec(dllexport) bool __stdcall setSequenceOhmicDrop(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , double value)
+{
+    try
+    {
+        auto returned = scriptWrappers.at(handle)->setSequenceOhmicDrop(value);
+        
+        *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
+        retval[*retvalLen] = '\0';
+        *retvalLen += 1;
+        
+        return true;
+    } 
+    catch (const ZahnerError& ex)
+    {
+        errorMessages.at(handle) = ex.getMessage();
+        return false;
+    }
+}
+
+__declspec(dllexport) bool __stdcall setSequenceMaximumRuntime(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , double value)
+{
+    try
+    {
+        auto returned = scriptWrappers.at(handle)->setSequenceMaximumRuntime(value);
+        
+        *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
+        retval[*retvalLen] = '\0';
+        *retvalLen += 1;
+        
+        return true;
+    } 
+    catch (const ZahnerError& ex)
+    {
+        errorMessages.at(handle) = ex.getMessage();
+        return false;
+    }
+}
+
+__declspec(dllexport) bool __stdcall setSequenceUpperPotentialLimit(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , double value)
+{
+    try
+    {
+        auto returned = scriptWrappers.at(handle)->setSequenceUpperPotentialLimit(value);
+        
+        *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
+        retval[*retvalLen] = '\0';
+        *retvalLen += 1;
+        
+        return true;
+    } 
+    catch (const ZahnerError& ex)
+    {
+        errorMessages.at(handle) = ex.getMessage();
+        return false;
+    }
+}
+
+__declspec(dllexport) bool __stdcall setSequenceLowerPotentialLimit(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , double value)
+{
+    try
+    {
+        auto returned = scriptWrappers.at(handle)->setSequenceLowerPotentialLimit(value);
+        
+        *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
+        retval[*retvalLen] = '\0';
+        *retvalLen += 1;
+        
+        return true;
+    } 
+    catch (const ZahnerError& ex)
+    {
+        errorMessages.at(handle) = ex.getMessage();
+        return false;
+    }
+}
+
+__declspec(dllexport) bool __stdcall setSequenceUpperCurrentLimit(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , double value)
+{
+    try
+    {
+        auto returned = scriptWrappers.at(handle)->setSequenceUpperCurrentLimit(value);
+        
+        *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
+        retval[*retvalLen] = '\0';
+        *retvalLen += 1;
+        
+        return true;
+    } 
+    catch (const ZahnerError& ex)
+    {
+        errorMessages.at(handle) = ex.getMessage();
+        return false;
+    }
+}
+
+__declspec(dllexport) bool __stdcall setSequenceLowerCurrentLimit(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , double value)
+{
+    try
+    {
+        auto returned = scriptWrappers.at(handle)->setSequenceLowerCurrentLimit(value);
+        
+        *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
+        retval[*retvalLen] = '\0';
+        *retvalLen += 1;
+        
+        return true;
+    } 
+    catch (const ZahnerError& ex)
+    {
+        errorMessages.at(handle) = ex.getMessage();
+        return false;
+    }
+}
+
+__declspec(dllexport) bool __stdcall setSequenceCurrentRange(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , double value)
+{
+    try
+    {
+        auto returned = scriptWrappers.at(handle)->setSequenceCurrentRange(value);
+        
+        *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
+        retval[*retvalLen] = '\0';
+        *retvalLen += 1;
+        
+        return true;
+    } 
+    catch (const ZahnerError& ex)
+    {
+        errorMessages.at(handle) = ex.getMessage();
+        return false;
+    }
+}
+
+__declspec(dllexport) bool __stdcall setSequencePotentialLatencyWindow(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , double value)
+{
+    try
+    {
+        auto returned = scriptWrappers.at(handle)->setSequencePotentialLatencyWindow(value);
+        
+        *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
+        retval[*retvalLen] = '\0';
+        *retvalLen += 1;
+        
+        return true;
+    } 
+    catch (const ZahnerError& ex)
+    {
+        errorMessages.at(handle) = ex.getMessage();
+        return false;
+    }
+}
+
+__declspec(dllexport) bool __stdcall setSequenceCurrentLatencyWindow(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , double value)
+{
+    try
+    {
+        auto returned = scriptWrappers.at(handle)->setSequenceCurrentLatencyWindow(value);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
         retval[*retvalLen] = '\0';
@@ -2565,6 +2891,78 @@ __declspec(dllexport) bool __stdcall setFraPotentiostatMode(ThalesRemoteScriptWr
         retval[*retvalLen] = '\0';
         *retvalLen += 1;
         
+        return true;
+    } 
+    catch (const ZahnerError& ex)
+    {
+        errorMessages.at(handle) = ex.getMessage();
+        return false;
+    }
+}
+
+__declspec(dllexport) bool __stdcall readFraSetup(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen )
+{
+    try
+    {
+        auto returned = scriptWrappers.at(handle)->readFraSetup();
+        
+        *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
+        retval[*retvalLen] = '\0';
+        *retvalLen += 1;
+        
+        return true;
+    } 
+    catch (const ZahnerError& ex)
+    {
+        errorMessages.at(handle) = ex.getMessage();
+        return false;
+    }
+}
+
+__declspec(dllexport) bool __stdcall readAcqSetup(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen )
+{
+    try
+    {
+        auto returned = scriptWrappers.at(handle)->readAcqSetup();
+        
+        *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
+        retval[*retvalLen] = '\0';
+        *retvalLen += 1;
+        
+        return true;
+    } 
+    catch (const ZahnerError& ex)
+    {
+        errorMessages.at(handle) = ex.getMessage();
+        return false;
+    }
+}
+
+__declspec(dllexport) bool __stdcall readAllAcqChannels(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen )
+{
+    try
+    {
+        auto returned = scriptWrappers.at(handle)->readAllAcqChannels();
+        
+        *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
+        retval[*retvalLen] = '\0';
+        *retvalLen += 1;
+        
+        return true;
+    } 
+    catch (const ZahnerError& ex)
+    {
+        errorMessages.at(handle) = ex.getMessage();
+        return false;
+    }
+}
+
+__declspec(dllexport) bool __stdcall readAcqChannel(ThalesRemoteScriptWrapper* handle, double* retval , int channel)
+{
+    try
+    {
+        auto returned = scriptWrappers.at(handle)->readAcqChannel(channel);
+        *retval = returned;
         return true;
     } 
     catch (const ZahnerError& ex)

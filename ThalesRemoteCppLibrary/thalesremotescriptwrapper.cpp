@@ -69,7 +69,7 @@ int compareVersions(const std::string& version1, const std::string& version2) {
     }
 }
 
-const std::string MINIMUM_THALES_VERSION = "5.8.6";
+const std::string MINIMUM_THALES_VERSION = "5.9.0";
 
 ThalesRemoteScriptWrapper::ThalesRemoteScriptWrapper(ZenniumConnection * const remoteConnection) :
     remoteConnection(remoteConnection)
@@ -183,6 +183,11 @@ double ThalesRemoteScriptWrapper::getPotential()
     return this->requestValueAndParseUsingRegexp("POTENTIAL", std::regex("potential=\\s*(.*?)V"));
 }
 
+double ThalesRemoteScriptWrapper::getVoltage()
+{
+    return this->getPotential();
+}
+
 std::string ThalesRemoteScriptWrapper::setCurrent(double current)
 {
     return this->setValue("Cset", current);
@@ -266,6 +271,11 @@ std::string ThalesRemoteScriptWrapper::getDeviceName()
         retval = match.str(3);
     }
     return retval;
+}
+
+std::string ThalesRemoteScriptWrapper::readSetup()
+{
+    return this->executeRemoteCommand("SENDSETUP");
 }
 
 std::string ThalesRemoteScriptWrapper::calibrateOffsets()
@@ -957,6 +967,39 @@ std::string ThalesRemoteScriptWrapper::setSequenceOutputFileName(std::string nam
     return this->setValue("SEQ_ROOT",name);
 }
 
+std::string ThalesRemoteScriptWrapper::enableSequenceAcqGlobal(bool state)
+{
+    return this->setValue("SEQ_ACQENA", state == true ? -1 : 0);
+}
+
+std::string ThalesRemoteScriptWrapper::disableSequenceAcqGlobal()
+{
+    return this->enableSequenceAcqGlobal(false);
+}
+
+std::string ThalesRemoteScriptWrapper::enableSequenceAcqChannel(int channel, bool state)
+{
+    std::string command = "SEQ_ACQ=" + std::to_string(channel) + ";" + std::to_string(state == true ? 1 : 0);
+    auto reply = this->executeRemoteCommand(command);
+
+    if(reply.find("ERROR") != std::string::npos)
+    {
+        throw ThalesRemoteError(reply);
+    }
+
+    return reply;
+}
+
+std::string ThalesRemoteScriptWrapper::disableSequenceAcqChannel(int channel)
+{
+    return this->enableSequenceAcqChannel(channel,false);
+}
+
+std::string ThalesRemoteScriptWrapper::readSequenceAcqSetup()
+{
+    return this->executeRemoteCommand("SENDSEQACQSETUP");
+}
+
 std::string ThalesRemoteScriptWrapper::runSequence()
 {
     auto reply = this->executeRemoteCommand("DOSEQ");
@@ -967,6 +1010,51 @@ std::string ThalesRemoteScriptWrapper::runSequence()
     }
 
     return reply;
+}
+
+std::string ThalesRemoteScriptWrapper::setSequenceOhmicDrop(double value)
+{
+    return this->setValue("SEQ_RODROP", value);
+}
+
+std::string ThalesRemoteScriptWrapper::setSequenceMaximumRuntime(double value)
+{
+    return this->setValue("SEQ_MAXTIME", value);
+}
+
+std::string ThalesRemoteScriptWrapper::setSequenceUpperPotentialLimit(double value)
+{
+    return this->setValue("SEQ_EUPPER", value);
+}
+
+std::string ThalesRemoteScriptWrapper::setSequenceLowerPotentialLimit(double value)
+{
+    return this->setValue("SEQ_ELOWER", value);
+}
+
+std::string ThalesRemoteScriptWrapper::setSequenceUpperCurrentLimit(double value)
+{
+    return this->setValue("SEQ_IUPPER", value);
+}
+
+std::string ThalesRemoteScriptWrapper::setSequenceLowerCurrentLimit(double value)
+{
+    return this->setValue("SEQ_ILOWER", value);
+}
+
+std::string ThalesRemoteScriptWrapper::setSequenceCurrentRange(double value)
+{
+    return this->setValue("SEQ_IRANGE", value);
+}
+
+std::string ThalesRemoteScriptWrapper::setSequencePotentialLatencyWindow(double value)
+{
+    return this->setValue("SEQ_POTOFLO", value);
+}
+
+std::string ThalesRemoteScriptWrapper::setSequenceCurrentLatencyWindow(double value)
+{
+    return this->setValue("SEQ_CUROFLO", value);
 }
 
 std::string ThalesRemoteScriptWrapper::enableFraMode(bool enabled)
@@ -1036,6 +1124,34 @@ std::string ThalesRemoteScriptWrapper::setFraPotentiostatMode(PotentiostatMode p
     }
 
     return this->executeRemoteCommand(command);
+}
+
+std::string ThalesRemoteScriptWrapper::readFraSetup()
+{
+    return this->executeRemoteCommand("SENDFRASETUP");
+}
+
+std::string ThalesRemoteScriptWrapper::readAcqSetup()
+{
+    return this->executeRemoteCommand("SENDACQSETUP");
+}
+
+std::string ThalesRemoteScriptWrapper::readAllAcqChannels()
+{
+    std::string reply = this->executeRemoteCommand("ANALOGALL");
+
+    if(reply.find("ERROR") != std::string::npos)
+    {
+        throw ThalesRemoteError(reply);
+    }
+
+    return reply;
+}
+
+double ThalesRemoteScriptWrapper::readAcqChannel(int channel)
+{
+    this->setValue("CHANNEL",channel);
+    return this->requestValueAndParseUsingRegexp("ANALOGIN", std::regex("=[\\s]*(.*)"));
 }
 
 

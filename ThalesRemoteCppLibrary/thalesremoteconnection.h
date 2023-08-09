@@ -93,6 +93,19 @@ public:
      */
     bool isConnectedToTerm() const;
 
+    /** Wraps the socket send function in a loop.
+     *
+     *  Wraps the socket send function in a loop that all data is sent. The function tries to repeat the send as many times as there are bytes to prevent an infinite loop.
+     *  The parameters are those of the send function.
+     *
+     * \param s
+     * \param data
+     * \param dataSize
+     * \param flags
+     * \return
+     */
+    int sendall(SOCKET s, char *data, int dataSize, int flags);
+
     /** Send a telegram (data) to Term.
      *
      * \param  payload The actual data which is being sent to Term.
@@ -121,6 +134,13 @@ public:
      * \return The last received telegram or an empty string if the timeout was reached or something went wrong.
      */
     std::string waitForStringTelegram(int message_type, const std::chrono::duration<int, std::milli> timeout);
+
+    /** Check if the queue is non empty.
+     *
+     * \param message_type Used internally by the DevCli dll. Depends on context. Most of the time 2.
+     * \return true if a telegram can be read.
+     */
+    bool isTelegramAvailable(int message_type);
 
     std::vector<uint8_t> waitForTelegram(int message_type);
     /** Block maximal timeout milliseconds while waiting for an incoming telegram.

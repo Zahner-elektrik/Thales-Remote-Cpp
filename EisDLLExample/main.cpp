@@ -189,7 +189,7 @@ void watchThread()
 int main(int argc, char *argv[]) {
 
 //    lib = LoadLibrary(TEXT("libThalesRemoteExternalLibrary.dll"));
-    lib = LoadLibrary(TEXT("C:\\Programmieren\\Github\\ThalesRemoteQt\\ThalesRemoteExternalLibrary\\libThalesRemoteExternalLibrary.dll"));
+    lib = LoadLibrary(TEXT("C:\\Programmieren\\Github\\ThalesRemoteQt\\ThalesRemoteExternalLibrary\\libThalesRemoteExternalLibrary32.dll"));
     char replyBuffer[1000];
     int replySize;
     if(lib == NULL)

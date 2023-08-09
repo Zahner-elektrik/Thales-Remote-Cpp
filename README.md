@@ -108,7 +108,7 @@ The DLL and the source and header files of the DLL generated.cpp and generated.h
 The DLL is built with CMAKE and MinGW and does not contain any debug information. The repository contains all files to generate the DLL from the generated.cpp and generated.h files.
 
 
-# 📧 Haveing a question?
+# 📧 Having a question?
 Send an <a href="mailto:support@zahner.de?subject=Thales-Remote-Python Question&body=Your Message">e-mail</a> to our support team.
 
 # ⁉️ Found a bug or missing a specific feature?
