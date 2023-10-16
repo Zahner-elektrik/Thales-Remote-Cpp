@@ -69,7 +69,7 @@ int compareVersions(const std::string& version1, const std::string& version2) {
     }
 }
 
-const std::string MINIMUM_THALES_VERSION = "5.9.0";
+const std::string MINIMUM_THALES_VERSION = "5.9.1";
 
 ThalesRemoteScriptWrapper::ThalesRemoteScriptWrapper(ZenniumConnection * const remoteConnection) :
     remoteConnection(remoteConnection)
