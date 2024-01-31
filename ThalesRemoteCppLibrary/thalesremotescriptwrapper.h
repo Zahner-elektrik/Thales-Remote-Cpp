@@ -4,7 +4,7 @@
  *  / /_/ _ `/ _ \/ _ \/ -_) __/___/ -_) / -_)  '_/ __/ __/ /  '_/
  * /___/\_,_/_//_/_//_/\__/_/      \__/_/\__/_/\_\\__/_/ /_/_/\_\
  *
- * Copyright 2023 ZAHNER-elektrik I. Zahner-Schiller GmbH & Co. KG
+ * Copyright 2024 ZAHNER-elektrik I. Zahner-Schiller GmbH & Co. KG
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -558,7 +558,7 @@ public:
      */
     std::complex<double> getImpedance(double frequency);
 
-    /** Measure the impedace with all possible parameters
+    /** Measure the impedace with activated PAD4 channels with all possible parameters
      *
      * \param  frequency The frequency to measure the impedance at.
      * \param  amplitude The amplitude to measure the impedance with. In Volt if potentiostatic mode or Ampere for galvanostatic mode.
@@ -567,6 +567,32 @@ public:
      * \return The complex impedance at the measured point.
      */
     std::complex<double> getImpedance(double frequency, double amplitude, int numberOfPeriods = 1);
+
+     /** Measure the impedance with activated PAD4 channels at the set frequency, amplitude and averages.
+      * 
+      * The function returns a string containing all impedance results. impedance is the MAIN channel all other padXX= are the PAD4 channels. Channels which are deactivated have the value 0.
+      *
+      * \return String containing the impedance results.
+      */
+    std::string getImpedancePad4();
+
+    /** Measure the impedance at the set amplitude with set averages.
+     *
+     * \param  frequency the frequency to measure the impedance at.
+     *
+     * \return String containing the impedance results.
+     */
+    std::string getImpedancePad4(double frequency);
+
+    /** Measure the impedace with activated PAD4 channels with all possible parameters
+     *
+     * \param  frequency The frequency to measure the impedance at.
+     * \param  amplitude The amplitude to measure the impedance with. In Volt if potentiostatic mode or Ampere for galvanostatic mode.
+     * \param  numberOfPeriods The number of periods / waves to average.
+     *
+     * \return String containing the impedance results.
+     */
+    std::string getImpedancePad4(double frequency, double amplitude, int numberOfPeriods = 1);
 
     /** Set the measurement naming rule.
      *

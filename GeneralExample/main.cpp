@@ -9,7 +9,7 @@ int main(int argc, char *argv[]) {
 
     ZenniumConnection ZenniumConnection;
 
-    ZenniumConnection.connectToTerm("192.168.2.94", "ScriptRemote");
+    ZenniumConnection.connectToTerm("127.0.0.1", "ScriptRemote");
     ThalesRemoteScriptWrapper zahnerZennium(&ZenniumConnection);
 
     zahnerZennium.forceThalesIntoRemoteScript();

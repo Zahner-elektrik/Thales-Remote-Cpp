@@ -4,7 +4,7 @@
  * /_  / ___ _/ /  ___  ___ ___________ / /__ / /__/ /_____(_) /__
  *  / /_/ _ `/ _ \/ _ \/ -_) __/___/ -_) / -_)  '_/ __/ __/ /  '_/
  * /___/\_,_/_//_/_//_/\__/_/      \__/_/\__/_/\_\__/_/ /_/_/\_ *
- * Copyright 2023 ZAHNER-elektrik I. Zahner-Schiller GmbH & Co. KG
+ * Copyright 2024 ZAHNER-elektrik I. Zahner-Schiller GmbH & Co. KG
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -1275,6 +1275,25 @@ __declspec(dllexport) bool __stdcall getImpedance(ThalesRemoteScriptWrapper* han
         
         *real = returned.real();
         *imag = returned.imag();
+        
+        return true;
+    } 
+    catch (const ZahnerError& ex)
+    {
+        errorMessages.at(handle) = ex.getMessage();
+        return false;
+    }
+}
+
+__declspec(dllexport) bool __stdcall getImpedancePad4(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen )
+{
+    try
+    {
+        auto returned = scriptWrappers.at(handle)->getImpedancePad4();
+        
+        *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
+        retval[*retvalLen] = '\0';
+        *retvalLen += 1;
         
         return true;
     } 

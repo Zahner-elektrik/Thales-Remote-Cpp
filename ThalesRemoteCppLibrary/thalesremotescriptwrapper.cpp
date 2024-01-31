@@ -4,7 +4,7 @@
  *  / /_/ _ `/ _ \/ _ \/ -_) __/___/ -_) / -_)  '_/ __/ __/ /  '_/
  * /___/\_,_/_//_/_//_/\__/_/      \__/_/\__/_/\_\\__/_/ /_/_/\_\
  *
- * Copyright 2023 ZAHNER-elektrik I. Zahner-Schiller GmbH & Co. KG
+ * Copyright 2024 ZAHNER-elektrik I. Zahner-Schiller GmbH & Co. KG
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -69,7 +69,7 @@ int compareVersions(const std::string& version1, const std::string& version2) {
     }
 }
 
-const std::string MINIMUM_THALES_VERSION = "5.9.1";
+const std::string MINIMUM_THALES_VERSION = "5.9.2";
 
 ThalesRemoteScriptWrapper::ThalesRemoteScriptWrapper(ZenniumConnection * const remoteConnection) :
     remoteConnection(remoteConnection)
@@ -503,8 +503,8 @@ std::string ThalesRemoteScriptWrapper::setScanDirection(ScanDirection direction)
     return this->setValue("ScanDirection", directionInt);
 }
 
-std::complex<double> ThalesRemoteScriptWrapper::getImpedance() {
-
+std::complex<double> ThalesRemoteScriptWrapper::getImpedance()
+{
     std::complex<double> result(std::nan("1"), std::nan("1"));
 
     std::string reply = this->executeRemoteCommand("IMPEDANCE");
@@ -518,7 +518,7 @@ std::complex<double> ThalesRemoteScriptWrapper::getImpedance() {
     std::smatch match;
     std::regex_search(reply, match, replyStringPattern);
 
-    if (match.size() > 2) {
+    if(match.size() > 2) {
 
         result = std::complex<double>(this->stringToDobule(match.str(1)), this->stringToDobule(match.str(2)));
     }
@@ -540,6 +540,36 @@ std::complex<double> ThalesRemoteScriptWrapper::getImpedance(double frequency, d
     this->setNumberOfPeriods(numberOfPeriods);
 
     return this->getImpedance();
+}
+
+std::string ThalesRemoteScriptWrapper::getImpedancePad4()
+{
+    std::string reply = this->executeRemoteCommand("PAD4IMP");
+
+    if(reply.find("ERROR") != std::string::npos)
+    {
+        throw ThalesRemoteError(reply);
+    }
+
+    return reply;
+}
+
+std::string ThalesRemoteScriptWrapper::getImpedancePad4(double frequency)
+{
+
+    this->setFrequency(frequency);
+
+    return this->getImpedancePad4();
+}
+
+std::string ThalesRemoteScriptWrapper::getImpedancePad4(double frequency, double amplitude, int numberOfPeriods)
+{
+
+    this->setFrequency(frequency);
+    this->setAmplitude(amplitude);
+    this->setNumberOfPeriods(numberOfPeriods);
+
+    return this->getImpedancePad4();
 }
 
 std::string ThalesRemoteScriptWrapper::setEISNaming(NamingRule naming)

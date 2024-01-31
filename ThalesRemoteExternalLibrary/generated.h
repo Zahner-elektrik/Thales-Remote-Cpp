@@ -4,7 +4,7 @@
  * /_  / ___ _/ /  ___  ___ ___________ / /__ / /__/ /_____(_) /__
  *  / /_/ _ `/ _ \/ _ \/ -_) __/___/ -_) / -_)  '_/ __/ __/ /  '_/
  * /___/\_,_/_//_/_//_/\__/_/      \__/_/\__/_/\_\__/_/ /_/_/\_ *
- * Copyright 2023 ZAHNER-elektrik I. Zahner-Schiller GmbH & Co. KG
+ * Copyright 2024 ZAHNER-elektrik I. Zahner-Schiller GmbH & Co. KG
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -144,6 +144,8 @@ __declspec(dllexport) bool __stdcall setScanStrategy(ThalesRemoteScriptWrapper* 
 __declspec(dllexport) bool __stdcall setScanDirection(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , char const* direction);
 	
 __declspec(dllexport) bool __stdcall getImpedance(ThalesRemoteScriptWrapper* handle, double* real, double* imag );
+	
+__declspec(dllexport) bool __stdcall getImpedancePad4(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen );
 	
 __declspec(dllexport) bool __stdcall setEISNaming(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , char const* naming);
 	

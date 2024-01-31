@@ -6,7 +6,7 @@ int main(int argc, char *argv[]) {
 
     ZenniumConnection ZenniumConnection;
 
-    ZenniumConnection.connectToTerm("192.168.2.94", "ScriptRemote");
+    ZenniumConnection.connectToTerm("192.168.2.47", "ScriptRemote");
 
     ThalesRemoteScriptWrapper zahnerZennium(&ZenniumConnection);
 
@@ -54,13 +54,30 @@ int main(int argc, char *argv[]) {
 
 
     /*
+    * Single frequency measurement
+
+    */
+    zahnerZennium.enablePotentiostat();
+
+    for(int i = 0; i < 5; i++) {
+        std::cout << zahnerZennium.getCurrent() << std::endl;
+        std::cout << zahnerZennium.getPotential() << std::endl;
+    }
+
+    for(const auto& frequency : { 100, 300, 1000 })
+    {
+        const auto impedanceResult = zahnerZennium.getImpedancePad4(frequency);
+        std::cout << impedanceResult << std::endl;
+    }
+
+    /*
      * Switching on the potentiostat before the measurement,
      * so that EIS is measured at the set DC potential.
      * If the potentiostat is off before the measurement,
      * the measurement is performed at the OCP.
      */
-    zahnerZennium.enablePotentiostat();
     zahnerZennium.measureEIS();
+    zahnerZennium.setAmplitude(0);
     zahnerZennium.disablePotentiostat();
     ZenniumConnection.disconnectFromTerm();
 

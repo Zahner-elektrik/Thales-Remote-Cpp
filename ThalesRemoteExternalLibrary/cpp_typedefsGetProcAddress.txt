@@ -45,6 +45,7 @@ typedef bool (__stdcall  *setLowerNumberOfPeriodsType)(void* handle, char* retva
 typedef bool (__stdcall  *setScanStrategyType)(void* handle, char* retval, int* retvalLen , char const* strategy);
 typedef bool (__stdcall  *setScanDirectionType)(void* handle, char* retval, int* retvalLen , char const* direction);
 typedef bool (__stdcall  *getImpedanceType)(void* handle, double* real, double* imag );
+typedef bool (__stdcall  *getImpedancePad4Type)(void* handle, char* retval, int* retvalLen );
 typedef bool (__stdcall  *setEISNamingType)(void* handle, char* retval, int* retvalLen , char const* naming);
 typedef bool (__stdcall  *setEISCounterType)(void* handle, char* retval, int* retvalLen , int number);
 typedef bool (__stdcall  *setEISOutputPathType)(void* handle, char* retval, int* retvalLen , const char* path);
@@ -181,6 +182,7 @@ setLowerNumberOfPeriodsType setLowerNumberOfPeriods = (setLowerNumberOfPeriodsTy
 setScanStrategyType setScanStrategy = (setScanStrategyType) GetProcAddress(lib, "setScanStrategy");
 setScanDirectionType setScanDirection = (setScanDirectionType) GetProcAddress(lib, "setScanDirection");
 getImpedanceType getImpedance = (getImpedanceType) GetProcAddress(lib, "getImpedance");
+getImpedancePad4Type getImpedancePad4 = (getImpedancePad4Type) GetProcAddress(lib, "getImpedancePad4");
 setEISNamingType setEISNaming = (setEISNamingType) GetProcAddress(lib, "setEISNaming");
 setEISCounterType setEISCounter = (setEISCounterType) GetProcAddress(lib, "setEISCounter");
 setEISOutputPathType setEISOutputPath = (setEISOutputPathType) GetProcAddress(lib, "setEISOutputPath");
