@@ -27,9 +27,9 @@
 #ifndef THALESREMOTEEXTERNALLIBRARY
 #define THALESREMOTEEXTERNALLIBRARY
 
-#include "thalesremoteconnection.h"
-#include "thalesremotescriptwrapper.h"
-#include "thalesfileinterface.h"
+typedef void ZenniumConnection;
+typedef void ThalesRemoteScriptWrapper;
+typedef void ThalesFileInterface;
 
 extern "C"
 {

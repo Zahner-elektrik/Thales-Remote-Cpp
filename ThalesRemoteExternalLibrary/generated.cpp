@@ -3,8 +3,9 @@
  *  ____       __                        __    __   __      _ __
  * /_  / ___ _/ /  ___  ___ ___________ / /__ / /__/ /_____(_) /__
  *  / /_/ _ `/ _ \/ _ \/ -_) __/___/ -_) / -_)  '_/ __/ __/ /  '_/
- * /___/\_,_/_//_/_//_/\__/_/      \__/_/\__/_/\_\__/_/ /_/_/\_ *
- * Copyright 2024 ZAHNER-elektrik I. Zahner-Schiller GmbH & Co. KG
+ * /___/\_,_/_//_/_//_/\__/_/      \__/_/\__/_/\_\\__/_/ /_/_/\_\
+ *
+ * Copyright 2023 ZAHNER-elektrik I. Zahner-Schiller GmbH & Co. KG
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the "Software"),
@@ -416,7 +417,7 @@ __declspec(dllexport) bool __stdcall forceThalesIntoRemoteScript(ThalesRemoteScr
         auto returned = scriptWrappers.at(handle)->forceThalesIntoRemoteScript();
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -435,7 +436,7 @@ __declspec(dllexport) bool __stdcall hideWindow(ThalesRemoteScriptWrapper* handl
         auto returned = scriptWrappers.at(handle)->hideWindow();
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -454,7 +455,7 @@ __declspec(dllexport) bool __stdcall showWindow(ThalesRemoteScriptWrapper* handl
         auto returned = scriptWrappers.at(handle)->showWindow();
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -473,7 +474,7 @@ __declspec(dllexport) bool __stdcall getThalesVersion(ThalesRemoteScriptWrapper*
         auto returned = scriptWrappers.at(handle)->getThalesVersion();
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -552,7 +553,7 @@ __declspec(dllexport) bool __stdcall setCurrent(ThalesRemoteScriptWrapper* handl
         auto returned = scriptWrappers.at(handle)->setCurrent(current);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -571,7 +572,7 @@ __declspec(dllexport) bool __stdcall setPotential(ThalesRemoteScriptWrapper* han
         auto returned = scriptWrappers.at(handle)->setPotential(potential);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -590,7 +591,7 @@ __declspec(dllexport) bool __stdcall setMaximumShuntIndex(ThalesRemoteScriptWrap
         auto returned = scriptWrappers.at(handle)->setMaximumShuntIndex(shunt);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -609,7 +610,7 @@ __declspec(dllexport) bool __stdcall setMinimumShuntIndex(ThalesRemoteScriptWrap
         auto returned = scriptWrappers.at(handle)->setMinimumShuntIndex(shunt);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -628,7 +629,7 @@ __declspec(dllexport) bool __stdcall setShuntIndex(ThalesRemoteScriptWrapper* ha
         auto returned = scriptWrappers.at(handle)->setShuntIndex(index);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -647,7 +648,7 @@ __declspec(dllexport) bool __stdcall setVoltageRangeIndex(ThalesRemoteScriptWrap
         auto returned = scriptWrappers.at(handle)->setVoltageRangeIndex(index);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -666,7 +667,7 @@ __declspec(dllexport) bool __stdcall selectPotentiostat(ThalesRemoteScriptWrappe
         auto returned = scriptWrappers.at(handle)->selectPotentiostat(device);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -685,7 +686,7 @@ __declspec(dllexport) bool __stdcall selectPotentiostatWithoutPotentiostatStateC
         auto returned = scriptWrappers.at(handle)->selectPotentiostatWithoutPotentiostatStateChange(device);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -704,7 +705,7 @@ __declspec(dllexport) bool __stdcall switchToSCPIControl(ThalesRemoteScriptWrapp
         auto returned = scriptWrappers.at(handle)->switchToSCPIControl();
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -723,7 +724,7 @@ __declspec(dllexport) bool __stdcall switchToSCPIControlWithoutPotentiostatState
         auto returned = scriptWrappers.at(handle)->switchToSCPIControlWithoutPotentiostatStateChange();
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -742,7 +743,7 @@ __declspec(dllexport) bool __stdcall getSerialNumber(ThalesRemoteScriptWrapper* 
         auto returned = scriptWrappers.at(handle)->getSerialNumber();
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -761,7 +762,7 @@ __declspec(dllexport) bool __stdcall getDeviceName(ThalesRemoteScriptWrapper* ha
         auto returned = scriptWrappers.at(handle)->getDeviceName();
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -780,7 +781,7 @@ __declspec(dllexport) bool __stdcall readSetup(ThalesRemoteScriptWrapper* handle
         auto returned = scriptWrappers.at(handle)->readSetup();
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -799,7 +800,7 @@ __declspec(dllexport) bool __stdcall calibrateOffsets(ThalesRemoteScriptWrapper*
         auto returned = scriptWrappers.at(handle)->calibrateOffsets();
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -818,7 +819,7 @@ __declspec(dllexport) bool __stdcall enablePotentiostat(ThalesRemoteScriptWrappe
         auto returned = scriptWrappers.at(handle)->enablePotentiostat(enabled);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -837,7 +838,7 @@ __declspec(dllexport) bool __stdcall disablePotentiostat(ThalesRemoteScriptWrapp
         auto returned = scriptWrappers.at(handle)->disablePotentiostat();
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -856,7 +857,7 @@ __declspec(dllexport) bool __stdcall setPotentiostatMode(ThalesRemoteScriptWrapp
         auto returned = scriptWrappers.at(handle)->setPotentiostatMode(stringToPotentiostatMode(std::string(potentiostatMode)));
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -875,7 +876,7 @@ __declspec(dllexport) bool __stdcall enableRuleFileUsage(ThalesRemoteScriptWrapp
         auto returned = scriptWrappers.at(handle)->enableRuleFileUsage(enabled);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -894,7 +895,7 @@ __declspec(dllexport) bool __stdcall disableRuleFileUsage(ThalesRemoteScriptWrap
         auto returned = scriptWrappers.at(handle)->disableRuleFileUsage();
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -913,7 +914,7 @@ __declspec(dllexport) bool __stdcall setupPad4Channel(ThalesRemoteScriptWrapper*
         auto returned = scriptWrappers.at(handle)->setupPad4Channel(card, channel, enabled);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -932,7 +933,7 @@ __declspec(dllexport) bool __stdcall setupPad4ChannelWithVoltageRange(ThalesRemo
         auto returned = scriptWrappers.at(handle)->setupPad4ChannelWithVoltageRange(card, channel, enabled, voltageRange);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -951,7 +952,7 @@ __declspec(dllexport) bool __stdcall setupPad4ChannelWithShuntResistor(ThalesRem
         auto returned = scriptWrappers.at(handle)->setupPad4ChannelWithShuntResistor(card, channel, enabled, shuntResistor);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -970,7 +971,7 @@ __declspec(dllexport) bool __stdcall setupPad4ModeGlobal(ThalesRemoteScriptWrapp
         auto returned = scriptWrappers.at(handle)->setupPad4ModeGlobal(stringToPad4Mode(std::string(mode)));
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -989,7 +990,7 @@ __declspec(dllexport) bool __stdcall enablePad4Global(ThalesRemoteScriptWrapper*
         auto returned = scriptWrappers.at(handle)->enablePad4Global(enabled);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1008,7 +1009,7 @@ __declspec(dllexport) bool __stdcall disablePad4Global(ThalesRemoteScriptWrapper
         auto returned = scriptWrappers.at(handle)->disablePad4Global();
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1027,7 +1028,7 @@ __declspec(dllexport) bool __stdcall readPAD4Setup(ThalesRemoteScriptWrapper* ha
         auto returned = scriptWrappers.at(handle)->readPAD4Setup();
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1046,7 +1047,7 @@ __declspec(dllexport) bool __stdcall setFrequency(ThalesRemoteScriptWrapper* han
         auto returned = scriptWrappers.at(handle)->setFrequency(frequency);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1065,7 +1066,7 @@ __declspec(dllexport) bool __stdcall setAmplitude(ThalesRemoteScriptWrapper* han
         auto returned = scriptWrappers.at(handle)->setAmplitude(amplitude);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1084,7 +1085,7 @@ __declspec(dllexport) bool __stdcall setNumberOfPeriods(ThalesRemoteScriptWrappe
         auto returned = scriptWrappers.at(handle)->setNumberOfPeriods(numberOfPeriods);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1103,7 +1104,7 @@ __declspec(dllexport) bool __stdcall setUpperFrequencyLimit(ThalesRemoteScriptWr
         auto returned = scriptWrappers.at(handle)->setUpperFrequencyLimit(frequency);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1122,7 +1123,7 @@ __declspec(dllexport) bool __stdcall setLowerFrequencyLimit(ThalesRemoteScriptWr
         auto returned = scriptWrappers.at(handle)->setLowerFrequencyLimit(frequency);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1141,7 +1142,7 @@ __declspec(dllexport) bool __stdcall setStartFrequency(ThalesRemoteScriptWrapper
         auto returned = scriptWrappers.at(handle)->setStartFrequency(frequency);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1160,7 +1161,7 @@ __declspec(dllexport) bool __stdcall setUpperStepsPerDecade(ThalesRemoteScriptWr
         auto returned = scriptWrappers.at(handle)->setUpperStepsPerDecade(steps);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1179,7 +1180,7 @@ __declspec(dllexport) bool __stdcall setLowerStepsPerDecade(ThalesRemoteScriptWr
         auto returned = scriptWrappers.at(handle)->setLowerStepsPerDecade(steps);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1198,7 +1199,7 @@ __declspec(dllexport) bool __stdcall setUpperNumberOfPeriods(ThalesRemoteScriptW
         auto returned = scriptWrappers.at(handle)->setUpperNumberOfPeriods(periods);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1217,7 +1218,7 @@ __declspec(dllexport) bool __stdcall setLowerNumberOfPeriods(ThalesRemoteScriptW
         auto returned = scriptWrappers.at(handle)->setLowerNumberOfPeriods(periods);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1236,7 +1237,7 @@ __declspec(dllexport) bool __stdcall setScanStrategy(ThalesRemoteScriptWrapper* 
         auto returned = scriptWrappers.at(handle)->setScanStrategy(stringToScanStrategy(std::string(strategy)));
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1255,7 +1256,7 @@ __declspec(dllexport) bool __stdcall setScanDirection(ThalesRemoteScriptWrapper*
         auto returned = scriptWrappers.at(handle)->setScanDirection(stringToScanDirection(std::string(direction)));
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1292,7 +1293,7 @@ __declspec(dllexport) bool __stdcall getImpedancePad4(ThalesRemoteScriptWrapper*
         auto returned = scriptWrappers.at(handle)->getImpedancePad4();
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1311,7 +1312,7 @@ __declspec(dllexport) bool __stdcall setEISNaming(ThalesRemoteScriptWrapper* han
         auto returned = scriptWrappers.at(handle)->setEISNaming(stringToNamingRule(std::string(naming)));
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1330,7 +1331,7 @@ __declspec(dllexport) bool __stdcall setEISCounter(ThalesRemoteScriptWrapper* ha
         auto returned = scriptWrappers.at(handle)->setEISCounter(number);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1349,7 +1350,7 @@ __declspec(dllexport) bool __stdcall setEISOutputPath(ThalesRemoteScriptWrapper*
         auto returned = scriptWrappers.at(handle)->setEISOutputPath(std::string(path));
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1368,7 +1369,7 @@ __declspec(dllexport) bool __stdcall setEISOutputFileName(ThalesRemoteScriptWrap
         auto returned = scriptWrappers.at(handle)->setEISOutputFileName(std::string(name));
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1387,7 +1388,7 @@ __declspec(dllexport) bool __stdcall measureEIS(ThalesRemoteScriptWrapper* handl
         auto returned = scriptWrappers.at(handle)->measureEIS();
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1406,7 +1407,7 @@ __declspec(dllexport) bool __stdcall setCVStartPotential(ThalesRemoteScriptWrapp
         auto returned = scriptWrappers.at(handle)->setCVStartPotential(potential);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1425,7 +1426,7 @@ __declspec(dllexport) bool __stdcall setCVUpperReversingPotential(ThalesRemoteSc
         auto returned = scriptWrappers.at(handle)->setCVUpperReversingPotential(potential);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1444,7 +1445,7 @@ __declspec(dllexport) bool __stdcall setCVLowerReversingPotential(ThalesRemoteSc
         auto returned = scriptWrappers.at(handle)->setCVLowerReversingPotential(potential);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1463,7 +1464,7 @@ __declspec(dllexport) bool __stdcall setCVEndPotential(ThalesRemoteScriptWrapper
         auto returned = scriptWrappers.at(handle)->setCVEndPotential(potential);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1482,7 +1483,7 @@ __declspec(dllexport) bool __stdcall setCVStartHoldTime(ThalesRemoteScriptWrappe
         auto returned = scriptWrappers.at(handle)->setCVStartHoldTime(time);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1501,7 +1502,7 @@ __declspec(dllexport) bool __stdcall setCVEndHoldTime(ThalesRemoteScriptWrapper*
         auto returned = scriptWrappers.at(handle)->setCVEndHoldTime(time);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1520,7 +1521,7 @@ __declspec(dllexport) bool __stdcall setCVScanRate(ThalesRemoteScriptWrapper* ha
         auto returned = scriptWrappers.at(handle)->setCVScanRate(scanRate);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1539,7 +1540,7 @@ __declspec(dllexport) bool __stdcall setCVCycles(ThalesRemoteScriptWrapper* hand
         auto returned = scriptWrappers.at(handle)->setCVCycles(cycles);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1558,7 +1559,7 @@ __declspec(dllexport) bool __stdcall setCVSamplesPerCycle(ThalesRemoteScriptWrap
         auto returned = scriptWrappers.at(handle)->setCVSamplesPerCycle(samples);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1577,7 +1578,7 @@ __declspec(dllexport) bool __stdcall setCVMaximumCurrent(ThalesRemoteScriptWrapp
         auto returned = scriptWrappers.at(handle)->setCVMaximumCurrent(current);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1596,7 +1597,7 @@ __declspec(dllexport) bool __stdcall setCVMinimumCurrent(ThalesRemoteScriptWrapp
         auto returned = scriptWrappers.at(handle)->setCVMinimumCurrent(current);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1615,7 +1616,7 @@ __declspec(dllexport) bool __stdcall setCVOhmicDrop(ThalesRemoteScriptWrapper* h
         auto returned = scriptWrappers.at(handle)->setCVOhmicDrop(ohmicDrop);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1634,7 +1635,7 @@ __declspec(dllexport) bool __stdcall enableCVAutoRestartAtCurrentOverflow(Thales
         auto returned = scriptWrappers.at(handle)->enableCVAutoRestartAtCurrentOverflow(enabled);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1653,7 +1654,7 @@ __declspec(dllexport) bool __stdcall disableCVAutoRestartAtCurrentOverflow(Thale
         auto returned = scriptWrappers.at(handle)->disableCVAutoRestartAtCurrentOverflow();
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1672,7 +1673,7 @@ __declspec(dllexport) bool __stdcall enableCVAutoRestartAtCurrentUnderflow(Thale
         auto returned = scriptWrappers.at(handle)->enableCVAutoRestartAtCurrentUnderflow(enabled);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1691,7 +1692,7 @@ __declspec(dllexport) bool __stdcall disableCVAutoRestartAtCurrentUnderflow(Thal
         auto returned = scriptWrappers.at(handle)->disableCVAutoRestartAtCurrentUnderflow();
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1710,7 +1711,7 @@ __declspec(dllexport) bool __stdcall enableCVAnalogFunctionGenerator(ThalesRemot
         auto returned = scriptWrappers.at(handle)->enableCVAnalogFunctionGenerator(enabled);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1729,7 +1730,7 @@ __declspec(dllexport) bool __stdcall disableCVAnalogFunctionGenerator(ThalesRemo
         auto returned = scriptWrappers.at(handle)->disableCVAnalogFunctionGenerator();
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1748,7 +1749,7 @@ __declspec(dllexport) bool __stdcall setCVNaming(ThalesRemoteScriptWrapper* hand
         auto returned = scriptWrappers.at(handle)->setCVNaming(stringToNamingRule(std::string(naming)));
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1767,7 +1768,7 @@ __declspec(dllexport) bool __stdcall setCVCounter(ThalesRemoteScriptWrapper* han
         auto returned = scriptWrappers.at(handle)->setCVCounter(number);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1786,7 +1787,7 @@ __declspec(dllexport) bool __stdcall setCVOutputPath(ThalesRemoteScriptWrapper* 
         auto returned = scriptWrappers.at(handle)->setCVOutputPath(std::string(path));
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1805,7 +1806,7 @@ __declspec(dllexport) bool __stdcall setCVOutputFileName(ThalesRemoteScriptWrapp
         auto returned = scriptWrappers.at(handle)->setCVOutputFileName(std::string(name));
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1824,7 +1825,7 @@ __declspec(dllexport) bool __stdcall checkCVSetup(ThalesRemoteScriptWrapper* han
         auto returned = scriptWrappers.at(handle)->checkCVSetup();
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1843,7 +1844,7 @@ __declspec(dllexport) bool __stdcall readCVSetup(ThalesRemoteScriptWrapper* hand
         auto returned = scriptWrappers.at(handle)->readCVSetup();
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1862,7 +1863,7 @@ __declspec(dllexport) bool __stdcall measureCV(ThalesRemoteScriptWrapper* handle
         auto returned = scriptWrappers.at(handle)->measureCV();
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1881,7 +1882,7 @@ __declspec(dllexport) bool __stdcall setIEFirstEdgePotential(ThalesRemoteScriptW
         auto returned = scriptWrappers.at(handle)->setIEFirstEdgePotential(potential);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1900,7 +1901,7 @@ __declspec(dllexport) bool __stdcall setIESecondEdgePotential(ThalesRemoteScript
         auto returned = scriptWrappers.at(handle)->setIESecondEdgePotential(potential);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1919,7 +1920,7 @@ __declspec(dllexport) bool __stdcall setIEThirdEdgePotential(ThalesRemoteScriptW
         auto returned = scriptWrappers.at(handle)->setIEThirdEdgePotential(potential);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1938,7 +1939,7 @@ __declspec(dllexport) bool __stdcall setIEFourthEdgePotential(ThalesRemoteScript
         auto returned = scriptWrappers.at(handle)->setIEFourthEdgePotential(potential);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1957,7 +1958,7 @@ __declspec(dllexport) bool __stdcall setIEFirstEdgePotentialRelation(ThalesRemot
         auto returned = scriptWrappers.at(handle)->setIEFirstEdgePotentialRelation(stringToPotentialRelation(std::string(relation)));
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1976,7 +1977,7 @@ __declspec(dllexport) bool __stdcall setIESecondEdgePotentialRelation(ThalesRemo
         auto returned = scriptWrappers.at(handle)->setIESecondEdgePotentialRelation(stringToPotentialRelation(std::string(relation)));
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -1995,7 +1996,7 @@ __declspec(dllexport) bool __stdcall setIEThirdEdgePotentialRelation(ThalesRemot
         auto returned = scriptWrappers.at(handle)->setIEThirdEdgePotentialRelation(stringToPotentialRelation(std::string(relation)));
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2014,7 +2015,7 @@ __declspec(dllexport) bool __stdcall setIEFourthEdgePotentialRelation(ThalesRemo
         auto returned = scriptWrappers.at(handle)->setIEFourthEdgePotentialRelation(stringToPotentialRelation(std::string(relation)));
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2033,7 +2034,7 @@ __declspec(dllexport) bool __stdcall setIEPotentialResolution(ThalesRemoteScript
         auto returned = scriptWrappers.at(handle)->setIEPotentialResolution(resolution);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2052,7 +2053,7 @@ __declspec(dllexport) bool __stdcall setIEMinimumWaitingTime(ThalesRemoteScriptW
         auto returned = scriptWrappers.at(handle)->setIEMinimumWaitingTime(time);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2071,7 +2072,7 @@ __declspec(dllexport) bool __stdcall setIEMaximumWaitingTime(ThalesRemoteScriptW
         auto returned = scriptWrappers.at(handle)->setIEMaximumWaitingTime(time);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2090,7 +2091,7 @@ __declspec(dllexport) bool __stdcall setIERelativeTolerance(ThalesRemoteScriptWr
         auto returned = scriptWrappers.at(handle)->setIERelativeTolerance(tolerance);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2109,7 +2110,7 @@ __declspec(dllexport) bool __stdcall setIEAbsoluteTolerance(ThalesRemoteScriptWr
         auto returned = scriptWrappers.at(handle)->setIEAbsoluteTolerance(tolerance);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2128,7 +2129,7 @@ __declspec(dllexport) bool __stdcall setIEOhmicDrop(ThalesRemoteScriptWrapper* h
         auto returned = scriptWrappers.at(handle)->setIEOhmicDrop(ohmicDrop);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2147,7 +2148,7 @@ __declspec(dllexport) bool __stdcall setIESweepMode(ThalesRemoteScriptWrapper* h
         auto returned = scriptWrappers.at(handle)->setIESweepMode(stringToIESweepMode(std::string(sweepMode)));
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2166,7 +2167,7 @@ __declspec(dllexport) bool __stdcall setIEScanRate(ThalesRemoteScriptWrapper* ha
         auto returned = scriptWrappers.at(handle)->setIEScanRate(scanRate);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2185,7 +2186,7 @@ __declspec(dllexport) bool __stdcall setIEMaximumCurrent(ThalesRemoteScriptWrapp
         auto returned = scriptWrappers.at(handle)->setIEMaximumCurrent(current);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2204,7 +2205,7 @@ __declspec(dllexport) bool __stdcall setIEMinimumCurrent(ThalesRemoteScriptWrapp
         auto returned = scriptWrappers.at(handle)->setIEMinimumCurrent(current);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2223,7 +2224,7 @@ __declspec(dllexport) bool __stdcall setIENaming(ThalesRemoteScriptWrapper* hand
         auto returned = scriptWrappers.at(handle)->setIENaming(stringToNamingRule(std::string(naming)));
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2242,7 +2243,7 @@ __declspec(dllexport) bool __stdcall setIECounter(ThalesRemoteScriptWrapper* han
         auto returned = scriptWrappers.at(handle)->setIECounter(number);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2261,7 +2262,7 @@ __declspec(dllexport) bool __stdcall setIEOutputPath(ThalesRemoteScriptWrapper* 
         auto returned = scriptWrappers.at(handle)->setIEOutputPath(std::string(path));
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2280,7 +2281,7 @@ __declspec(dllexport) bool __stdcall setIEOutputFileName(ThalesRemoteScriptWrapp
         auto returned = scriptWrappers.at(handle)->setIEOutputFileName(std::string(name));
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2299,7 +2300,7 @@ __declspec(dllexport) bool __stdcall checkIESetup(ThalesRemoteScriptWrapper* han
         auto returned = scriptWrappers.at(handle)->checkIESetup();
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2318,7 +2319,7 @@ __declspec(dllexport) bool __stdcall readIESetup(ThalesRemoteScriptWrapper* hand
         auto returned = scriptWrappers.at(handle)->readIESetup();
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2337,7 +2338,7 @@ __declspec(dllexport) bool __stdcall measureIE(ThalesRemoteScriptWrapper* handle
         auto returned = scriptWrappers.at(handle)->measureIE();
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2356,7 +2357,7 @@ __declspec(dllexport) bool __stdcall selectSequence(ThalesRemoteScriptWrapper* h
         auto returned = scriptWrappers.at(handle)->selectSequence(number);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2375,7 +2376,7 @@ __declspec(dllexport) bool __stdcall setSequenceNaming(ThalesRemoteScriptWrapper
         auto returned = scriptWrappers.at(handle)->setSequenceNaming(stringToNamingRule(std::string(naming)));
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2394,7 +2395,7 @@ __declspec(dllexport) bool __stdcall setSequenceCounter(ThalesRemoteScriptWrappe
         auto returned = scriptWrappers.at(handle)->setSequenceCounter(number);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2413,7 +2414,7 @@ __declspec(dllexport) bool __stdcall setSequenceOutputPath(ThalesRemoteScriptWra
         auto returned = scriptWrappers.at(handle)->setSequenceOutputPath(std::string(path));
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2432,7 +2433,7 @@ __declspec(dllexport) bool __stdcall setSequenceOutputFileName(ThalesRemoteScrip
         auto returned = scriptWrappers.at(handle)->setSequenceOutputFileName(std::string(name));
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2451,7 +2452,7 @@ __declspec(dllexport) bool __stdcall enableSequenceAcqGlobal(ThalesRemoteScriptW
         auto returned = scriptWrappers.at(handle)->enableSequenceAcqGlobal(state);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2470,7 +2471,7 @@ __declspec(dllexport) bool __stdcall disableSequenceAcqGlobal(ThalesRemoteScript
         auto returned = scriptWrappers.at(handle)->disableSequenceAcqGlobal();
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2489,7 +2490,7 @@ __declspec(dllexport) bool __stdcall enableSequenceAcqChannel(ThalesRemoteScript
         auto returned = scriptWrappers.at(handle)->enableSequenceAcqChannel(channel, state);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2508,7 +2509,7 @@ __declspec(dllexport) bool __stdcall disableSequenceAcqChannel(ThalesRemoteScrip
         auto returned = scriptWrappers.at(handle)->disableSequenceAcqChannel(channel);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2527,7 +2528,7 @@ __declspec(dllexport) bool __stdcall readSequenceAcqSetup(ThalesRemoteScriptWrap
         auto returned = scriptWrappers.at(handle)->readSequenceAcqSetup();
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2546,7 +2547,7 @@ __declspec(dllexport) bool __stdcall runSequence(ThalesRemoteScriptWrapper* hand
         auto returned = scriptWrappers.at(handle)->runSequence();
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2565,7 +2566,7 @@ __declspec(dllexport) bool __stdcall setSequenceOhmicDrop(ThalesRemoteScriptWrap
         auto returned = scriptWrappers.at(handle)->setSequenceOhmicDrop(value);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2584,7 +2585,7 @@ __declspec(dllexport) bool __stdcall setSequenceMaximumRuntime(ThalesRemoteScrip
         auto returned = scriptWrappers.at(handle)->setSequenceMaximumRuntime(value);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2603,7 +2604,7 @@ __declspec(dllexport) bool __stdcall setSequenceUpperPotentialLimit(ThalesRemote
         auto returned = scriptWrappers.at(handle)->setSequenceUpperPotentialLimit(value);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2622,7 +2623,7 @@ __declspec(dllexport) bool __stdcall setSequenceLowerPotentialLimit(ThalesRemote
         auto returned = scriptWrappers.at(handle)->setSequenceLowerPotentialLimit(value);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2641,7 +2642,7 @@ __declspec(dllexport) bool __stdcall setSequenceUpperCurrentLimit(ThalesRemoteSc
         auto returned = scriptWrappers.at(handle)->setSequenceUpperCurrentLimit(value);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2660,7 +2661,7 @@ __declspec(dllexport) bool __stdcall setSequenceLowerCurrentLimit(ThalesRemoteSc
         auto returned = scriptWrappers.at(handle)->setSequenceLowerCurrentLimit(value);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2679,7 +2680,7 @@ __declspec(dllexport) bool __stdcall setSequenceCurrentRange(ThalesRemoteScriptW
         auto returned = scriptWrappers.at(handle)->setSequenceCurrentRange(value);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2698,7 +2699,7 @@ __declspec(dllexport) bool __stdcall setSequencePotentialLatencyWindow(ThalesRem
         auto returned = scriptWrappers.at(handle)->setSequencePotentialLatencyWindow(value);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2717,7 +2718,7 @@ __declspec(dllexport) bool __stdcall setSequenceCurrentLatencyWindow(ThalesRemot
         auto returned = scriptWrappers.at(handle)->setSequenceCurrentLatencyWindow(value);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2736,7 +2737,7 @@ __declspec(dllexport) bool __stdcall enableFraMode(ThalesRemoteScriptWrapper* ha
         auto returned = scriptWrappers.at(handle)->enableFraMode(enabled);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2755,7 +2756,7 @@ __declspec(dllexport) bool __stdcall setFraVoltageInputGain(ThalesRemoteScriptWr
         auto returned = scriptWrappers.at(handle)->setFraVoltageInputGain(value);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2774,7 +2775,7 @@ __declspec(dllexport) bool __stdcall setFraVoltageOutputGain(ThalesRemoteScriptW
         auto returned = scriptWrappers.at(handle)->setFraVoltageOutputGain(value);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2793,7 +2794,7 @@ __declspec(dllexport) bool __stdcall setFraVoltageMinimum(ThalesRemoteScriptWrap
         auto returned = scriptWrappers.at(handle)->setFraVoltageMinimum(value);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2812,7 +2813,7 @@ __declspec(dllexport) bool __stdcall setFraVoltageMaximum(ThalesRemoteScriptWrap
         auto returned = scriptWrappers.at(handle)->setFraVoltageMaximum(value);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2831,7 +2832,7 @@ __declspec(dllexport) bool __stdcall setFraCurrentInputGain(ThalesRemoteScriptWr
         auto returned = scriptWrappers.at(handle)->setFraCurrentInputGain(value);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2850,7 +2851,7 @@ __declspec(dllexport) bool __stdcall setFraCurrentOutputGain(ThalesRemoteScriptW
         auto returned = scriptWrappers.at(handle)->setFraCurrentOutputGain(value);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2869,7 +2870,7 @@ __declspec(dllexport) bool __stdcall setFraCurrentMinimum(ThalesRemoteScriptWrap
         auto returned = scriptWrappers.at(handle)->setFraCurrentMinimum(value);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2888,7 +2889,7 @@ __declspec(dllexport) bool __stdcall setFraCurrentMaximum(ThalesRemoteScriptWrap
         auto returned = scriptWrappers.at(handle)->setFraCurrentMaximum(value);
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2907,7 +2908,7 @@ __declspec(dllexport) bool __stdcall setFraPotentiostatMode(ThalesRemoteScriptWr
         auto returned = scriptWrappers.at(handle)->setFraPotentiostatMode(stringToPotentiostatMode(std::string(potentiostatMode)));
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2926,7 +2927,7 @@ __declspec(dllexport) bool __stdcall readFraSetup(ThalesRemoteScriptWrapper* han
         auto returned = scriptWrappers.at(handle)->readFraSetup();
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2945,7 +2946,7 @@ __declspec(dllexport) bool __stdcall readAcqSetup(ThalesRemoteScriptWrapper* han
         auto returned = scriptWrappers.at(handle)->readAcqSetup();
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
@@ -2964,7 +2965,7 @@ __declspec(dllexport) bool __stdcall readAllAcqChannels(ThalesRemoteScriptWrappe
         auto returned = scriptWrappers.at(handle)->readAllAcqChannels();
         
         *retvalLen = returned.copy(retval, static_cast<std::basic_string<char>::size_type>(*retvalLen-1), 0);
-        retval[*retvalLen] = '\0';
+        retval[*retvalLen] = ' ';
         *retvalLen += 1;
         
         return true;
