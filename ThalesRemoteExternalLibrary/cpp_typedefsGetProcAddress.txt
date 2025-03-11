@@ -123,11 +123,15 @@ typedef bool (__stdcall  *setSequencePotentialLatencyWindowType)(void* handle, c
 typedef bool (__stdcall  *setSequenceCurrentLatencyWindowType)(void* handle, char* retval, int* retvalLen , double value);
 typedef bool (__stdcall  *enableFraModeType)(void* handle, char* retval, int* retvalLen , bool enabled);
 typedef bool (__stdcall  *setFraVoltageInputGainType)(void* handle, char* retval, int* retvalLen , double value);
+typedef bool (__stdcall  *setFraVoltageInputOffsetType)(void* handle, char* retval, int* retvalLen , double value);
 typedef bool (__stdcall  *setFraVoltageOutputGainType)(void* handle, char* retval, int* retvalLen , double value);
+typedef bool (__stdcall  *setFraVoltageOutputOffsetType)(void* handle, char* retval, int* retvalLen , double value);
 typedef bool (__stdcall  *setFraVoltageMinimumType)(void* handle, char* retval, int* retvalLen , double value);
 typedef bool (__stdcall  *setFraVoltageMaximumType)(void* handle, char* retval, int* retvalLen , double value);
 typedef bool (__stdcall  *setFraCurrentInputGainType)(void* handle, char* retval, int* retvalLen , double value);
+typedef bool (__stdcall  *setFraCurrentInputOffsetType)(void* handle, char* retval, int* retvalLen , double value);
 typedef bool (__stdcall  *setFraCurrentOutputGainType)(void* handle, char* retval, int* retvalLen , double value);
+typedef bool (__stdcall  *setFraCurrentOutputOffsetType)(void* handle, char* retval, int* retvalLen , double value);
 typedef bool (__stdcall  *setFraCurrentMinimumType)(void* handle, char* retval, int* retvalLen , double value);
 typedef bool (__stdcall  *setFraCurrentMaximumType)(void* handle, char* retval, int* retvalLen , double value);
 typedef bool (__stdcall  *setFraPotentiostatModeType)(void* handle, char* retval, int* retvalLen , char const* potentiostatMode);
@@ -135,6 +139,8 @@ typedef bool (__stdcall  *readFraSetupType)(void* handle, char* retval, int* ret
 typedef bool (__stdcall  *readAcqSetupType)(void* handle, char* retval, int* retvalLen );
 typedef bool (__stdcall  *readAllAcqChannelsType)(void* handle, char* retval, int* retvalLen );
 typedef bool (__stdcall  *readAcqChannelType)(void* handle, double* retval , int channel);
+typedef bool (__stdcall  *enableAcqType)(void* handle, char* retval, int* retvalLen , bool enabled);
+typedef bool (__stdcall  *disableAcqType)(void* handle, char* retval, int* retvalLen );
 forceThalesIntoRemoteScriptType forceThalesIntoRemoteScript = (forceThalesIntoRemoteScriptType) GetProcAddress(lib, "forceThalesIntoRemoteScript");
 hideWindowType hideWindow = (hideWindowType) GetProcAddress(lib, "hideWindow");
 showWindowType showWindow = (showWindowType) GetProcAddress(lib, "showWindow");
@@ -260,11 +266,15 @@ setSequencePotentialLatencyWindowType setSequencePotentialLatencyWindow = (setSe
 setSequenceCurrentLatencyWindowType setSequenceCurrentLatencyWindow = (setSequenceCurrentLatencyWindowType) GetProcAddress(lib, "setSequenceCurrentLatencyWindow");
 enableFraModeType enableFraMode = (enableFraModeType) GetProcAddress(lib, "enableFraMode");
 setFraVoltageInputGainType setFraVoltageInputGain = (setFraVoltageInputGainType) GetProcAddress(lib, "setFraVoltageInputGain");
+setFraVoltageInputOffsetType setFraVoltageInputOffset = (setFraVoltageInputOffsetType) GetProcAddress(lib, "setFraVoltageInputOffset");
 setFraVoltageOutputGainType setFraVoltageOutputGain = (setFraVoltageOutputGainType) GetProcAddress(lib, "setFraVoltageOutputGain");
+setFraVoltageOutputOffsetType setFraVoltageOutputOffset = (setFraVoltageOutputOffsetType) GetProcAddress(lib, "setFraVoltageOutputOffset");
 setFraVoltageMinimumType setFraVoltageMinimum = (setFraVoltageMinimumType) GetProcAddress(lib, "setFraVoltageMinimum");
 setFraVoltageMaximumType setFraVoltageMaximum = (setFraVoltageMaximumType) GetProcAddress(lib, "setFraVoltageMaximum");
 setFraCurrentInputGainType setFraCurrentInputGain = (setFraCurrentInputGainType) GetProcAddress(lib, "setFraCurrentInputGain");
+setFraCurrentInputOffsetType setFraCurrentInputOffset = (setFraCurrentInputOffsetType) GetProcAddress(lib, "setFraCurrentInputOffset");
 setFraCurrentOutputGainType setFraCurrentOutputGain = (setFraCurrentOutputGainType) GetProcAddress(lib, "setFraCurrentOutputGain");
+setFraCurrentOutputOffsetType setFraCurrentOutputOffset = (setFraCurrentOutputOffsetType) GetProcAddress(lib, "setFraCurrentOutputOffset");
 setFraCurrentMinimumType setFraCurrentMinimum = (setFraCurrentMinimumType) GetProcAddress(lib, "setFraCurrentMinimum");
 setFraCurrentMaximumType setFraCurrentMaximum = (setFraCurrentMaximumType) GetProcAddress(lib, "setFraCurrentMaximum");
 setFraPotentiostatModeType setFraPotentiostatMode = (setFraPotentiostatModeType) GetProcAddress(lib, "setFraPotentiostatMode");
@@ -272,3 +282,5 @@ readFraSetupType readFraSetup = (readFraSetupType) GetProcAddress(lib, "readFraS
 readAcqSetupType readAcqSetup = (readAcqSetupType) GetProcAddress(lib, "readAcqSetup");
 readAllAcqChannelsType readAllAcqChannels = (readAllAcqChannelsType) GetProcAddress(lib, "readAllAcqChannels");
 readAcqChannelType readAcqChannel = (readAcqChannelType) GetProcAddress(lib, "readAcqChannel");
+enableAcqType enableAcq = (enableAcqType) GetProcAddress(lib, "enableAcq");
+disableAcqType disableAcq = (disableAcqType) GetProcAddress(lib, "disableAcq");

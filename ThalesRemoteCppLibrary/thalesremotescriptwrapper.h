@@ -27,48 +27,49 @@
 #ifndef THALESREMOTESCRIPTWRAPPER_H
 #define THALESREMOTESCRIPTWRAPPER_H
 
-#include <regex>
 #include <complex>
+#include <regex>
 
 #include "thalesremoteconnection.h"
 
 enum class PotentiostatMode {
-    POTENTIOSTATIC,         /**< Potentiostatic operation of the potentiostat, as a voltage source. */
-    GALVANOSTATIC,          /**< Galvanostatic operation of the potentiostat, as a current source. */
-    PSEUDOGALVANOSTATIC     /**< Potentiostatic operation only for EIS, the potential for a target current is determined automatically. Measurement is done with voltage amplitude. */
+    POTENTIOSTATIC,     /**< Potentiostatic operation of the potentiostat, as a voltage source. */
+    GALVANOSTATIC,      /**< Galvanostatic operation of the potentiostat, as a current source. */
+    PSEUDOGALVANOSTATIC /**< Potentiostatic operation only for EIS, the potential for a target current is determined
+                           automatically. Measurement is done with voltage amplitude. */
 };
 
-enum class ScanStrategy{
-    SINGLE_SINE,    /**< Measurement of individual frequency points in the low-frequency range. */
-    MULTI_SINE,     /**< Measurement with multisine in the low-frequency range. */
-    TABLE           /**< Specify a table with frequency points at which the measurements are carried out. */
+enum class ScanStrategy {
+    SINGLE_SINE, /**< Measurement of individual frequency points in the low-frequency range. */
+    MULTI_SINE,  /**< Measurement with multisine in the low-frequency range. */
+    TABLE        /**< Specify a table with frequency points at which the measurements are carried out. */
 };
 
-enum class ScanDirection{
-    START_TO_MIN,   /**< Scan at first from start to lower frequency. */
-    START_TO_MAX    /**< Scan at first from start to maximum frequency. */
+enum class ScanDirection {
+    START_TO_MIN, /**< Scan at first from start to lower frequency. */
+    START_TO_MAX  /**< Scan at first from start to maximum frequency. */
 };
 
-enum class NamingRule{
-    DATETIME,    /**< Extension of the specified name with date and time. */
-    COUNTER,     /**< Extension of the specified name with an sequential number. */
-    INDIVIDUAL   /**< No extension each file must be named individually, otherwise it will be overwritten. */
+enum class NamingRule {
+    DATETIME,  /**< Extension of the specified name with date and time. */
+    COUNTER,   /**< Extension of the specified name with an sequential number. */
+    INDIVIDUAL /**< No extension each file must be named individually, otherwise it will be overwritten. */
 };
 
-enum class PotentialRelation{
+enum class PotentialRelation {
     ABSOLUTE_RELATED, /**< Absolute relation of the potential. */
     RELATIVE_RELATED  /**< Relative relation of the potential. */
 };
 
-enum class IESweepMode{
-    STEADYSTATE,    /**< The explanation of the modes can be found in the IE manual. */
-    FIXEDSAMPLING,  /**< The explanation of the modes can be found in the IE manual. */
-    DYNAMICSCAN     /**< The explanation of the modes can be found in the IE manual. */
+enum class IESweepMode {
+    STEADYSTATE,   /**< The explanation of the modes can be found in the IE manual. */
+    FIXEDSAMPLING, /**< The explanation of the modes can be found in the IE manual. */
+    DYNAMICSCAN    /**< The explanation of the modes can be found in the IE manual. */
 };
 
-enum class Pad4Mode{
-    VOLTAGE,    /**< Voltage measurement */
-    CURRENT     /**< The explanation of the modes can be found in the IE manual. */
+enum class Pad4Mode {
+    VOLTAGE, /**< Voltage measurement */
+    CURRENT  /**< The explanation of the modes can be found in the IE manual. */
 };
 
 /** The ThalesRemoteScriptWrapper class
@@ -77,12 +78,10 @@ enum class Pad4Mode{
  *  The commands are explained in https://doc.zahner.de/manuals/remote2.pdf .
  *  In the document you can also find a table with error numbers which are returned.
  */
-class ThalesRemoteScriptWrapper
-{
+class ThalesRemoteScriptWrapper {
 public:
-
     /** Constructor. Needs a connected ThalesRemoteConnection */
-    ThalesRemoteScriptWrapper(ZenniumConnection * const remoteConnection);
+    ThalesRemoteScriptWrapper(ZenniumConnection* const remoteConnection);
 
     /** Directly execute a query to Remote Script.
      *
@@ -136,7 +135,8 @@ public:
      * The complete documentation can be found in the DevCli-Manual Page 8.
      *
      * The timeout is not set by default and the command blocks indefinitely.
-     * However, a time in seconds can optionally be specified for the timeout. When the timeout expires, an exception is thrown by the socket.
+     * However, a time in seconds can optionally be specified for the timeout. When the timeout expires, an exception is
+     * thrown by the socket.
      *
      * \return The HeartBeat time in milli seconds.
      */
@@ -295,7 +295,8 @@ public:
     /** Read the currently set parameters
      *
      * A string containing the configuration is returned.
-     *   For Example: OK;SETUP;Pset=1.0000e-05;Cset=1.0000e-06;Frq=1.0000e+03;Ampl=0.0000e+00;Nw=1;Pot=0;Gal=0;GAL=0;Cmin=-3.0000e+00;Cmax=3.0000e+00;Pmin=-5.2377e+00;Pmax=5.2377e+00;DEV=0;EPC=0;MAXDEV=4;ENDSETUP
+     *   For Example:
+     * OK;SETUP;Pset=1.0000e-05;Cset=1.0000e-06;Frq=1.0000e+03;Ampl=0.0000e+00;Nw=1;Pot=0;Gal=0;GAL=0;Cmin=-3.0000e+00;Cmax=3.0000e+00;Pmin=-5.2377e+00;Pmax=5.2377e+00;DEV=0;EPC=0;MAXDEV=4;ENDSETUP
      *
      * \return The response string from the device.
      */
@@ -360,7 +361,8 @@ public:
 
     /** Setting a single channel of a PAD4 card for an EIS measurement.
      *
-     *  Each channel of the Pad4 card must be configured separately and then the PAD4 must be activated with ThalesRemoteScriptWrapper::enablePAD4.
+     *  Each channel of the Pad4 card must be configured separately and then the PAD4 must be activated with
+     * ThalesRemoteScriptWrapper::enablePAD4.
      *
      * \param  card The number of the card starting at 1 and up to 4.
      * \param  channel The channel of the card starting at 1 and up to 4.
@@ -372,9 +374,10 @@ public:
 
     /** Setting a single channel of a PAD4 card for an EIS measurement.
      *
-     *  Each channel of the Pad4 card must be configured separately and then the PAD4 must be activated with ThalesRemoteScriptWrapper::enablePAD4.
-     *  Each channel can be given a different voltage range or shunt.
-     *  The user can switch the type of PAD4 channels between voltage sense (standard configuration) and current sense (with additional shunt resistor).
+     *  Each channel of the Pad4 card must be configured separately and then the PAD4 must be activated with
+     * ThalesRemoteScriptWrapper::enablePAD4. Each channel can be given a different voltage range or shunt. The user can
+     * switch the type of PAD4 channels between voltage sense (standard configuration) and current sense (with
+     * additional shunt resistor).
      *
      * \param  card The number of the card starting at 1 and up to 4.
      * \param  channel The channel of the card starting at 1 and up to 4.
@@ -387,14 +390,16 @@ public:
 
     /** Setting a single channel of a PAD4 card for an EIS measurement.
      *
-     *  Each channel of the Pad4 card must be configured separately and then the PAD4 must be activated with ThalesRemoteScriptWrapper::enablePAD4.
-     *  Each channel can be given a different voltage range or shunt.
-     *  The user can switch the type of PAD4 channels between voltage sense (standard configuration) and current sense (with additional shunt resistor).
+     *  Each channel of the Pad4 card must be configured separately and then the PAD4 must be activated with
+     * ThalesRemoteScriptWrapper::enablePAD4. Each channel can be given a different voltage range or shunt. The user can
+     * switch the type of PAD4 channels between voltage sense (standard configuration) and current sense (with
+     * additional shunt resistor).
      *
      * \param  card The number of the card starting at 1 and up to 4.
      * \param  channel The channel of the card starting at 1 and up to 4.
      * \param  enabled True to enable the channel.
-     * \param  shuntResistor shunt resistor, which is used. Only used if ThalesRemoteScriptWrapper::setupPad4ModeGlobal is set to Pad4Mode::CURRENT
+     * \param  shuntResistor shunt resistor, which is used. Only used if ThalesRemoteScriptWrapper::setupPad4ModeGlobal
+     * is set to Pad4Mode::CURRENT
      *
      * \return The response string from the device.
      */
@@ -402,7 +407,8 @@ public:
 
     /** Switch between current and voltage measurement
      *
-     * The user can switch the type of PAD4 channels between voltage sense (standard configuration) and current sense (with additional shunt resistor).
+     * The user can switch the type of PAD4 channels between voltage sense (standard configuration) and current sense
+     * (with additional shunt resistor).
      *
      * \param  mode current or voltage measurement
      *
@@ -561,19 +567,21 @@ public:
     /** Measure the impedace with activated PAD4 channels with all possible parameters
      *
      * \param  frequency The frequency to measure the impedance at.
-     * \param  amplitude The amplitude to measure the impedance with. In Volt if potentiostatic mode or Ampere for galvanostatic mode.
+     * \param  amplitude The amplitude to measure the impedance with. In Volt if potentiostatic mode or Ampere for
+     * galvanostatic mode.
      * \param  numberOfPeriods The number of periods / waves to average.
      *
      * \return The complex impedance at the measured point.
      */
     std::complex<double> getImpedance(double frequency, double amplitude, int numberOfPeriods = 1);
 
-     /** Measure the impedance with activated PAD4 channels at the set frequency, amplitude and averages.
-      * 
-      * The function returns a string containing all impedance results. impedance is the MAIN channel all other padXX= are the PAD4 channels. Channels which are deactivated have the value 0.
-      *
-      * \return String containing the impedance results.
-      */
+    /** Measure the impedance with activated PAD4 channels at the set frequency, amplitude and averages.
+     *
+     * The function returns a string containing all impedance results. impedance is the MAIN channel all other padXX=
+     * are the PAD4 channels. Channels which are deactivated have the value 0.
+     *
+     * \return String containing the impedance results.
+     */
     std::string getImpedancePad4();
 
     /** Measure the impedance at the set amplitude with set averages.
@@ -587,7 +595,8 @@ public:
     /** Measure the impedace with activated PAD4 channels with all possible parameters
      *
      * \param  frequency The frequency to measure the impedance at.
-     * \param  amplitude The amplitude to measure the impedance with. In Volt if potentiostatic mode or Ampere for galvanostatic mode.
+     * \param  amplitude The amplitude to measure the impedance with. In Volt if potentiostatic mode or Ampere for
+     * galvanostatic mode.
      * \param  numberOfPeriods The number of periods / waves to average.
      *
      * \return String containing the impedance results.
@@ -644,7 +653,6 @@ public:
      * \return The response string from the device.
      */
     std::string measureEIS();
-
 
 
     /*
@@ -867,7 +875,8 @@ public:
 
     /** Read the set parameters.
      *
-     *  After checking with ThalesRemoteScriptWrapper::checkCVSetup the parameters can be read back from the workstation.
+     *  After checking with ThalesRemoteScriptWrapper::checkCVSetup the parameters can be read back from the
+     * workstation.
      *
      * \return The response string from the device.
      */
@@ -1111,18 +1120,19 @@ public:
 
     /** Read the set parameters.
      *
-     *  After checking with ThalesRemoteScriptWrapper::checkIESetup the parameters can be read back from the workstation.
+     *  After checking with ThalesRemoteScriptWrapper::checkIESetup the parameters can be read back from the
+     * workstation.
      *
      * \return The response string from the device.
      */
     std::string readIESetup();
 
     /** Measure IE.
-    *
-    *  Before measurement, all parameters must be checked with ThalesRemoteScriptWrapper::checkIESetup.
-    *
-    * \return The response string from the device.
-    */
+     *
+     *  Before measurement, all parameters must be checked with ThalesRemoteScriptWrapper::checkIESetup.
+     *
+     * \return The response string from the device.
+     */
     std::string measureIE();
 
     /*
@@ -1372,6 +1382,14 @@ public:
      */
     std::string setFraVoltageInputGain(double value);
 
+    /** Sets the input voltage offset.
+     *
+     * \param  value The value to set.
+     *
+     * \return The response string from the device.
+     */
+    std::string setFraVoltageInputOffset(double value);
+
     /** Sets the output voltage gain.
      *
      * \param  value The value to set.
@@ -1379,6 +1397,14 @@ public:
      * \return The response string from the device.
      */
     std::string setFraVoltageOutputGain(double value);
+
+    /** Sets the output voltage offset.
+     *
+     * \param  value The value to set.
+     *
+     * \return The response string from the device.
+     */
+    std::string setFraVoltageOutputOffset(double value);
 
     /** Sets the minimum voltage.
      *
@@ -1404,6 +1430,14 @@ public:
      */
     std::string setFraCurrentInputGain(double value);
 
+    /** Sets the input current offset
+     *
+     * \param  value The value to set.
+     *
+     * \return The response string from the device.
+     */
+    std::string setFraCurrentInputOffset(double value);
+
     /** Sets the output current gain
      *
      * \param  value The value to set.
@@ -1411,6 +1445,14 @@ public:
      * \return The response string from the device.
      */
     std::string setFraCurrentOutputGain(double value);
+
+    /** Sets the output current offset
+     *
+     * \param  value The value to set.
+     *
+     * \return The response string from the device.
+     */
+    std::string setFraCurrentOutputOffset(double value);
 
     /** Sets the minimum current.
      *
@@ -1474,10 +1516,24 @@ public:
      */
     double readAcqChannel(int channel);
 
+    /** Enable configured ACQ channels.
+     *
+     *  With this command, the ACQ channels can only be used for the EIS, CV and IE methods.
+     *  The ACQ channels must first be set up via the GUI.
+     *
+     * \param  enabled true to enable ACQ.
+     *
+     * \return The response string from the device.
+     */
+    std::string enableAcq(bool enabled);
+
+    /** Disable configured ACQ channels.
+     *
+     * \return The response string from the device.
+     */
+    std::string disableAcq();
 
 protected:
-
-
     /** Set an Remote2 parameter or value.
      *
      *  With this command the parameters are transmitted to the Thales Remote2 and the response is read.
@@ -1561,7 +1617,7 @@ protected:
      */
     int stringToInt(std::string string);
 
-    ZenniumConnection * const remoteConnection;
+    ZenniumConnection* const remoteConnection;
 };
 
-#endif // THALESREMOTESCRIPTWRAPPER_H
+#endif  // THALESREMOTESCRIPTWRAPPER_H

@@ -33,23 +33,44 @@ typedef void ThalesFileInterface;
 
 extern "C"
 {
-    __declspec(dllexport) bool __stdcall  getErrorMessage(void* handle, char* retval, int* retvalLen);
-	__declspec(dllexport) ZenniumConnection* __stdcall  createZenniumConnection();
-	__declspec(dllexport) void __stdcall  deleteZenniumConnection(ZenniumConnection* handle);
-	__declspec(dllexport) bool __stdcall  disconnectFromTerm(ZenniumConnection* handle);
-	__declspec(dllexport) bool __stdcall  connectToTerm(ZenniumConnection* handle, char const * address, char const* connectionName);
-	__declspec(dllexport) bool __stdcall  setTimeout(ZenniumConnection* handle, int timeout);
-	__declspec(dllexport) bool __stdcall  getTimeout(ZenniumConnection* handle, int* timeout);
-	__declspec(dllexport) ThalesRemoteScriptWrapper* __stdcall  createThalesRemoteScriptWrapper(ZenniumConnection* handle);
-    __declspec(dllexport) void __stdcall deleteThalesRemoteScriptWrapper(ThalesRemoteScriptWrapper* handle);
-    __declspec(dllexport) ThalesFileInterface* __stdcall  createThalesFileInterface(ZenniumConnection* handle);
-    __declspec(dllexport) void __stdcall deleteThalesFileInterface(ThalesFileInterface* handle);
-    __declspec(dllexport) bool __stdcall enableAutomaticFileExchange(ThalesFileInterface* handle, char* retval, int* retvalLen, bool enable, char const* fileExtensions);
-    __declspec(dllexport) bool __stdcall disableAutomaticFileExchange(ThalesFileInterface* handle, char* retval, int* retvalLen);
-    __declspec(dllexport) bool __stdcall appendFilesToSkip(ThalesFileInterface* handle, char const* filename);
-    __declspec(dllexport) bool __stdcall setSavePath(ThalesFileInterface* handle, char const* path);
-    __declspec(dllexport) bool __stdcall enableSaveReceivedFilesToDisk(ThalesFileInterface* handle, char const* path, bool enable);
-    __declspec(dllexport) bool __stdcall disableSaveReceivedFilesToDisk(ThalesFileInterface* handle);
+/**
+ * @brief Retrieves the error message for a specific handle
+ * 
+ * This function retrieves the error message associated with a given handle.
+ * It locks the mutex for thread-safety during access and copies the error message
+ * to the provided buffer.
+ *
+ * @param[in]     handle    Pointer to the object whose error message is being retrieved
+ * @param[out]    retval    Pointer to a buffer where the error message will be copied
+ * @param[in,out] retvalLen Pointer to an integer that specifies the buffer size on input
+ *                          and contains the actual length of the copied string (including 
+ *                          null terminator) on output
+ *
+ * @return true if the error message was successfully retrieved, false otherwise
+ *         When false is returned, "no_error" is copied to the buffer
+ *
+ * @note The function expects retvalLen to include space for the null terminator
+ * @note The function ensures that the returned string is null-terminated
+ */
+__declspec(dllexport) bool __stdcall  getErrorMessage(void* handle, char* retval, int* retvalLen);
+__declspec(dllexport) ZenniumConnection* __stdcall  createZenniumConnection();
+__declspec(dllexport) void __stdcall  deleteZenniumConnection(ZenniumConnection* handle);
+__declspec(dllexport) bool __stdcall  disconnectFromTerm(ZenniumConnection* handle);
+__declspec(dllexport) bool __stdcall  connectToTerm(ZenniumConnection* handle, char const * address, char const* connectionName);
+__declspec(dllexport) bool __stdcall  waitForBinaryTelegram(ZenniumConnection* handle, int message_type, char* retval, int* retvalLen);
+__declspec(dllexport) bool __stdcall  waitForBinaryTelegramTimeout(ZenniumConnection* handle, int message_type, int timeout, char* retval, int* retvalLen);
+__declspec(dllexport) bool __stdcall  setTimeout(ZenniumConnection* handle, int timeout);
+__declspec(dllexport) bool __stdcall  getTimeout(ZenniumConnection* handle, int* timeout);
+__declspec(dllexport) ThalesRemoteScriptWrapper* __stdcall  createThalesRemoteScriptWrapper(ZenniumConnection* handle);
+__declspec(dllexport) void __stdcall deleteThalesRemoteScriptWrapper(ThalesRemoteScriptWrapper* handle);
+__declspec(dllexport) ThalesFileInterface* __stdcall  createThalesFileInterface(ZenniumConnection* handle);
+__declspec(dllexport) void __stdcall deleteThalesFileInterface(ThalesFileInterface* handle);
+__declspec(dllexport) bool __stdcall enableAutomaticFileExchange(ThalesFileInterface* handle, char* retval, int* retvalLen, bool enable, char const* fileExtensions);
+__declspec(dllexport) bool __stdcall disableAutomaticFileExchange(ThalesFileInterface* handle, char* retval, int* retvalLen);
+__declspec(dllexport) bool __stdcall appendFilesToSkip(ThalesFileInterface* handle, char const* filename);
+__declspec(dllexport) bool __stdcall setSavePath(ThalesFileInterface* handle, char const* path);
+__declspec(dllexport) bool __stdcall enableSaveReceivedFilesToDisk(ThalesFileInterface* handle, char const* path, bool enable);
+__declspec(dllexport) bool __stdcall disableSaveReceivedFilesToDisk(ThalesFileInterface* handle);
 
 	
 __declspec(dllexport) bool __stdcall forceThalesIntoRemoteScript(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen );
@@ -302,7 +323,11 @@ __declspec(dllexport) bool __stdcall enableFraMode(ThalesRemoteScriptWrapper* ha
 	
 __declspec(dllexport) bool __stdcall setFraVoltageInputGain(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , double value);
 	
+__declspec(dllexport) bool __stdcall setFraVoltageInputOffset(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , double value);
+	
 __declspec(dllexport) bool __stdcall setFraVoltageOutputGain(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , double value);
+	
+__declspec(dllexport) bool __stdcall setFraVoltageOutputOffset(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , double value);
 	
 __declspec(dllexport) bool __stdcall setFraVoltageMinimum(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , double value);
 	
@@ -310,7 +335,11 @@ __declspec(dllexport) bool __stdcall setFraVoltageMaximum(ThalesRemoteScriptWrap
 	
 __declspec(dllexport) bool __stdcall setFraCurrentInputGain(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , double value);
 	
+__declspec(dllexport) bool __stdcall setFraCurrentInputOffset(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , double value);
+	
 __declspec(dllexport) bool __stdcall setFraCurrentOutputGain(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , double value);
+	
+__declspec(dllexport) bool __stdcall setFraCurrentOutputOffset(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , double value);
 	
 __declspec(dllexport) bool __stdcall setFraCurrentMinimum(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , double value);
 	
@@ -325,6 +354,10 @@ __declspec(dllexport) bool __stdcall readAcqSetup(ThalesRemoteScriptWrapper* han
 __declspec(dllexport) bool __stdcall readAllAcqChannels(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen );
 	
 __declspec(dllexport) bool __stdcall readAcqChannel(ThalesRemoteScriptWrapper* handle, double* retval , int channel);
+	
+__declspec(dllexport) bool __stdcall enableAcq(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen , bool enabled);
+	
+__declspec(dllexport) bool __stdcall disableAcq(ThalesRemoteScriptWrapper* handle, char* retval, int* retvalLen );
 
 }
 #endif // THALESREMOTEEXTERNALLIBRARY

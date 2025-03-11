@@ -143,6 +143,7 @@ public:
     bool isTelegramAvailable(int message_type);
 
     std::vector<uint8_t> waitForTelegram(int message_type);
+    std::vector<uint8_t> waitForBinaryTelegram(int message_type);
     /** Block maximal timeout milliseconds while waiting for an incoming telegram.
      *
      * If some Telegram has already arrived it will just return the last one from the queue.
@@ -154,6 +155,7 @@ public:
      * \return The last received telegram or an empty string if the timeout was reached or something went wrong.
      */
     std::vector<uint8_t> waitForTelegram(int message_type, const std::chrono::duration<int, std::milli> timeout);
+    std::vector<uint8_t> waitForBinaryTelegram(int message_type, const std::chrono::duration<int, std::milli> timeout);
 
     /** Immediately return the last received telegram.
      *

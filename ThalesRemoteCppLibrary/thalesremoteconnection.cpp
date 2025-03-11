@@ -218,6 +218,11 @@ std::vector<uint8_t> ZenniumConnection::waitForTelegram(int message_type)
     return this->waitForTelegram(message_type, this->defaultTimeout);
 }
 
+std::vector<uint8_t> ZenniumConnection::waitForBinaryTelegram(int message_type)
+{
+    return waitForTelegram(message_type);
+}
+
 std::vector<uint8_t> ZenniumConnection::waitForTelegram(int message_type, const std::chrono::duration<int, std::milli> timeout) {
 
     auto receivedTelegram = this->queuesForChannels[message_type]->get(true, timeout);
@@ -228,6 +233,11 @@ std::vector<uint8_t> ZenniumConnection::waitForTelegram(int message_type, const 
         throw TermConnectionError("Empty telegram received.");
     }
     return receivedTelegram;
+}
+
+std::vector<uint8_t> ZenniumConnection::waitForBinaryTelegram(int message_type, const std::chrono::duration<int, std::milli> timeout)
+{
+    return waitForTelegram(message_type,timeout);
 }
 
 std::string ZenniumConnection::waitForStringTelegram(int message_type)

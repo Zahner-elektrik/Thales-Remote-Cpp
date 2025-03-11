@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.5)
 project(ThalesRemoteExternalLibrary)
 
 file(GLOB_RECURSE ExternalLibrarySrc
-    "*.h"
-    "*.cpp"
+    generated.cpp
+    generated.h
 )
 
 add_library (ThalesRemoteExternalLibrary SHARED ${ExternalLibrarySrc})
